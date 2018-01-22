@@ -1,4 +1,7 @@
-class Physics extends Trait {
+import { Trait } from './Entity';
+import { Sides } from './Entity';
+
+export class Physics extends Trait {
     constructor() {
         super('physics');
     }
@@ -14,7 +17,7 @@ class Physics extends Trait {
     }
 }
 
-class Solid extends Trait {
+export class Solid extends Trait {
     constructor() {
         super('solid');
         this.obstructs = true;
@@ -41,7 +44,7 @@ class Solid extends Trait {
     }
 }
 
-class Run extends Trait {
+export class Run extends Trait {
     constructor() {
         super('run');
 
@@ -55,7 +58,7 @@ class Run extends Trait {
     }
 }
 
-class Jump extends Trait {
+export class Jump extends Trait {
     constructor() {
         super('jump');
 
@@ -100,7 +103,10 @@ class Jump extends Trait {
         }
 
         if (this.engageTime > 0) {
-            entity.vel.y = -(this.velocity + Math.abs(entity.vel.x) * this.speedBoost);
+            entity.vel.y = -(
+                this.velocity +
+                Math.abs(entity.vel.x) * this.speedBoost
+            );
             this.engageTime -= deltaTime;
         }
 
@@ -108,16 +114,16 @@ class Jump extends Trait {
     }
 }
 
-class Killable extends Trait {
+export class Killable extends Trait {
     constructor() {
         super('killable');
         this.dead = false;
         this.deadTime = 0;
-        this.removeAfter = .3;
+        this.removeAfter = 0.3;
     }
 
     kill() {
-        this.queue(() => this.dead = true);
+        this.queue(() => (this.dead = true));
     }
 
     revive() {
@@ -137,16 +143,16 @@ class Killable extends Trait {
     }
 }
 
-class Pickable extends Trait {
+export class Pickable extends Trait {
     constructor() {
         super('pickable');
         this.picked = false;
         this.pickTime = 0;
-        this.removeAfter = .3;
+        this.removeAfter = 0.3;
     }
 
     pick() {
-        this.queue(() => this.picked = true);
+        this.queue(() => (this.picked = true));
     }
 
     update(entity, deltaTime, level) {
@@ -161,11 +167,10 @@ class Pickable extends Trait {
     }
 }
 
-class Picker extends Trait {
+export class Picker extends Trait {
     constructor() {
         super('picker');
-        this.onPick = function() {
-        }
+        this.onPick = function() {};
     }
 
     collides(us, them) {

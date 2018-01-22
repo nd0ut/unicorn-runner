@@ -1,4 +1,8 @@
-function createBackgroundLayer(level, tiles, image) {
+import { loadImage } from './loaders';
+import { SpriteSheet } from './SpriteSheet';
+import { TileResolver } from './TileCreation';
+
+export function createBackgroundLayer(level, tiles, image) {
     const resolver = new TileResolver(tiles);
     const buffer = document.createElement('canvas');
     const sprites = new SpriteSheet(image, 60, 60);
@@ -36,7 +40,7 @@ function createBackgroundLayer(level, tiles, image) {
     };
 }
 
-function drawStaticBackground() {
+export function drawStaticBackground() {
     const buffer = document.createElement('canvas');
     buffer.width = 840 + 60;
     buffer.height = 660;
@@ -57,17 +61,17 @@ function drawStaticBackground() {
     }
 
     function loadGrass() {
-        loadImage('img/glass_back.png').then(function(result) {
+        loadImage(require('../img/glass_back.png')).then(function(result) {
             GlassBackImage = result;
             loaded++;
         });
 
-        loadImage('img/grass.png').then(function(result) {
+        loadImage(require('../img/grass.png')).then(function(result) {
             GrassImage = result;
             loaded++;
         });
 
-        loadImage('img/glass_front.png').then(function(result) {
+        loadImage(require('../img/glass_front.png')).then(function(result) {
             GlassFrontImage = result;
             loaded++;
         });
@@ -93,7 +97,7 @@ function drawStaticBackground() {
     }
 }
 
-function createSpriteLayer(entities, width = 172, height = 119) {
+export function createSpriteLayer(entities, width = 172, height = 119) {
     const spriteBuffer = document.createElement('canvas');
     spriteBuffer.width = width;
     spriteBuffer.height = height;

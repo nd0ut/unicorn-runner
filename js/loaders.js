@@ -1,4 +1,6 @@
-function createAnim(frames, frameLen) {
+import { SpriteSheet } from './SpriteSheet';
+
+export function createAnim(frames, frameLen) {
     return function resolveFrame(distance) {
         const frameIndex = Math.floor(distance / frameLen) % frames.length;
         const frameName = frames[frameIndex];
@@ -6,7 +8,7 @@ function createAnim(frames, frameLen) {
     };
 }
 
-function loadImage(url) {
+export function loadImage(url) {
     return new Promise(resolve => {
         const image = new Image();
         image.addEventListener('load', () => {
@@ -16,7 +18,7 @@ function loadImage(url) {
     });
 }
 
-function loadSpriteSheet(name) {
+export function loadSpriteSheet(name) {
     return new Promise(resolve => {
         resolve(name);
     })

@@ -1,3 +1,12 @@
+import { Camera } from './Camera';
+import { loadEnemyBug } from './chars/EnemyBug';
+import { loadRainbow } from './chars/Rainbow';
+import { loadUnicorn } from './chars/Unicorn';
+import { Entity } from './Entity';
+import { createLevelLoader } from './loadLevel';
+import { PlayerController } from './PlayerController';
+import { Timer } from './Timer';
+
 const LEVEL = {
     layers: [
         {

@@ -1,4 +1,4 @@
-class ClipBox {
+export class ClipBox {
     constructor(pos, size, offset) {
         this.pos = pos;
         this.size = size;

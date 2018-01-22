@@ -1,4 +1,6 @@
-class TileResolver {
+import { Sides } from './Entity';
+
+export class TileResolver {
     constructor(matrix, tileSize = 60) {
         this.matrix = matrix;
         this.tileSize = tileSize;
@@ -56,7 +58,7 @@ class TileResolver {
     }
 }
 
-class TileCollider {
+export class TileCollider {
     constructor(matrix) {
         this.tiles = new TileResolver(matrix);
     }

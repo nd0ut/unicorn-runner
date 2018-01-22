@@ -1,4 +1,4 @@
-class EntityCollider {
+export class EntityCollider {
     constructor(entities) {
         this.entities = entities;
     }

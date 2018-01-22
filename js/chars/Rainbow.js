@@ -1,5 +1,9 @@
+import { Entity, Trait } from '../Entity';
+import { loadSpriteSheet } from '../loaders';
+import { Physics, Pickable, Solid } from '../Traits';
+
 const RAINBOW = {
-    imageURL: 'img/rainbow_line.png',
+    imageURL: require('../../img/rainbow_line.png'),
     frames: [
         {
             name: 'spark-1',
@@ -42,9 +46,8 @@ const RAINBOW = {
     ]
 };
 
-function loadRainbow() {
-    return loadSpriteSheet(RAINBOW)
-    .then(createRainbowFactory);
+export function loadRainbow() {
+    return loadSpriteSheet(RAINBOW).then(createRainbowFactory);
 }
 
 class BehaviorRainbow extends Trait {
@@ -62,7 +65,6 @@ class BehaviorRainbow extends Trait {
         us.solid.obstructs = false;
     }
 }
-
 
 function createRainbowFactory(sprite) {
     const sparkAnim = sprite.animations.get('spark');

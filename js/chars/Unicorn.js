@@ -1,5 +1,9 @@
+import { Entity } from '../Entity';
+import { loadSpriteSheet } from '../loaders';
+import { Jump, Killable, Physics, Picker, Run, Solid } from '../Traits';
+
 const UNICORN = {
-    imageURL: 'img/unicorn_full.png',
+    imageURL: require('../../img/unicorn_full.png'),
     frames: [
         {
             name: 'idle',
@@ -71,30 +75,18 @@ const UNICORN = {
         {
             name: 'run',
             frameLen: 20,
-            frames: [
-                'run-1',
-                'run-2',
-                'run-3',
-                'run-4'
-            ]
+            frames: ['run-1', 'run-2', 'run-3', 'run-4']
         },
         {
             name: 'death',
             frameLen: 0.2,
-            frames: [
-                'death-5',
-                'death-6',
-                'death-7',
-                'death-8',
-                'death-9'
-            ]
+            frames: ['death-5', 'death-6', 'death-7', 'death-8', 'death-9']
         }
     ]
 };
 
-function loadUnicorn() {
-    return loadSpriteSheet(UNICORN)
-    .then(createUnicornFactory);
+export function loadUnicorn() {
+    return loadSpriteSheet(UNICORN).then(createUnicornFactory);
 }
 
 function createUnicornFactory(sprite) {
@@ -138,5 +130,5 @@ function createUnicornFactory(sprite) {
         unicorn.draw = drawUnicorn;
 
         return unicorn;
-    }
+    };
 }

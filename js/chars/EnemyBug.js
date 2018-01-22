@@ -1,5 +1,9 @@
+import { Entity, Trait } from '../Entity';
+import { loadSpriteSheet } from '../loaders';
+import { Killable, Physics, Solid } from '../Traits';
+
 const ENEMY_BUG = {
-    imageURL: 'img/bug_line.png',
+    imageURL: require('../../img/bug_line.png'),
     frames: [
         {
             name: 'frame-1',
@@ -37,7 +41,7 @@ const ENEMY_BUG = {
     ]
 };
 
-function loadEnemyBug() {
+export function loadEnemyBug() {
     return loadSpriteSheet(ENEMY_BUG)
     .then(createEnemyBugFactory);
 }

@@ -1,4 +1,7 @@
-class PlayerController extends Trait {
+import { Trait } from './Entity';
+import { Vec2 } from './math';
+
+export class PlayerController extends Trait {
     constructor() {
         super('playerController');
         this.checkpoint = new Vec2(0, 0);

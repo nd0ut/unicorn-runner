@@ -1,3 +1,8 @@
+import { createBackgroundLayer, createSpriteLayer, drawStaticBackground } from './layers';
+import { Level } from './Level';
+import { loadImage } from './loaders';
+import { Matrix } from './math';
+
 function setupCollision(levelSpec, level) {
     const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
         return mergedTiles.concat(layerSpec.tiles);
@@ -28,14 +33,14 @@ function setupEntities(levelSpec, level, entityFactory) {
     level.comp.layers.push(spriteLayer);
 }
 
-function createLevelLoader(entityFactory) {
+export function createLevelLoader(entityFactory) {
     return function loadLevel(name) {
         return new Promise(resolve => {
             resolve(name);
         })
         .then(levelSpec => Promise.all([
             levelSpec,
-            loadImage('img/board_update.png')
+            loadImage(require('../img/board_update.png'))
         ]))
         .then(([levelSpec, image]) => {
             const level = new Level();

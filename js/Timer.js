@@ -1,4 +1,4 @@
-class Timer {
+export class Timer {
     constructor(deltaTime = 1/60) {
         let accumulatedTime = 0;
         let lastTime = 0;
