@@ -19,13 +19,26 @@ export class PlayerController extends Trait {
             setTimeout(() => {
                 this.scoreSelector.innerHTML = this.score;
             }, 0);
-        }
+        };
+    }
+
+    resetScore() {
+        this.score = 0;
+        this.scoreSelector.innerHTML = this.score;
+    }
+
+    resetDistance() {
+        this.player.run.distance = 0;
     }
 
     update(entity, deltaTime, level) {
-        if (!level.entities.has(this.player)
-           || this.player.pos.y > 1200
-           || this.player.pos.x > 11400) {
+        if (
+            !level.entities.has(this.player) ||
+            this.player.pos.y > 1200
+        ) {
+            this.resetScore();
+            this.resetDistance();
+
             this.player.killable.revive();
             this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
             level.entities.add(this.player);

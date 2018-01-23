@@ -6,6 +6,7 @@ export class Level {
     constructor() {
         this.gravity = 1500;
         this.totalTime = 0;
+        this.distance = 0;
 
         this.comp = new Compositor();
         this.entities = new Set();
@@ -16,6 +17,10 @@ export class Level {
 
     setCollisionGrid(matrix) {
         this.tileCollider = new TileCollider(matrix);
+    }
+
+    setDistance(distance) {
+        this.distance = distance;
     }
 
     update(deltaTime) {

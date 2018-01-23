@@ -18,6 +18,10 @@ export class Matrix {
 
         this.grid[x][y] = value;
     }
+
+    width() {
+        return this.grid.length;
+    }
 }
 
 export class Vec2 {

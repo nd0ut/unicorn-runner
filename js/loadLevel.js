@@ -18,6 +18,7 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
         const staticBackgroundLayer = drawStaticBackground();
         level.comp.layers.push(staticBackgroundLayer);
         level.comp.layers.push(backgroundLayer);
+        level.setDistance(Math.max(level.distance, backgroundGrid.width() * 60));
     });
 }
 
@@ -44,6 +45,7 @@ export function createLevelLoader(entityFactory) {
         ]))
         .then(([levelSpec, image]) => {
             const level = new Level();
+
             setupCollision(levelSpec, level);
             setupBackgrounds(levelSpec, level, image);
             setupEntities(levelSpec, level, entityFactory);

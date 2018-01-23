@@ -22,7 +22,74 @@ const levelSpec = {
                             38, 10,
                             4, 1
                         ],
-
+                        [
+                            51, 2,
+                            4, 1
+                        ],
+                        [
+                            55, 2,
+                            6, 1
+                        ],
+                        [
+                            60, 1,
+                            6, 1
+                        ],
+                        [
+                            64, 5,
+                            8, 1
+                        ],
+                        [
+                            73, 10,
+                            5, 1
+                        ],
+                        [
+                            87, 2,
+                            8, 1
+                        ],
+                        [
+                            93, 4,
+                            6, 1
+                        ],
+                        [
+                            101, 19,
+                            6, 1
+                        ],
+                        [
+                            124, 10,
+                            6, 1
+                        ],
+                        [
+                            138, 10,
+                            4, 1
+                        ],
+                        [
+                            151, 2,
+                            4, 1
+                        ],
+                        [
+                            155, 2,
+                            6, 1
+                        ],
+                        [
+                            160, 1,
+                            6, 1
+                        ],
+                        [
+                            164, 5,
+                            8, 1
+                        ],
+                        [
+                            173, 10,
+                            5, 1
+                        ],
+                        [
+                            187, 2,
+                            8, 1
+                        ],
+                        [
+                            193, 1,
+                            6, 1
+                        ]
                     ]
                 }
             ]
@@ -77,7 +144,7 @@ const levelSpec = {
 };
 
 
-export async function first(game) {
+export async function second(game) {
     const level = await game.loadLevel(levelSpec);
     const unicorn = game.unicorn;
     const playerEnv = game.playerEnv;
@@ -103,9 +170,5 @@ export async function first(game) {
         level.update(deltaTime);
         game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
         level.comp.draw(game.context, game.camera);
-         
-        if (unicorn.pos.x > level.distance) {
-            game.nextLevel();
-        }
     };
 }

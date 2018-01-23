@@ -8,17 +8,17 @@ import { PlayerController } from './PlayerController';
 import { Timer } from './Timer';
 import { AutoJump } from './Traits';
 import * as levels from './levels';
+import { createPlayerEnv } from './levels/createPlayerEnv';
 
 export class Game {
     constructor(context) {
-        this.levelsSequence = (function*(klass) {
-            yield levels.initial(klass);
-            yield levels.first(klass);
-        })(this);
+        this.levelsSequence = [levels.initial, levels.first, levels.second];
+        this.currentLevel = -1;
 
         this.context = context;
         this.camera = new Camera();
         this.timer = new Timer();
+        this.levelSelector = document.getElementById('current-level');
 
         this.start();
     }
@@ -28,13 +28,18 @@ export class Game {
 
         this.charsFactory = await loadChars();
         this.loadLevel = await createLevelLoader(this.charsFactory);
+        this.unicorn = this.charsFactory.unicorn();
+        this.playerEnv = createPlayerEnv(this.unicorn);
 
-        this.levelsSequence.next();
+        this.nextLevel();
     }
 
-    next() {
-        const nextLevel = this.levelsSequence.next().value;
-        nextLevel();
+    nextLevel() {
+        this.currentLevel = this.currentLevel + 1;
+        this.levelSelector.innerHTML = this.currentLevel;
+        
+        const startLevel = this.levelsSequence[this.currentLevel];
+        startLevel(this);
     }
 }
 

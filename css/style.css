@@ -42,6 +42,23 @@ canvas#screen {
     font-size: 34px;
 }
 
+.level-block {
+    position: absolute;
+    top: 30px;
+    right: 200px;
+    display: block;
+    text-align: center;
+}
+
+.level-sign {
+    margin: 0;
+}
+
+.level-num {
+    margin: 0;
+    font-size: 34px;
+}
+
 .play-block {
     display: flex;
     width: 100%;

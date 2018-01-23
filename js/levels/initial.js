@@ -1,9 +1,11 @@
 import { getRandomInt } from '../math';
 import { AutoJump } from '../Traits';
-import {createPlayerEnv} from './createPlayerEnv'
+import { createPlayerEnv } from './createPlayerEnv';
+
+const N = 100;
 
 function getEntities() {
-    const entities = Array.from(Array(300)).map((val, idx) => ({
+    const entities = Array.from(Array(N)).map((val, idx) => ({
         name: 'rainbow',
         pos: [idx * getRandomInt(100, 1000), 0]
     }));
@@ -16,30 +18,36 @@ function getRanges() {
     let mul = 1;
     let x = 0;
 
-    const entities = Array.from(Array(300)).map(() => {
+    const ranges = Array.from(Array(N)).map(() => {
         mul = h === 3 ? 1 : mul;
         mul = h === 7 ? -1 : mul;
+
         const platformWidth = getRandomInt(6, 12);
+
         const range = [x, platformWidth, h, 1];
         h = h + mul;
         x = x + platformWidth + 1;
+
         return range;
     });
 
-    return entities;
+    return ranges;
 }
+
+const ranges = getRanges();
+const entities = getEntities();
 
 const levelConfig = {
     layers: [
         {
             tiles: [
                 {
-                    ranges: getRanges()
+                    ranges
                 }
             ]
         }
     ],
-    entities: getEntities()
+    entities
 };
 
 export async function initial(game) {
@@ -60,7 +68,7 @@ export async function initial(game) {
 
     const onPlay = () => {
         document.querySelector('.play-block').remove();
-        game.levelsSequence.next();
+        game.nextLevel();
     };
 
     document.querySelector('.play-btn').addEventListener('click', onPlay);
