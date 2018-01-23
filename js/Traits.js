@@ -1,5 +1,6 @@
 import { Trait } from './Entity';
 import { Sides } from './Entity';
+import { getRandomInt } from './math';
 
 export class Physics extends Trait {
     constructor() {
@@ -14,6 +15,21 @@ export class Physics extends Trait {
         level.tileCollider.checkY(entity);
 
         entity.vel.y += level.gravity * deltaTime;
+    }
+}
+
+export class AutoJump extends Trait {
+    constructor() {
+        super('autojump');
+    }
+    
+    update(entity, deltaTime, level) {
+        const willCollide = level.tileCollider.willCollideX(entity, entity.run.speed / 300);
+
+        if(willCollide) {
+            entity.jump.start();
+            setTimeout(() => entity.jump.cancel(), 50);
+        }
     }
 }
 

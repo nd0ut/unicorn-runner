@@ -1,4 +1,6 @@
-export default {
+import {createPlayerEnv} from './createPlayerEnv'
+
+const levelConfig = {
     layers: [
         {
             tiles: [
@@ -140,3 +142,33 @@ export default {
         }
     ]
 };
+
+
+export async function first(game) {
+    const level = await game.loadLevel(levelConfig);
+    const unicorn = game.charsFactory.unicorn();
+    const playerEnv = createPlayerEnv(unicorn);
+    level.entities.add(playerEnv);
+
+    ['keydown', 'keyup'].forEach(eventName => {
+        window.addEventListener(eventName, event => {
+            if (event.code === 'Space') {
+                const keyState = event.type === 'keydown' ? 1 : 0;
+
+                if (keyState > 0) {
+                    unicorn.jump.start();
+                } else {
+                    unicorn.jump.cancel();
+                }
+            } else {
+                unicorn.jump.cancel();
+            }
+        });
+    });
+
+    game.timer.update = deltaTime => {
+        level.update(deltaTime);
+        game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
+        level.comp.draw(game.context, game.camera);
+    };
+}

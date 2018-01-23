@@ -11,7 +11,7 @@ export class Timer {
             }
 
             while (accumulatedTime > deltaTime) {
-                this.update(deltaTime);
+                this.update && this.update(deltaTime);
                 accumulatedTime -= deltaTime;
             }
 

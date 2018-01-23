@@ -30,3 +30,7 @@ export class Vec2 {
         this.y = y;
     }
 }
+
+export function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }

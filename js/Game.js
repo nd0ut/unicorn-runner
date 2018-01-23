@@ -6,7 +6,37 @@ import { Entity } from './Entity';
 import { createLevelLoader } from './loadLevel';
 import { PlayerController } from './PlayerController';
 import { Timer } from './Timer';
-import { Game} from './Game';
+import { AutoJump } from './Traits';
+import * as levels from './levels';
+
+export class Game {
+    constructor(context) {
+        this.levelsSequence = (function*(klass) {
+            yield levels.initial(klass);
+            yield levels.first(klass);
+        })(this);
+
+        this.context = context;
+        this.camera = new Camera();
+        this.timer = new Timer();
+
+        this.start();
+    }
+
+    async start() {
+        this.timer.start();
+
+        this.charsFactory = await loadChars();
+        this.loadLevel = await createLevelLoader(this.charsFactory);
+
+        this.levelsSequence.next();
+    }
+
+    next() {
+        const nextLevel = this.levelsSequence.next().value;
+        nextLevel();
+    }
+}
 
 function loadChars() {
     const entityFactories = {};
@@ -20,18 +50,4 @@ function loadChars() {
         loadEnemyBug().then(addFactory('enemyBug')),
         loadRainbow().then(addFactory('rainbow'))
     ]).then(() => entityFactories);
-}
-
-export function createPlayerEnv(playerEntity) {
-    const playerEnv = new Entity();
-    const playerControl = new PlayerController();
-    playerControl.checkpoint.set(64, 64);
-    playerControl.setPlayer(playerEntity);
-    playerEnv.addTrait(playerControl);
-    return playerEnv;
-}
-
-export async function main(canvas) {
-    const context = canvas.getContext('2d');
-    const game = new Game(context);
 }

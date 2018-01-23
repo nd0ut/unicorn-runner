@@ -63,6 +63,24 @@ export class TileCollider {
         this.tiles = new TileResolver(matrix);
     }
 
+    willCollideX(entity, distance) {
+        let x;
+        if (entity.vel.x > 0) {
+            x = entity.bounds.right;
+        } else if (entity.vel.x < 0) {
+            x = entity.bounds.left;
+        } else {
+            return;
+        }
+        
+        const matches = this.tiles.searchByRange(
+            x, x + distance,
+            entity.bounds.top, entity.bounds.bottom
+        );
+
+        return matches.length > 0;
+    }
+
     checkX(entity) {
         let x;
         if (entity.vel.x > 0) {

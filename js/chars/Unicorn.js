@@ -1,6 +1,6 @@
 import { Entity } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
-import { Jump, Killable, Physics, Picker, Run, Solid } from '../Traits';
+import { Jump, Killable, Physics, Picker, Run, Solid, AutoJump } from '../Traits';
 
 const UNICORN = {
     imageURL: require('../../img/unicorn_full.png'),
