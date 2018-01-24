@@ -24,11 +24,12 @@ export class AutoJump extends Trait {
     }
     
     update(entity, deltaTime, level) {
-        const willCollide = level.tileCollider.willCollideX(entity, entity.run.speed / 300);
+        const distance = entity.vel.x * 0.3;
+        const willCollide = level.tileCollider.willCollideX(entity, distance);
 
         if(willCollide) {
             entity.jump.start();
-            setTimeout(() => entity.jump.cancel(), 50);
+            setTimeout(() => entity.jump.cancel(), 300);
         }
     }
 }

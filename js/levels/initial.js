@@ -5,16 +5,18 @@ import { createPlayerEnv } from './createPlayerEnv';
 const N = 100;
 
 function getEntities() {
+    const choose = ['rainbow', 'speedbooster'];
+
     const entities = Array.from(Array(N)).map((val, idx) => ({
-        name: ['speedbooster'][getRandomInt(0,0)],
-        pos: [idx * getRandomInt(100, 1000), 0]
+        name: choose[getRandomInt(0, choose.length - 1)],
+        pos: [idx * getRandomInt(100, 2000) + 500, 100]
     }));
 
     return entities;
 }
 
 function getRanges() {
-    let h = 3;
+    let h = 5;
     let mul = 1;
     let x = 0;
 
@@ -55,7 +57,6 @@ export async function initial(game) {
 
     const unicorn = game.charsFactory.unicorn();
     unicorn.addTrait(new AutoJump());
-    unicorn.run.speed = 50000;
 
     const playerEnv = createPlayerEnv(unicorn);
     level.entities.add(playerEnv);
