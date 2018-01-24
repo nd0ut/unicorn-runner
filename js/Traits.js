@@ -169,6 +169,8 @@ export class Killable extends Trait {
 
     update(entity, deltaTime, level) {
         if (this.dead) {
+            entity.vel.x = entity.vel.x * 0.3;
+
             this.deadTime += deltaTime;
             if (this.deadTime > this.removeAfter) {
                 this.queue(() => {
