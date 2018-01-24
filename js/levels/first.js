@@ -1,4 +1,5 @@
 import {createPlayerEnv} from './createPlayerEnv'
+import { splashText } from '../Splash';
 
 const levelSpec = {
     layers: [
@@ -105,6 +106,7 @@ export async function first(game) {
         level.comp.draw(game.context, game.camera);
          
         if (unicorn.pos.x > level.distance) {
+            splashText('Level 2');
             game.nextLevel();
         }
     };
