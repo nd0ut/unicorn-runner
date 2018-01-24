@@ -53,20 +53,20 @@ export function drawStaticBackground() {
 
     function drawGradient(context) {
         let gradient = context.createLinearGradient(0, 0, 0, buffer.width);
-        gradient.addColorStop(0, '#0714BC');
-        gradient.addColorStop(0.25, '#0730EF');
-        gradient.addColorStop(1, '#268BEF');
+        gradient.addColorStop(0, '#256bcc');
+        gradient.addColorStop(0.4, '#2278c6');
+        gradient.addColorStop(0.8, '#00c7a4');
         context.fillStyle = gradient;
         context.fillRect(0, 0, buffer.width, buffer.height);
     }
 
     function loadGrass() {
-        loadImage(require('../img/glass_back.png')).then(function(result) {
+        loadImage(require('../img/clouds.png')).then(function(result) {
             GlassBackImage = result;
             loaded++;
         });
 
-        loadImage(require('../img/grass.png')).then(function(result) {
+        loadImage(require('../img/landscape.png')).then(function(result) {
             GrassImage = result;
             loaded++;
         });
@@ -82,7 +82,7 @@ export function drawStaticBackground() {
         let GlassCoordX = -camera.pos.x / 1.2;
 
         for (let i = 0; i < 30; i++) {
-            context.drawImage(GlassBackImage, GlassCoordX + GrassImage.width * i + 600, buffer.height - GlassBackImage.height + 1);
+            context.drawImage(GlassBackImage, GlassCoordX + GrassImage.width * i + 600, 0);
             context.drawImage(GrassImage, GrassCoordX + GrassImage.width * i, buffer.height - GrassImage.height + 1);
             context.drawImage(GlassFrontImage, GlassCoordX + GrassImage.width * i + 100, buffer.height - GlassFrontImage.height + 1);
         }
