@@ -6,7 +6,7 @@ const N = 100;
 
 function getEntities() {
     const entities = Array.from(Array(N)).map((val, idx) => ({
-        name: 'rainbow',
+        name: ['speedbooster'][getRandomInt(0,0)],
         pos: [idx * getRandomInt(100, 1000), 0]
     }));
 

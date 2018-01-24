@@ -2,13 +2,11 @@ import { Camera } from './Camera';
 import { loadEnemyBug } from './chars/EnemyBug';
 import { loadRainbow } from './chars/Rainbow';
 import { loadUnicorn } from './chars/Unicorn';
-import { Entity } from './Entity';
-import { createLevelLoader } from './loadLevel';
-import { PlayerController } from './PlayerController';
-import { Timer } from './Timer';
-import { AutoJump } from './Traits';
 import * as levels from './levels';
 import { createPlayerEnv } from './levels/createPlayerEnv';
+import { createLevelLoader } from './loadLevel';
+import { Timer } from './Timer';
+import { loadSpeedBooster } from './chars/SpeedBooster';
 
 export class Game {
     constructor(context) {
@@ -36,10 +34,10 @@ export class Game {
 
     nextLevel() {
         this.playerEnv.playerController.commitScore();
-        
+
         this.currentLevel = this.currentLevel + 1;
         this.levelSelector.innerHTML = this.currentLevel;
-        
+
         const startLevel = this.levelsSequence[this.currentLevel];
         startLevel(this);
     }
@@ -55,6 +53,7 @@ function loadChars() {
     return Promise.all([
         loadUnicorn().then(addFactory('unicorn')),
         loadEnemyBug().then(addFactory('enemyBug')),
-        loadRainbow().then(addFactory('rainbow'))
+        loadRainbow().then(addFactory('rainbow')),
+        loadSpeedBooster().then(addFactory('speedbooster')),
     ]).then(() => entityFactories);
 }

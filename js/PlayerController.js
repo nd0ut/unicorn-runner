@@ -15,7 +15,7 @@ export class PlayerController extends Trait {
     setPlayer(entity) {
         this.player = entity;
 
-        this.player.picker.onPick = () => {
+        this.player.picker.onPick = (picker, pickable) => {
             this.score += 50;
 
             setTimeout(() => {
