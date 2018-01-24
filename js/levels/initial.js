@@ -5,7 +5,8 @@ import { createPlayerEnv } from './createPlayerEnv';
 const N = 100;
 
 function getEntities() {
-    const choose = ['rainbow', 'speedbooster'];
+    const choose = ['rainbow', 'speedbooster', 'portal'];
+    // const choose = ['portal'];
 
     const entities = Array.from(Array(N)).map((val, idx) => ({
         name: choose[getRandomInt(0, choose.length - 1)],

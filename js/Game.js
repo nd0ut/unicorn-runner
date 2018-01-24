@@ -7,6 +7,7 @@ import { createPlayerEnv } from './levels/createPlayerEnv';
 import { createLevelLoader } from './loadLevel';
 import { Timer } from './Timer';
 import { loadSpeedBooster } from './chars/SpeedBooster';
+import { loadPortal } from './chars/Portal';
 
 export class Game {
     constructor(context) {
@@ -55,5 +56,6 @@ function loadChars() {
         loadEnemyBug().then(addFactory('enemyBug')),
         loadRainbow().then(addFactory('rainbow')),
         loadSpeedBooster().then(addFactory('speedbooster')),
+        loadPortal().then(addFactory('portal')),
     ]).then(() => entityFactories);
 }
