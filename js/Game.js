@@ -35,6 +35,8 @@ export class Game {
     }
 
     nextLevel() {
+        this.playerEnv.playerController.commitScore();
+        
         this.currentLevel = this.currentLevel + 1;
         this.levelSelector.innerHTML = this.currentLevel;
         

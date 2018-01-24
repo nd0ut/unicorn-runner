@@ -6,6 +6,8 @@ export class PlayerController extends Trait {
         super('playerController');
         this.checkpoint = new Vec2(0, 0);
         this.player = null;
+
+        this.totalScore = 0;
         this.score = 0;
         this.scoreSelector = document.getElementById('unicorn-score');
     }
@@ -17,14 +19,19 @@ export class PlayerController extends Trait {
             this.score += 50;
 
             setTimeout(() => {
-                this.scoreSelector.innerHTML = this.score;
+                this.scoreSelector.innerHTML = this.totalScore + this.score;
             }, 0);
         };
     }
 
+    commitScore() {
+        this.totalScore = this.score;
+        this.resetScore();
+    }
+
     resetScore() {
         this.score = 0;
-        this.scoreSelector.innerHTML = this.score;
+        this.scoreSelector.innerHTML = this.totalScore + this.score;
     }
 
     resetDistance() {
