@@ -88,9 +88,9 @@ class BehaviorSpeedBooster extends Trait {
         this.boostTime = 10000;
     }
 
-    restoreSpeed(them) {
+    restoreSpeed(them) {        
         if(them.jump.jumpingUp || them.jump.fallingDown) {
-            this.queue(() => this.restoreSpeed(them));
+            them.run.queue(() => this.restoreSpeed(them));
         } else {
             them.run.speed -= this.boost;
         }
