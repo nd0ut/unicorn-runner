@@ -46,6 +46,7 @@ export class PlayerController extends Trait {
             this.resetScore();
             this.resetDistance();
 
+            this.player.resetLifetime();
             this.player.killable.revive();
             this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
             level.entities.add(this.player);

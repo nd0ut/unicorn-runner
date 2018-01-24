@@ -78,6 +78,9 @@ export class Jump extends Trait {
     constructor() {
         super('jump');
 
+        this.falling = false;
+        this.jumping = false;
+
         this.ready = 0;
         this.duration = 0.8;
         this.engageTime = 0;
@@ -87,8 +90,12 @@ export class Jump extends Trait {
         this.velocity = 200;
     }
 
-    get falling() {
-        return this.ready < 0;
+    get fallingDown() {
+        return this.ready < 0 && this.falling;
+    }
+
+    get jumpingUp() {
+        return this.ready < 0 && this.jumping;
     }
 
     start() {
@@ -103,12 +110,21 @@ export class Jump extends Trait {
     obstruct(entity, side) {
         if (side === Sides.BOTTOM) {
             this.ready = 1;
+            this.falling = false;
         } else if (side === Sides.TOP) {
             this.cancel();
         }
     }
 
     update(entity, deltaTime) {
+        if(this.ready < 0 && entity.vel.y < 0) {
+            this.jumping = true;
+            this.falling = false;            
+        } else if(this.ready < 0 && entity.vel.y > 0) {
+            this.jumping = false;
+            this.falling = true;
+        }
+        
         if (this.requestTime > 0) {
             if (this.ready > 0) {
                 this.engageTime = this.duration;
@@ -118,12 +134,15 @@ export class Jump extends Trait {
             this.requestTime -= deltaTime;
         }
 
-        if (this.engageTime > 0) {
+        if (this.engageTime > 0) {            
             entity.vel.y = -(
                 this.velocity +
                 Math.abs(entity.vel.x) * this.speedBoost
             );
             this.engageTime -= deltaTime;
+            if(this.engageTime < 0) {
+                this.engageTime = 0;
+            }
         }
 
         this.ready--;
