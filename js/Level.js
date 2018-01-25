@@ -1,6 +1,7 @@
 import {Compositor} from './Compositor';
 import {EntityCollider} from './EntityCollider';
 import {TileCollider} from './TileCreation';
+import { SoundManager } from './SoundManager';
 
 export class Level {
     constructor() {

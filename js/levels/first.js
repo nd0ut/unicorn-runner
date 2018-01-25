@@ -98,7 +98,7 @@ const levelSpec = {
     ],
     entities: [
         {
-            name: "speedbooster",
+            name: "rainbow",
             pos: [408, 0]
         },
         {
@@ -106,7 +106,7 @@ const levelSpec = {
             pos: [780, 0]
         },
         {
-            name: "speedbooster",
+            name: "rainbow",
             pos: [1608, 0]
         },
         {
@@ -118,7 +118,7 @@ const levelSpec = {
             pos: [2580, 0]
         },
         {
-            name: "speedbooster",
+            name: "rainbow",
             pos: [3288, 0]
         },
         {
@@ -126,7 +126,7 @@ const levelSpec = {
             pos: [3960, 0]
         },
         {
-            name: "speedbooster",
+            name: "rainbow",
             pos: [4448, 0]
         },
         {

@@ -100,7 +100,6 @@ class BehaviorSpeedBooster extends Trait {
         if (us.pickable.picked || !them.run) {
             return;
         }
-
         us.pickable.pick();
         us.vel.set(30, -400);
         us.solid.obstructs = false;

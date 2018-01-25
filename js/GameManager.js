@@ -17,6 +17,7 @@ export class GameManager {
         this.context = context;
         this.camera = new Camera();
         this.timer = new Timer();
+
         this.levelSelector = document.getElementById('current-level');
 
         this.start();

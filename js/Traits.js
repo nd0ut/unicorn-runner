@@ -219,3 +219,19 @@ export class Picker extends Trait {
         this.onPick(us, them);
     }
 }
+
+export class Soundable extends Trait {
+    constructor(sound, soundFrame) {
+        super('soundable');
+
+        this.sound = sound;
+        this.soundFrame = soundFrame;
+    }
+
+    update(entity, deltaTime, level) {
+        const frame = new Map();
+        this.soundFrame(entity).forEach(f => frame.set(f.name, f.play));
+
+        this.sound.playFrame(frame);
+    }
+}
