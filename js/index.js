@@ -1,4 +1,5 @@
-import {main} from './main';
+import { GameManager } from './GameManager';
 
-const canvas = document.getElementById('screen');
-main(canvas);
+const canvas = document.getElementById('screen'); 
+const context = canvas.getContext('2d');
+const game = new GameManager(context);

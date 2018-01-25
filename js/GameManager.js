@@ -9,7 +9,7 @@ import { Timer } from './Timer';
 import { loadSpeedBooster } from './chars/SpeedBooster';
 import { loadPortal } from './chars/Portal';
 
-export class Game {
+export class GameManager {
     constructor(context) {
         this.levelsSequence = [levels.initial, levels.first, levels.second];
         this.currentLevel = -1;
