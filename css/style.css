@@ -5,6 +5,10 @@ body {
     padding: 0;
     font-family: 'Orbitron', sans-serif;
     line-height: 1;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 canvas#screen {
@@ -13,7 +17,7 @@ canvas#screen {
 
 .main-wrapper {
     position: relative;
-    width: 840px;
+    width: 1024px;
 }
 
 .fintech-header {
