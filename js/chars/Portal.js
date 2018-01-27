@@ -64,7 +64,6 @@ class BehaviorPortal extends Trait {
         us.pickable.pick();
         us.vel.set(30, -400);
         us.solid.obstructs = false;
-        us.pickable.finalize();
 
         them.pos.x += getRandomInt(-1000, 1000);
         them.pos.y = 0;
