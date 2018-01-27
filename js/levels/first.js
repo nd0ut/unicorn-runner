@@ -2,6 +2,12 @@ import {createPlayerEnv} from './createPlayerEnv'
 import { splashText } from '../Splash';
 
 const levelSpec = {
+    sounds: [
+        {
+            url: require('../../sounds/hooked-on-a-feeling.mp3'),
+            name: 'music'
+        }
+    ],
     layers: [
         {
             tiles: [
@@ -166,6 +172,8 @@ export async function first(game) {
             }
         });
     });
+
+    // level.sounds.get('music').playOnce();
 
     game.timer.update = deltaTime => {
         level.update(deltaTime);

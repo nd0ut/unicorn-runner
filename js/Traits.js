@@ -67,6 +67,7 @@ export class Run extends Trait {
 
         this.speed = 13000;
         this.distance = 0;
+        this.onGround = false;
     }
 
     update(entity, deltaTime) {
@@ -182,14 +183,16 @@ export class Killable extends Trait {
 }
 
 export class Pickable extends Trait {
-    constructor() {
+    constructor({onPick} = {}) {
         super('pickable');
+        this.onPick = onPick;
         this.picked = false;
         this.pickTime = 0;
         this.removeAfter = 0.3;
     }
 
     pick() {
+        this.onPick && this.onPick();
         this.queue(() => (this.picked = true));
     }
 

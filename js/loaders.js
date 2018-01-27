@@ -20,10 +20,8 @@ export function loadImage(url) {
     });
 }
 
-export function loadSpriteSheet(name) {
-    return new Promise(resolve => {
-        resolve(name);
-    })
+export function loadSpriteSheet(sheetSpec) {
+    return Promise.resolve(sheetSpec)
         .then(sheetSpec =>
             Promise.all([sheetSpec, loadImage(sheetSpec.imageURL)])
         )
@@ -54,26 +52,7 @@ export function loadSpriteSheet(name) {
         });
 }
 
-export function loadSoundSamples(name) {
-    return new Promise(resolve => {
-        resolve(name);
-    })
-        .then(soundSpec =>
-            Promise.all([
-                soundSpec,
-                SoundManager.loadSamples(
-                    soundSpec.samples.map(sample => sample.url)
-                )
-            ])
-        )
-        .then(([soundSpec, bufferList]) => {
-            const sound = new Sound();
-            soundSpec.samples.forEach((sample, idx) => {
-                sound.defineSample({
-                    buffer: bufferList[idx],
-                    ...sample
-                });
-            });
-            return sound;
-        });
+export function loadSounds(soundSpec) {
+    return Promise.resolve(soundSpec)
+        .then(soundSpec => SoundManager.loadSounds(soundSpec.sounds));
 }

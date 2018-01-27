@@ -2,6 +2,7 @@ import { createBackgroundLayer, createSpriteLayer, drawStaticBackground } from '
 import { Level } from './Level';
 import { loadImage } from './loaders';
 import { Matrix } from './math';
+import { SoundManager } from './SoundManager';
 
 function setupCollision(levelSpec, level) {
     const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
@@ -23,7 +24,7 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
 }
 
 function setupEntities(levelSpec, level, entityFactory) {
-    levelSpec.entities.forEach(({name, pos: [x, y]}) => {
+    levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
         const createEntity = entityFactory[name];
         const entity = createEntity();
         entity.pos.set(x, y);
@@ -34,32 +35,36 @@ function setupEntities(levelSpec, level, entityFactory) {
     level.comp.layers.push(spriteLayer);
 }
 
-export function createLevelLoader(entityFactory) {
-    return function loadLevel(name) {
-        return new Promise(resolve => {
-            resolve(name);
-        })
-        .then(levelSpec => Promise.all([
-            levelSpec,
-            loadImage(require('../img/board_update.png'))
-        ]))
-        .then(([levelSpec, image]) => {
-            const level = new Level();
-            
-            setupCollision(levelSpec, level);
-            setupBackgrounds(levelSpec, level, image);
-            setupEntities(levelSpec, level, entityFactory);
+function setupSounds(level, sounds) {
+    level.sounds = sounds;
+}
 
-            return level;
-        });
+export function createLevelLoader(entityFactory) {
+    return function loadLevel(levelSpec) {
+        return Promise.resolve(levelSpec)
+            .then(levelSpec => Promise.all([
+                levelSpec,
+                loadImage(require('../img/board_update.png')),
+                levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined
+            ]))
+            .then(([levelSpec, image, sounds]) => {
+                const level = new Level();
+                
+                setupCollision(levelSpec, level);
+                setupBackgrounds(levelSpec, level, image);
+                setupEntities(levelSpec, level, entityFactory);
+                setupSounds(level, sounds);
+
+                return level;
+            });
     }
 }
 
 function createCollisionGrid(tiles, patterns) {
     const grid = new Matrix();
 
-    for (const {tile, x, y} of expandTiles(tiles, patterns)) {
-        grid.set(x, y, {type: tile.type});
+    for (const { tile, x, y } of expandTiles(tiles, patterns)) {
+        grid.set(x, y, { type: tile.type });
     }
 
     return grid;
@@ -68,8 +73,8 @@ function createCollisionGrid(tiles, patterns) {
 function createBackgroundGrid(tiles, patterns) {
     const grid = new Matrix();
 
-    for (const {tile, x, y} of expandTiles(tiles, patterns)) {
-        grid.set(x, y, {name: tile.name});
+    for (const { tile, x, y } of expandTiles(tiles, patterns)) {
+        grid.set(x, y, { name: tile.name });
     }
 
     return grid;
@@ -81,7 +86,7 @@ function* expandSpan(xStart, xLen, yStart, yLen) {
     const yEnd = yStart + yLen;
     for (let x = xStart; x < xEnd; ++x) {
         for (let y = yStart; y < yEnd; ++y) {
-            yield {x, y};
+            yield { x, y };
         }
     }
 }
@@ -110,7 +115,7 @@ function* expandRanges(ranges) {
 function* expandTiles(tiles, patterns) {
     function* walkTiles(tiles, offsetX, offsetY) {
         for (const tile of tiles) {
-            for (const {x, y} of expandRanges(tile.ranges)) {
+            for (const { x, y } of expandRanges(tile.ranges)) {
                 const derivedX = x + offsetX;
                 const derivedY = y + offsetY;
 

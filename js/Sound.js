@@ -1,36 +1,40 @@
-import { SoundManager } from './SoundManager';
-
 export class Sound {
-    constructor() {
-        this.samples = new Map();
+    constructor(soundManager, sound) {
+        this.soundManager = soundManager;
+
+        this.name = sound.name;
+        this.buffer = sound.buffer;
+
+        this.isPlaying = false;
+        this.timeoutId = null;
+        this.source = null;
     }
 
-    defineSample(sample) {
-        this.samples.set(sample.name, sample);
+    playOnce() {
+        this.soundManager.play(this);
     }
 
-    playFrame(frame) {
-        for (const [,sample] of this.samples) {
-            if (frame.has(sample.name)) {
-                const play = frame.get(sample.name);
-                play();
-            } else if(sample.forceStop) {
-                SoundManager.stop(sample.buffer);
-            }
+    startPlaying() {
+        this.source = this.soundManager.play(this, { loop: true })
+        this.isPlaying = true;
+    }
+
+    stopPlaying() {
+        this.source.stop();
+        this.isPlaying = false;
+    }
+
+    playing(rate = 1) {
+        if(!this.isPlaying) {
+            this.startPlaying();
         }
-    }
 
-    play(name, rate = 1) {
-        const sample = this.samples.get(name);
-        return {
-            name,
-            play: () =>
-                SoundManager.play(sample.buffer, {
-                    time: sample.delay || 0,
-                    loop: sample.loop,
-                    forceStop: sample.forceStop,
-                    rate
-                })
-        };
+        this.source.playbackRate.value = rate;
+
+        if(this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+
+        this.timeoutId = setTimeout(this.stopPlaying.bind(this), 100);
     }
 }

@@ -1,5 +1,5 @@
 import { Entity } from '../Entity';
-import { loadSpriteSheet, loadSoundSamples } from '../loaders';
+import { loadSpriteSheet, loadSounds } from '../loaders';
 import {
     Jump,
     Killable,
@@ -160,22 +160,19 @@ const UNICORN_SPRITE = {
 };
 
 const UNICORN_SOUNDS = {
-    samples: [
+    sounds: [
         {
             url: require('../../sounds/clip-clop.wav'),
             name: 'clip-clop',
-            loop: true,
-            forceStop: true
+            loop: true
         },
         {
             url: require('../../sounds/horse-die.wav'),
-            name: 'die',
-            forceStop: true            
+            name: 'die'
         },
         {
             url: require('../../sounds/jump.wav'),
-            name: 'jump',
-            forceStop: true
+            name: 'jump'
         },
         {
             url: require('../../sounds/land.wav'),
@@ -185,17 +182,20 @@ const UNICORN_SOUNDS = {
 }
 
 export function loadUnicorn() {
-    return Promise.all([loadSpriteSheet(UNICORN_SPRITE), loadSoundSamples(UNICORN_SOUNDS)]).then(
+    return Promise.all([loadSpriteSheet(UNICORN_SPRITE), loadSounds(UNICORN_SOUNDS)]).then(
         createUnicornFactory
     );
 }
 
-function createUnicornFactory([sprite, sound]) {
+function createUnicornFactory([sprite, sounds]) {
     const runAnim = sprite.animations.get('run');
     const jumpAnim = sprite.animations.get('jump');
     const fallAnim = sprite.animations.get('fall');
     const deathAnim = sprite.animations.get('death');
 
+    const runSound = sounds.get('clip-clop');
+    const dieSound = sounds.get('die');
+    
     function routeFrame(unicorn) {
         if (unicorn.killable.dead) {
             return deathAnim(unicorn.killable.deadTime);
@@ -216,27 +216,28 @@ function createUnicornFactory([sprite, sound]) {
         return 'idle';
     }
 
-    function soundFrame(unicorn) {
+    function playSounds(unicorn) {
         if (unicorn.killable.dead) {
-            return [sound.play('die')];
+            dieSound.playing();
+            return;
         }
 
         if (unicorn.jump.jumpingUp) {
-            return [sound.play('jump')];
+            return;
         }
 
         if (unicorn.jump.fallingDown) {
-            return [];
+            return;
         }
 
         if (unicorn.run.distance > 0) {
-            return [sound.play('land'), sound.play('clip-clop', unicorn.run.speed / 10000)];
+            runSound.playing(unicorn.run.speed / 10000);
+            return;
         }
-
-        return [];
     }
 
     function drawUnicorn(context) {
+        playSounds(this);
         sprite.draw(routeFrame(this), context, 0, 0, this.run.heading < 0);
     }
 
@@ -251,7 +252,6 @@ function createUnicornFactory([sprite, sound]) {
         unicorn.addTrait(new Jump());
         unicorn.addTrait(new Picker());
         unicorn.addTrait(new Killable());
-        // unicorn.addTrait(new Soundable(sound, soundFrame));
 
         unicorn.killable.removeAfter = 1;
 
