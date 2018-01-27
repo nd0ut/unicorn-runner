@@ -45,9 +45,9 @@ export function drawStaticBackground() {
     buffer.width = 840 + 60;
     buffer.height = 660;
 
-    let GrassImage;
-    let GlassBackImage;
-    let GlassFrontImage;
+    let BackImage;
+    let CloudsImage;
+    let FrontImage;
     let loaded = 0;
     const context = buffer.getContext('2d');
 
@@ -62,29 +62,30 @@ export function drawStaticBackground() {
 
     function loadGrass() {
         loadImage(require('../img/clouds.png')).then(function(result) {
-            GlassBackImage = result;
+            CloudsImage = result;
             loaded++;
         });
 
-        loadImage(require('../img/landscape.png')).then(function(result) {
-            GrassImage = result;
+        loadImage(require('../img/mountains.png')).then(function(result) {
+            BackImage = result;
             loaded++;
         });
 
-        loadImage(require('../img/glass_front.png')).then(function(result) {
-            GlassFrontImage = result;
+        loadImage(require('../img/forest.png')).then(function(result) {
+            FrontImage = result;
             loaded++;
         });
     }
 
     function drawGrass(context, camera) {
-        let GrassCoordX = -camera.pos.x / 0.8;
-        let GlassCoordX = -camera.pos.x / 1.2;
+        let BackCoordX = -camera.pos.x / 0.8;
+        let SkyCoordX = -camera.pos.x / 1.2;
+        let FrontCoordX = -camera.pos.x / 0.7;
 
         for (let i = 0; i < 30; i++) {
-            context.drawImage(GlassBackImage, GlassCoordX + GrassImage.width * i + 600, 0);
-            context.drawImage(GrassImage, GrassCoordX + GrassImage.width * i, buffer.height - GrassImage.height + 1);
-            context.drawImage(GlassFrontImage, GlassCoordX + GrassImage.width * i + 100, buffer.height - GlassFrontImage.height + 1);
+            context.drawImage(CloudsImage, SkyCoordX + BackImage.width * i + 600, 0);
+            context.drawImage(BackImage, BackCoordX + BackImage.width * i, buffer.height - BackImage.height + 1);
+            context.drawImage(FrontImage, FrontCoordX + FrontImage.width * i, buffer.height - FrontImage.height + 1);
         }
     }
 
