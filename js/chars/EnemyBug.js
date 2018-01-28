@@ -3,39 +3,66 @@ import { loadSpriteSheet } from '../loaders';
 import { Killable, Physics, Solid } from '../Traits';
 
 const ENEMY_BUG = {
-    imageURL: require('../../img/bug_line.png'),
+    imageURL: require('../../img/cactus.png'),
     frames: [
         {
-            name: 'frame-1',
-            rect: [0, 0, 58, 65]
+            name: 'idle-1',
+            rect: [61*0, 0, 61, 65]
         },
         {
-            name: 'frame-2',
-            rect: [58, 0, 58, 65]
+            name: 'idle-2',
+            rect: [61*1+1, 0, 61, 65]
         },
         {
-            name: 'frame-3',
-            rect: [116, 0, 58, 65]
+            name: 'idle-3',
+            rect: [61*2+1, 0, 61, 65]
         },
         {
-            name: 'frame-4',
-            rect: [174, 0, 58, 65]
+            name: 'idle-4',
+            rect: [61*3+1, 0, 61, 65]
         },
         {
-            name: 'frame-5',
-            rect: [232, 0, 58, 65]
-        }
+            name: 'idle-5',
+            rect: [61*4+4, 1, 61, 65]
+        },
+        {
+            name: 'idle-6',
+            rect: [61*5+9, 1, 61, 65]
+        },
+
+        {
+            name: 'attack-1',
+            rect: [197, 215, 61, 73]
+        },
+        {
+            name: 'attack-2',
+            rect: [110, 215, 75, 73]
+        },
+        {
+            name: 'attack-3',
+            rect: [14, 215, 75, 73]
+        },
     ],
     animations: [
         {
-            name: 'anim',
+            name: 'idle',
             frameLen: 0.2,
             frames: [
-                'frame-1',
-                'frame-2',
-                'frame-3',
-                'frame-4',
-                'frame-5'
+                'idle-1',
+                'idle-2',
+                'idle-3',
+                'idle-4',
+                'idle-5',
+                'idle-6',
+            ]
+        },
+        {
+            name: 'attack',
+            frameLen: 0.1,
+            frames: [
+                'attack-1',
+                'attack-2',
+                'attack-3',
             ]
         }
     ]
@@ -50,6 +77,20 @@ export function loadEnemyBug() {
 class BehaviorEnemyBug extends Trait {
     constructor() {
         super('behavior');
+        
+        this.attackDuration = 0.25;
+        this.cancelAttackAfter = 2;
+        this.inAttack = false;
+        this.startAttackTime = 0;
+        this.attackTime = 0;
+    }
+
+    update(entity, deltaTime, level) {
+        if(!this.inAttack || this.attackTime > this.attackDuration) {
+            return;
+        }
+
+        this.attackTime = entity.lifetime - this.startAttackTime;
     }
 
     collides(us, them) {
@@ -58,15 +99,30 @@ class BehaviorEnemyBug extends Trait {
         }
 
         them.killable.kill();
+
+        if(!this.inAttack) {
+            this.inAttack = true;
+            this.startAttackTime = us.lifetime;
+            setTimeout(() => {
+                this.inAttack = false;
+                this.attackTime = 0;
+                this.startAttackTime = 0;
+            }, this.cancelAttackAfter * 1000);
+        }
     }
 }
 
 
 function createEnemyBugFactory(sprite) {
-    const standAnim = sprite.animations.get('anim');
+    const idleAnim = sprite.animations.get('idle');
+    const attackAnim = sprite.animations.get('attack');
 
     function routeAnim(enemyBug) {
-        return standAnim(enemyBug.lifetime);
+        if (enemyBug.behavior.inAttack) {
+            return attackAnim(enemyBug.behavior.attackTime);
+        }
+
+        return idleAnim(enemyBug.lifetime);
     }
 
     function drawEnemyBug(context) {
@@ -76,7 +132,7 @@ function createEnemyBugFactory(sprite) {
     return function createEnemyBug() {
         const enemyBug = new Entity();
         enemyBug.size.set(58, 45);
-        enemyBug.offset.y = 20;
+        enemyBug.offset.y = 17;
 
         enemyBug.addTrait(new Physics());
         enemyBug.addTrait(new Solid());
