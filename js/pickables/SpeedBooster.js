@@ -1,6 +1,7 @@
 import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
 import { Physics, Pickable, Solid } from '../Traits';
+import { defineGameObject } from '../defineGameObject';
 
 const SPEED_BOOSTER = {
     imageURL: require('../../img/horseshoe.png'),
@@ -76,10 +77,6 @@ const SPEED_BOOSTER = {
     ]
 };
 
-export function loadSpeedBooster() {
-    return loadSpriteSheet(SPEED_BOOSTER).then(createSpeedBoosterFactory);
-}
-
 class BehaviorSpeedBooster extends Trait {
     constructor() {
         super('behavior');
@@ -110,28 +107,25 @@ class BehaviorSpeedBooster extends Trait {
     }
 }
 
-function createSpeedBoosterFactory(sprite) {
-    const boosterAnim = sprite.animations.get('horseshoe');
+export const loadSpeedBooster = defineGameObject('speedBooster', {
+    spriteSpecs: [SPEED_BOOSTER],
+    soundSpecs: [],
 
-    function routeAnim(speedbooster) {
-        return boosterAnim(speedbooster.lifetime);
+    size: [45, 49],
+    offset: [0, 0],
+
+    traits: ({ sounds }) => [
+        new Physics(),
+        new Solid(),
+        new Pickable(),
+        new BehaviorSpeedBooster()
+    ],
+
+    animations: sprite => {
+        const boosterAnim = sprite.animations.get('horseshoe');
+        
+        return speedbooster => {
+            return boosterAnim(speedbooster.lifetime);
+        };
     }
-
-    function drawSpeedBooster(context) {
-        sprite.draw(routeAnim(this), context, 0, 0, this.vel.x < 0);
-    }
-
-    return function createSpeedBooster() {
-        const boost = new Entity('speedBooster');
-        boost.size.set(45, 49);
-
-        boost.addTrait(new Physics());
-        boost.addTrait(new Solid());
-        boost.addTrait(new Pickable());
-        boost.addTrait(new BehaviorSpeedBooster());
-
-        boost.draw = drawSpeedBooster;
-
-        return boost;
-    };
-}
+});
