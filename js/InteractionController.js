@@ -9,8 +9,8 @@ export class InteractionController extends Trait {
         this.setupHandlers();
     }
     
-    get charsFactory() {
-        return this.game.charsFactory;
+    get entityFactory() {
+        return this.game.entityFactory;
     }
 
     get playerController() {
@@ -47,7 +47,7 @@ export class InteractionController extends Trait {
         }
 
         const unicorn = this.playerController.player;                    
-        unicorn.striker.strike(this.charsFactory.bullet('fireball'), this.currentLevel);
+        unicorn.striker.strike(this.entityFactory.bullet('fireball'), this.currentLevel);
     }
 
     jumpHandler(e) {

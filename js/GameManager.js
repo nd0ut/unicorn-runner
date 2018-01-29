@@ -1,14 +1,14 @@
 import { Camera } from './Camera';
 import { loadEnemyBug } from './chars/EnemyBug';
-import { loadRainbow } from './chars/Rainbow';
+import { loadRainbow } from './pickables/Rainbow';
 import { loadBullet } from './chars/Bullet';
 import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
 import { createPlayerEnv } from './levels/createPlayerEnv';
 import { createLevelLoader } from './loadLevel';
 import { Timer } from './Timer';
-import { loadSpeedBooster } from './chars/SpeedBooster';
-import { loadPortal } from './chars/Portal';
+import { loadSpeedBooster } from './pickables/SpeedBooster';
+import { loadPortal } from './pickables/Portal';
 import { splashText } from './Splash';
 
 export class GameManager {
@@ -39,8 +39,8 @@ export class GameManager {
     async start() {
         this.timer.start();
         
-        this.charsFactory = await loadChars();
-        this.loadLevel = await createLevelLoader(this.charsFactory);
+        this.entityFactory = await loadEntities();
+        this.loadLevel = await createLevelLoader(this.entityFactory);
         this.playerEnv = createPlayerEnv(this);
 
         this.playerEnv.playerController.onLevelComplete(this.nextLevel.bind(this));
@@ -79,7 +79,7 @@ export class GameManager {
     }
 }
 
-function loadChars() {
+function loadEntities() {
     const entityFactories = {};
 
     function addFactory(name) {

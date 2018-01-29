@@ -57,7 +57,7 @@ const levelConfig = {
 export async function initial(game) {
     const level = await game.loadLevel(levelConfig);
 
-    const unicorn = game.charsFactory.unicorn();
+    const unicorn = game.entityFactory.unicorn();
     unicorn.addTrait(new AutoJump());
 
     const playerEnv = createPlayerEnv(game);

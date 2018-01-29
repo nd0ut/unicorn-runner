@@ -80,7 +80,7 @@ const levelSpec = {
 export async function first(game) {
     const level = await game.loadLevel(levelSpec);    
     const playerEnv = game.playerEnv;
-    const unicorn = game.charsFactory.unicorn();
+    const unicorn = game.entityFactory.unicorn();
     playerEnv.playerController.setPlayer(unicorn);
     level.entities.add(playerEnv);
     level.entities.add(unicorn);
