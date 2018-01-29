@@ -27,6 +27,7 @@ export function loadSpriteSheet(sheetSpec) {
         )
         .then(([sheetSpec, image]) => {
             const sprites = new SpriteSheet(
+                sheetSpec.skinName,
                 image,
                 sheetSpec.tileW,
                 sheetSpec.tileH

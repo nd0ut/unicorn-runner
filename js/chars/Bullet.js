@@ -2,7 +2,8 @@ import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
 import { Killable, Physics, Solid } from '../Traits';
 
-const BULLET = {
+const FIREBALL_SPRITE = {
+    skinName: 'fireball',
     imageURL: require('../../img/fireball.png'),
     frames: [
         {
@@ -19,7 +20,7 @@ const BULLET = {
             name: 'idle',
             frameLen: 0.2,
             frames: [
-                'idle-1',
+                'idle-1'
                 // 'idle-2'
             ]
         }
@@ -27,10 +28,10 @@ const BULLET = {
 };
 
 export function loadBullet() {
-    return loadSpriteSheet(BULLET)
-        .then(createBulletFactory);
+    return Promise.all([loadSpriteSheet(FIREBALL_SPRITE)]).then(
+        createBulletFactory
+    );
 }
-
 
 class BehaviorBullet extends Trait {
     constructor(ownerEntity) {
@@ -44,19 +45,19 @@ class BehaviorBullet extends Trait {
     destroy() {
         this.queue(() => {
             this.destroyed = true;
-        })
+        });
     }
 
     update(entity, deltaTime, level) {
-        if(this.destroyed) {
+        if (this.destroyed) {
             this.queue(() => {
                 level.entities.delete(entity);
-            })
+            });
         }
     }
 
     obstruct() {
-        this.destroy();        
+        this.destroy();
     }
 
     collides(us, them) {
@@ -70,29 +71,36 @@ class BehaviorBullet extends Trait {
     }
 }
 
+function createBulletFactory(skinSprites) {
+    function getDrawFn(sprite) {
+        const idleAnim = sprite.animations.get('idle');
 
-function createBulletFactory(sprite) {
-    const idleAnim = sprite.animations.get('idle');
+        function routeAnim(bullet) {
+            return idleAnim(bullet.lifetime);
+        }
 
-    function routeAnim(bullet) {
-        return idleAnim(bullet.lifetime);
+        function drawBullet(context) {
+            sprite.draw(routeAnim(this), context, 0, 0);
+        }
+
+        return drawBullet
     }
 
-    function drawBullet(context) {
-        sprite.draw(routeAnim(this), context, 0, 0);
-    }
+    return function createBullet(skinName) {
+        return (ownerEntity) => {
+            const skinSprite = skinSprites.find(sprite => sprite.skinName === skinName);
 
-    return function createBullet(ownerEntity) {
-        const bullet = new Entity('bullet');
-        bullet.size.set(50, 25);
-        bullet.offset.y = 50;
+            const bullet = new Entity('bullet');
+            bullet.size.set(50, 25);
+            bullet.offset.y = 50;
 
-        bullet.addTrait(new Physics({applyGravity: false}));
-        bullet.addTrait(new Solid());
-        bullet.addTrait(new BehaviorBullet(ownerEntity));
+            bullet.addTrait(new Physics({ applyGravity: false }));
+            bullet.addTrait(new Solid());
+            bullet.addTrait(new BehaviorBullet(ownerEntity));
 
-        bullet.draw = drawBullet;
+            bullet.draw = getDrawFn(skinSprite);
 
-        return bullet;
+            return bullet;
+        }
     };
 }

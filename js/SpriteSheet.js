@@ -1,5 +1,6 @@
 export class SpriteSheet {
-    constructor(image, width, height) {
+    constructor(skinName, image, width, height) {
+        this.skinName = skinName || 'default';
         this.image = image;
         this.width = width;
         this.height = height;

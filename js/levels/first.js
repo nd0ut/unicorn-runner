@@ -170,7 +170,7 @@ export async function first(game) {
                 }
             } else if(e.code === 'KeyF' && !e.repeat) {
                if(playerEnv.playerController.canStrikeFireballs()) {
-                   unicorn.striker.strike(game.charsFactory.bullet, level);
+                   unicorn.striker.strike(game.charsFactory.bullet('fireball'), level);
                }
             } 
             else {

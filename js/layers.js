@@ -5,7 +5,7 @@ import { TileResolver } from './TileCreation';
 export function createBackgroundLayer(level, tiles, image) {
     const resolver = new TileResolver(tiles);
     const buffer = document.createElement('canvas');
-    const sprites = new SpriteSheet(image, 60, 60);
+    const sprites = new SpriteSheet('background', image, 60, 60);
 
     sprites.define('ground', 0, 0, 60, 60);
 
