@@ -1,7 +1,7 @@
 import { Camera } from './Camera';
 import { loadEnemyBug } from './chars/EnemyBug';
 import { loadRainbow } from './pickables/Rainbow';
-import { loadBullet } from './chars/Bullet';
+import { loadBullet } from './weapon/Bullet';
 import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
 import { createPlayerEnv } from './levels/createPlayerEnv';
