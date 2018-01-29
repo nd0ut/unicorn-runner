@@ -3,8 +3,10 @@ import { Sides } from './Entity';
 import { getRandomInt } from './math';
 
 export class Physics extends Trait {
-    constructor() {
+    constructor({applyGravity} = {applyGravity: true}) {
         super('physics');
+
+        this.applyGravity = applyGravity;
     }
 
     update(entity, deltaTime, level) {
@@ -14,7 +16,9 @@ export class Physics extends Trait {
         entity.pos.y += entity.vel.y * deltaTime;
         level.tileCollider.checkY(entity);
 
-        entity.vel.y += level.gravity * deltaTime;
+        if(this.applyGravity) {
+            entity.vel.y += level.gravity * deltaTime;            
+        }
     }
 }
 
@@ -65,7 +69,7 @@ export class Run extends Trait {
     constructor() {
         super('run');
 
-        this.speed = 13000;
+        this.speed = 15000;
         this.distance = 0;
         this.onGround = false;
     }
@@ -223,18 +227,18 @@ export class Picker extends Trait {
     }
 }
 
-export class Soundable extends Trait {
-    constructor(sound, soundFrame) {
-        super('soundable');
+// export class Striker {
+//     constructor(charsFactory) {
+//         super('striker');
 
-        this.sound = sound;
-        this.soundFrame = soundFrame;
-    }
+//         this.charsFactory = charsFactory;
+//     }
 
-    update(entity, deltaTime, level) {
-        const frame = new Map();
-        this.soundFrame(entity).forEach(f => frame.set(f.name, f.play));
-
-        this.sound.playFrame(frame);
-    }
-}
+//     strike() {
+//         const fireball = this.charsFactory.bullet(unicorn);
+//         fireball.pos.x = unicorn.pos.x + 50;
+//         fireball.pos.y = unicorn.pos.y + 30;
+//         fireball.vel.x = 1000;
+//         level.entities.add(fireball);
+//     }
+// }

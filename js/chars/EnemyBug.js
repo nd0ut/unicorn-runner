@@ -94,7 +94,7 @@ class BehaviorEnemyBug extends Trait {
     }
 
     collides(us, them) {
-        if (us.killable.dead) {
+        if (!them.killable || us.killable.dead) {
             return;
         }
 

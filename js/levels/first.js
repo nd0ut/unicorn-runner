@@ -153,21 +153,28 @@ const levelSpec = {
 
 export async function first(game) {
     const level = await game.loadLevel(levelSpec);
-    const unicorn = game.unicorn;
     const playerEnv = game.playerEnv;
+    const unicorn = playerEnv.playerController.player;
     level.entities.add(playerEnv);
 
     ['keydown', 'keyup'].forEach(eventName => {
-        window.addEventListener(eventName, event => {
-            if (event.code === 'Space') {
-                const keyState = event.type === 'keydown' ? 1 : 0;
+        window.addEventListener(eventName, e => {
+            if (e.code === 'Space') {
+                const keyState = e.type === 'keydown' ? 1 : 0;
 
                 if (keyState > 0) {
                     unicorn.jump.start();
                 } else {
                     unicorn.jump.cancel();
                 }
-            } else {
+            } else if(e.code === 'KeyF') {
+                const fireball = game.charsFactory.bullet(unicorn);
+                fireball.pos.x = unicorn.pos.x + 50;
+                fireball.pos.y = unicorn.pos.y + 30;
+                fireball.vel.x = 1000;
+                level.entities.add(fireball);
+            } 
+            else {
                 unicorn.jump.cancel();
             }
         });

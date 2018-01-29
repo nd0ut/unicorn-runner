@@ -1,6 +1,7 @@
 import { Camera } from './Camera';
 import { loadEnemyBug } from './chars/EnemyBug';
 import { loadRainbow } from './chars/Rainbow';
+import { loadBullet } from './chars/Bullet';
 import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
 import { createPlayerEnv } from './levels/createPlayerEnv';
@@ -11,7 +12,11 @@ import { loadPortal } from './chars/Portal';
 
 export class GameManager {
     constructor(context) {
-        this.levelsSequence = [levels.initial, levels.first, levels.second];
+        this.levelsSequence = [
+            // levels.initial, 
+            levels.first, 
+            levels.second
+        ];
         this.currentLevel = -1;
 
         this.context = context;
@@ -28,8 +33,8 @@ export class GameManager {
 
         this.charsFactory = await loadChars();
         this.loadLevel = await createLevelLoader(this.charsFactory);
-        this.unicorn = this.charsFactory.unicorn();
-        this.playerEnv = createPlayerEnv(this.unicorn);
+        const unicorn = this.charsFactory.unicorn();
+        this.playerEnv = createPlayerEnv(unicorn);
 
         this.nextLevel();
     }
@@ -58,5 +63,6 @@ function loadChars() {
         loadRainbow().then(addFactory('rainbow')),
         loadSpeedBooster().then(addFactory('speedbooster')),
         loadPortal().then(addFactory('portal')),
+        loadBullet().then(addFactory('bullet'))
     ]).then(() => entityFactories);
 }

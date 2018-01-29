@@ -237,7 +237,7 @@ function createUnicornFactory([sprite, sounds]) {
     }
 
     function drawUnicorn(context) {
-        playSounds(this);
+        // playSounds(this);
         sprite.draw(routeFrame(this), context, 0, 0, this.run.heading < 0);
     }
 

@@ -146,8 +146,8 @@ const levelSpec = {
 
 export async function second(game) {
     const level = await game.loadLevel(levelSpec);
-    const unicorn = game.unicorn;
     const playerEnv = game.playerEnv;
+    const unicorn = playerEnv.playerController.player;
     level.entities.add(playerEnv);
 
     ['keydown', 'keyup'].forEach(eventName => {
