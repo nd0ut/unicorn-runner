@@ -56,7 +56,7 @@ class BehaviorPortal extends Trait {
     }
 
     collides(us, them) {
-        if (us.pickable.picked || !them.run) {
+        if (us.pickable.picked || !them.picker) {
             return;
         }
 

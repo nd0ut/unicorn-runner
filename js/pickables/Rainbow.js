@@ -62,7 +62,7 @@ class BehaviorRainbow extends Trait {
     }
 
     collides(us, them) {
-        if (us.pickable.picked) {
+        if (us.pickable.picked || !them.picker ) {
             return;
         }
 
