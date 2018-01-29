@@ -55,5 +55,12 @@ export function loadSpriteSheet(sheetSpec) {
 
 export function loadSounds(soundSpec) {
     return Promise.resolve(soundSpec)
-        .then(soundSpec => SoundManager.loadSounds(soundSpec.sounds));
+        .then(soundSpec =>
+            Promise.all([soundSpec, SoundManager.loadSounds(soundSpec.sounds)])
+        )
+        .then(([soundSpec, sounds]) => {
+            return Object.assign(sounds, {
+                skinName: soundSpec.skinName || 'default'
+            })
+        });
 }

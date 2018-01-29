@@ -1,5 +1,5 @@
 import { Entity } from './Entity';
-import { loadSpriteSheet } from './loaders';
+import { loadSpriteSheet, loadSounds } from './loaders';
 
 function getDrawFn(sprite, animations) {
     const routeAnim = animations(sprite);
@@ -9,25 +9,52 @@ function getDrawFn(sprite, animations) {
     };
 }
 
-export function defineGameObject(name, { specs, traits, animations, size, offset }) {
+const defaultOptions = {
+    spriteSpecs: [],
+    soundSpecs: [],
+
+    traits: undefined,
+    animations: undefined,
+    sounds: undefined,
+    size: undefined,
+    offset: undefined
+};
+
+export function defineGameObject(name, options) {
+    const {
+        spriteSpecs,
+        soundSpecs,
+        traits,
+        animations,
+        sounds,
+        size,
+        offset
+    } = { ...defaultOptions, ...options };
+
     return async () => {
-        const sprites = await Promise.all(specs.map(spec => loadSpriteSheet(spec)));
+        const [sprites, sounds] = await Promise.all([
+            Promise.all(spriteSpecs.map(spec => loadSpriteSheet(spec))),
+            Promise.all(soundSpecs.map(spec => loadSounds(spec)))
+        ]);
 
         return (options = { skinName: 'default' }) => {
             const { skinName } = options;
-            
-            const sprite = sprites.find(sprite => sprite.skinName === skinName);
-    
+
+            const skinSprite = sprites.find(sprite => sprite.skinName === skinName);
+            const skinSounds = sounds.find(sound => sound.skinName === skinName);
+
             const entity = new Entity(name);
             entity.size.set(size[0], size[1]);
             entity.offset.x = offset[0];
             entity.offset.y = offset[1];
 
-            traits(options).forEach(trait => entity.addTrait(trait));
-    
-            entity.draw = getDrawFn(sprite, animations);
-    
+            traits({ ...options, sounds: skinSounds }).forEach(trait =>
+                entity.addTrait(trait)
+            );
+
+            entity.draw = getDrawFn(skinSprite, animations);
+
             return entity;
-        }
+        };
     };
 }

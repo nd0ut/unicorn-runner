@@ -106,8 +106,7 @@ const levelSpec = {
     ],
     entities: [
         {
-            name: "portal",
-            skinName: "default",
+            name: "rainbow",
             pos: [408, 0]
         },
         {

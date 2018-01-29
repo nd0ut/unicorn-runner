@@ -70,7 +70,7 @@ class BehaviorPortal extends Trait {
 }
 
 export const loadPortal = defineGameObject('portal', {
-    specs: [PORTAL],
+    spriteSpecs: [PORTAL],
     size: [36, 72],
     offset: [0, 0],
 

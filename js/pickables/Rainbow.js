@@ -1,6 +1,7 @@
 import { Entity, Trait } from '../Entity';
 import { Physics, Pickable, Solid, Soundable } from '../Traits';
 import { loadSpriteSheet, loadSounds } from '../loaders';
+import { defineGameObject } from '../defineGameObject';
 
 const RAINBOW_SPRITE = {
     imageURL: require('../../img/rainbow_line.png'),
@@ -53,13 +54,7 @@ const RAINBOW_SOUNDS = {
             name: 'picked'
         }
     ]
-}
-
-export function loadRainbow() {
-    return Promise.all([loadSpriteSheet(RAINBOW_SPRITE), loadSounds(RAINBOW_SOUNDS)]).then(
-        createRainbowFactory
-    );
-}
+};
 
 class BehaviorRainbow extends Trait {
     constructor() {
@@ -77,29 +72,25 @@ class BehaviorRainbow extends Trait {
     }
 }
 
-function createRainbowFactory([sprite, sounds]) {
-    const sparkAnim = sprite.animations.get('spark');
-    const pickedSound = sounds.get('picked');
+export const loadRainbow = defineGameObject('rainbow', {
+    spriteSpecs: [RAINBOW_SPRITE],
+    soundSpecs: [RAINBOW_SOUNDS],
 
-    function routeAnim(rainbow) {
-        return sparkAnim(rainbow.lifetime);
+    size: [83, 93],
+    offset: [0, 0],
+
+    traits: ({ sounds }) => [
+        new Physics(),
+        new Solid(),
+        new Pickable({ onPick: () => sounds.get('picked').playOnce() }),
+        new BehaviorRainbow()
+    ],
+
+    animations: sprite => {
+        const sparkAnim = sprite.animations.get('spark');
+
+        return rainbow => {
+            return sparkAnim(rainbow.lifetime);
+        };
     }
-
-    function drawRainbow(context) {
-        sprite.draw(routeAnim(this), context, 0, 0, this.vel.x < 0);
-    }
-
-    return function createRainbow() {
-        const rainbow = new Entity('rainbow');
-        rainbow.size.set(83, 93);
-
-        rainbow.addTrait(new Physics());
-        rainbow.addTrait(new Solid());
-        rainbow.addTrait(new Pickable({onPick: () => pickedSound.playOnce()}));
-        rainbow.addTrait(new BehaviorRainbow());
-
-        rainbow.draw = drawRainbow;
-
-        return rainbow;
-    };
-}
+});
