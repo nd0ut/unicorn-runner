@@ -42,11 +42,13 @@ export class SpriteSheet {
         context.drawImage(buffer, x, y);
 
         if (bounds) {
+            context.beginPath();
             context.rect(bounds.left, bounds.top, bounds.width, bounds.height);
             context.stroke();
 
             context.rect(x, y, buffer.width, buffer.height);
             context.stroke();
+            context.closePath();            
         }
     }
 
