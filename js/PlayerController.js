@@ -1,5 +1,6 @@
 import { Trait } from './Entity';
 import { Vec2 } from './math';
+import {splashText} from './Splash';
 
 export class PlayerController extends Trait {
     constructor() {
@@ -50,13 +51,21 @@ export class PlayerController extends Trait {
     }
 
     updateUiCounts(selector, count) {
+
         setTimeout(() => {
             selector.innerHTML = count;
         }, 0);
     }
 
     canStrikeFireballs() {
-        return this.fireballs > 0;
+        const alive = this.player && !this.player.killable.dead;
+        const haveBalls = this.fireballs > 0;
+
+        if(alive && this.fireballs === 0) {
+            splashText('not enough balls!', 1000, 70, 'red')
+        }
+
+        return alive && haveBalls;
     }
 
     commitScore() {
