@@ -2,7 +2,7 @@ import {Entity} from '../Entity';
 import {PlayerController} from '../PlayerController';
 
 export function createPlayerEnv(playerEntity) {
-    const playerEnv = new Entity();
+    const playerEnv = new Entity('player');
     const playerControl = new PlayerController();
     playerControl.checkpoint.set(64, 64);
     playerControl.setPlayer(playerEntity);

@@ -1,5 +1,6 @@
 import {createPlayerEnv} from './createPlayerEnv'
 import { splashText } from '../Splash';
+import { Striker } from '../Traits';
 
 const levelSpec = {
     sounds: [
@@ -167,12 +168,10 @@ export async function first(game) {
                 } else {
                     unicorn.jump.cancel();
                 }
-            } else if(e.code === 'KeyF') {
-                const fireball = game.charsFactory.bullet(unicorn);
-                fireball.pos.x = unicorn.pos.x + 50;
-                fireball.pos.y = unicorn.pos.y + 30;
-                fireball.vel.x = 1000;
-                level.entities.add(fireball);
+            } else if(e.code === 'KeyF' && !e.repeat) {
+               if(playerEnv.playerController.canStrikeFireballs()) {
+                   unicorn.striker.strike(game.charsFactory.bullet, level);
+               }
             } 
             else {
                 unicorn.jump.cancel();

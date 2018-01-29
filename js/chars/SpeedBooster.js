@@ -122,7 +122,7 @@ function createSpeedBoosterFactory(sprite) {
     }
 
     return function createSpeedBooster() {
-        const boost = new Entity();
+        const boost = new Entity('speedBooster');
         boost.size.set(45, 49);
 
         boost.addTrait(new Physics());

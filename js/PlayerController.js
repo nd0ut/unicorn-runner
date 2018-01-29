@@ -9,7 +9,12 @@ export class PlayerController extends Trait {
 
         this.totalScore = 0;
         this.score = 0;
+        this.fireballs = 10;
+
+        this.fireballsSelector = document.getElementById('current-fireballs');
         this.scoreSelector = document.getElementById('unicorn-score');
+
+        this.updateUiCounts(this.fireballsSelector, this.fireballs);        
     }
 
     setPlayer(entity) {
@@ -17,11 +22,25 @@ export class PlayerController extends Trait {
 
         this.player.picker.onPick = (picker, pickable) => {
             this.score += 50;
-
-            setTimeout(() => {
-                this.scoreSelector.innerHTML = this.totalScore + this.score;
-            }, 0);
+            this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
         };
+
+        this.player.striker.onStrike = (bullet) => {
+            if(bullet.name === 'bullet') {
+                this.fireballs--;
+            }
+            this.updateUiCounts(this.fireballsSelector, this.fireballs);            
+        };
+    }
+
+    updateUiCounts(selector, count) {
+        setTimeout(() => {
+            selector.innerHTML = count;
+        }, 0);
+    }
+
+    canStrikeFireballs() {
+        return this.fireballs > 0;
     }
 
     commitScore() {

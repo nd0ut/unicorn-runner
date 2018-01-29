@@ -83,7 +83,7 @@ function createBulletFactory(sprite) {
     }
 
     return function createBullet(ownerEntity) {
-        const bullet = new Entity();
+        const bullet = new Entity('bullet');
         bullet.size.set(50, 25);
         bullet.offset.y = 50;
 

@@ -11,13 +11,17 @@ export const Sides = {
 export class Trait {
     constructor(name) {
         this.NAME = name;
-
         this.tasks = [];
+        this.entity = undefined;
     }
 
     finalize() {
         this.tasks.forEach(task => task());
         this.tasks.length = 0;
+    }
+
+    setEntity(entity) {
+        this.entity = entity;
     }
 
     queue(task) {
@@ -38,7 +42,8 @@ export class Trait {
 }
 
 export class Entity {
-    constructor() {
+    constructor(name) {
+        this.name = name;
         this.pos = new Vec2(0, 0);
         this.vel = new Vec2(0, 0);
         this.size = new Vec2(0, 0);
@@ -50,6 +55,8 @@ export class Entity {
     }
 
     addTrait(trait) {
+        trait.setEntity(this);
+        
         this.traits.push(trait);
         this[trait.NAME] = trait;
     }

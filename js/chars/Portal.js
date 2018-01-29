@@ -82,7 +82,7 @@ function createPortalFactory(sprite) {
     }
 
     return function createPortal() {
-        const portal = new Entity();
+        const portal = new Entity('portal');
         portal.size.set(36, 72);
 
         portal.addTrait(new Physics());

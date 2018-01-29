@@ -63,6 +63,23 @@ canvas#screen {
     font-size: 34px;
 }
 
+.fireballs-block {
+    position: absolute;
+    top: 30px;
+    right: 300px;
+    display: block;
+    text-align: center;
+}
+
+.fireballs-sign {
+    margin: 0;
+}
+
+.fireballs-num {
+    margin: 0;
+    font-size: 34px;
+}
+
 .play-block {
     display: flex;
     width: 100%;

@@ -8,7 +8,8 @@ import {
     Run,
     Solid,
     AutoJump,
-    Soundable
+    Soundable,
+    Striker
 } from '../Traits';
 
 const UNICORN_SPRITE = {
@@ -242,7 +243,7 @@ function createUnicornFactory([sprite, sounds]) {
     }
 
     return function createUnicorn() {
-        const unicorn = new Entity();
+        const unicorn = new Entity('unicorn');
         unicorn.size.set(90, 140);
         unicorn.offset.x = 50;
 
@@ -252,6 +253,7 @@ function createUnicornFactory([sprite, sounds]) {
         unicorn.addTrait(new Jump());
         unicorn.addTrait(new Picker());
         unicorn.addTrait(new Killable());
+        unicorn.addTrait(new Striker());
 
         unicorn.killable.removeAfter = 1;
 

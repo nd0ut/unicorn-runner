@@ -3,7 +3,7 @@ import { Sides } from './Entity';
 import { getRandomInt } from './math';
 
 export class Physics extends Trait {
-    constructor({applyGravity} = {applyGravity: true}) {
+    constructor({ applyGravity } = { applyGravity: true }) {
         super('physics');
 
         this.applyGravity = applyGravity;
@@ -16,8 +16,8 @@ export class Physics extends Trait {
         entity.pos.y += entity.vel.y * deltaTime;
         level.tileCollider.checkY(entity);
 
-        if(this.applyGravity) {
-            entity.vel.y += level.gravity * deltaTime;            
+        if (this.applyGravity) {
+            entity.vel.y += level.gravity * deltaTime;
         }
     }
 }
@@ -26,12 +26,12 @@ export class AutoJump extends Trait {
     constructor() {
         super('autojump');
     }
-    
+
     update(entity, deltaTime, level) {
         const distance = entity.vel.x * 0.3;
         const willCollide = level.tileCollider.willCollideX(entity, distance);
 
-        if(willCollide) {
+        if (willCollide) {
             entity.jump.start();
             setTimeout(() => entity.jump.cancel(), 300);
         }
@@ -123,14 +123,14 @@ export class Jump extends Trait {
     }
 
     update(entity, deltaTime) {
-        if(this.ready < 0 && entity.vel.y < 0) {
+        if (this.ready < 0 && entity.vel.y < 0) {
             this.jumping = true;
-            this.falling = false;            
-        } else if(this.ready < 0 && entity.vel.y > 0) {
+            this.falling = false;
+        } else if (this.ready < 0 && entity.vel.y > 0) {
             this.jumping = false;
             this.falling = true;
         }
-        
+
         if (this.requestTime > 0) {
             if (this.ready > 0) {
                 this.engageTime = this.duration;
@@ -140,13 +140,13 @@ export class Jump extends Trait {
             this.requestTime -= deltaTime;
         }
 
-        if (this.engageTime > 0) {            
+        if (this.engageTime > 0) {
             entity.vel.y = -(
                 this.velocity +
                 Math.abs(entity.vel.x) * this.speedBoost
             );
             this.engageTime -= deltaTime;
-            if(this.engageTime < 0) {
+            if (this.engageTime < 0) {
                 this.engageTime = 0;
             }
         }
@@ -187,7 +187,7 @@ export class Killable extends Trait {
 }
 
 export class Pickable extends Trait {
-    constructor({onPick} = {}) {
+    constructor({ onPick } = {}) {
         super('pickable');
         this.onPick = onPick;
         this.picked = false;
@@ -227,18 +227,46 @@ export class Picker extends Trait {
     }
 }
 
-// export class Striker {
-//     constructor(charsFactory) {
-//         super('striker');
+export class Striker extends Trait {
+    constructor() {
+        super('striker');
 
-//         this.charsFactory = charsFactory;
-//     }
+        this.reloadDuration = 0.1;
+        this.canStrike = true;
+        this.strikeTime = 0;
 
-//     strike() {
-//         const fireball = this.charsFactory.bullet(unicorn);
-//         fireball.pos.x = unicorn.pos.x + 50;
-//         fireball.pos.y = unicorn.pos.y + 30;
-//         fireball.vel.x = 1000;
-//         level.entities.add(fireball);
-//     }
-// }
+        this.onStrike = undefined;
+    }
+
+    strike(createBullet, level) {
+        if (!this.canStrike) {
+            return;
+        }
+
+        const bullet = createBullet(this.entity);
+        bullet.pos.x = this.entity.pos.x + 50;
+        bullet.pos.y = this.entity.pos.y + 30;
+        bullet.vel.x = 1000;
+        level.entities.add(bullet);
+
+        this.onStrike && this.onStrike(bullet);
+
+        this.queue(() => {
+            this.canStrike = false;
+            this.strikeTime = this.entity.lifetime;    
+        })
+    }
+
+    update(entity, deltaTime, level) {
+        if(this.canStrike) {
+            return;
+        }
+        const diff = this.entity.lifetime - this.strikeTime;
+        
+        if(diff > this.reloadDuration) {
+            this.queue(() => {
+                this.canStrike = true;
+            })
+        }
+    }
+}
