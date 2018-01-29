@@ -70,6 +70,7 @@ export class Run extends Trait {
         super('run');
 
         this.speed = 15000;
+        // this.speed = 2000;
         this.distance = 0;
         this.onGround = false;
     }

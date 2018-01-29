@@ -1,16 +1,6 @@
+import { defineGameObject } from '../defineGameObject';
 import { Entity } from '../Entity';
-import { loadSpriteSheet, loadSounds } from '../loaders';
-import {
-    Jump,
-    Killable,
-    Physics,
-    Picker,
-    Run,
-    Solid,
-    AutoJump,
-    Soundable,
-    Striker
-} from '../Traits';
+import { Jump, Killable, Physics, Picker, Run, Solid, Striker } from '../Traits';
 
 const UNICORN_SPRITE = {
     imageURL: require('../../img/unicorn_ham.png'),
@@ -182,22 +172,13 @@ const UNICORN_SOUNDS = {
     ]
 }
 
-export function loadUnicorn() {
-    return Promise.all([loadSpriteSheet(UNICORN_SPRITE), loadSounds(UNICORN_SOUNDS)]).then(
-        createUnicornFactory
-    );
-}
-
-function createUnicornFactory([sprite, sounds]) {
+function animations(sprite) {
     const runAnim = sprite.animations.get('run');
     const jumpAnim = sprite.animations.get('jump');
     const fallAnim = sprite.animations.get('fall');
     const deathAnim = sprite.animations.get('death');
 
-    const runSound = sounds.get('clip-clop');
-    const dieSound = sounds.get('die');
-    
-    function routeFrame(unicorn) {
+    return unicorn => {
         if (unicorn.killable.dead) {
             return deathAnim(unicorn.killable.deadTime);
         }
@@ -216,8 +197,13 @@ function createUnicornFactory([sprite, sounds]) {
 
         return 'idle';
     }
+}
 
-    function playSounds(unicorn) {
+function sounds(sounds) {
+    const runSound = sounds.get('clip-clop');
+    const dieSound = sounds.get('die');
+
+    return (unicorn) => {
         if (unicorn.killable.dead) {
             dieSound.playing();
             return;
@@ -236,29 +222,29 @@ function createUnicornFactory([sprite, sounds]) {
             return;
         }
     }
-
-    function drawUnicorn(context) {
-        // playSounds(this);
-        sprite.draw(routeFrame(this), context, 0, 0, this.run.heading < 0);
-    }
-
-    return function createUnicorn() {
-        const unicorn = new Entity('unicorn');
-        unicorn.size.set(90, 140);
-        unicorn.offset.x = 50;
-
-        unicorn.addTrait(new Physics());
-        unicorn.addTrait(new Solid());
-        unicorn.addTrait(new Run());
-        unicorn.addTrait(new Jump());
-        unicorn.addTrait(new Picker());
-        unicorn.addTrait(new Killable());
-        unicorn.addTrait(new Striker());
-
-        unicorn.killable.removeAfter = 1;
-
-        unicorn.draw = drawUnicorn;
-
-        return unicorn;
-    };
 }
+
+
+export const loadUnicorn = defineGameObject('unicorn', {
+    spriteSpecs: [UNICORN_SPRITE],
+    soundsSpec: [UNICORN_SOUNDS],
+
+    size: [90, 100],
+    offset: [45, 40],
+    // drawBounds: true,
+
+    afterCreate: entity => {
+        entity.killable.removeAfter = 1;        
+    },
+    
+    traits: () => [
+        new Physics(),
+        new Solid(),
+        new Run(),
+        new Jump(),
+        new Picker(),
+        new Killable(),
+        new Striker()
+    ],
+    animations
+});

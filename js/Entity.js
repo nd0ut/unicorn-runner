@@ -77,6 +77,10 @@ export class Entity {
 
     }
 
+    voice() {
+
+    }
+
     finalize() {
         this.traits.forEach(trait => {
             trait.finalize();
@@ -88,6 +92,8 @@ export class Entity {
     }
 
     update(deltaTime, level) {
+        this.voice && this.voice();
+        
         this.traits.forEach(trait => {
             trait.update(this, deltaTime, level);
         });
