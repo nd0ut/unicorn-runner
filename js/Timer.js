@@ -1,8 +1,10 @@
 export class Timer {
     constructor(deltaTime = 1/60) {
+        this.rafId = undefined;
+        
         let accumulatedTime = 0;
         let lastTime = 0;
-
+        
         this.updateProxy = (time) => {
             accumulatedTime += (time - lastTime) / 1000;
 
@@ -11,7 +13,7 @@ export class Timer {
             }
 
             while (accumulatedTime > deltaTime) {
-                this.update && this.update(deltaTime);
+                this.update(deltaTime);
                 accumulatedTime -= deltaTime;
             }
 
@@ -21,11 +23,19 @@ export class Timer {
         }
     }
 
+    update() {
+        
+    }
+
     enqueue() {
-        requestAnimationFrame(this.updateProxy);
+        this.rafId = requestAnimationFrame(this.updateProxy);
     }
 
     start() {
         this.enqueue();
+    }
+
+    stop() {
+        cancelAnimationFrame(this.rafId);
     }
 }

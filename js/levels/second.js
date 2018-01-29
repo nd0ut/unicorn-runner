@@ -1,6 +1,7 @@
 import {createPlayerEnv} from './createPlayerEnv'
 
 const levelSpec = {
+    name: 'Level 2',
     layers: [
         {
             tiles: [
@@ -147,28 +148,20 @@ const levelSpec = {
 export async function second(game) {
     const level = await game.loadLevel(levelSpec);
     const playerEnv = game.playerEnv;
-    const unicorn = playerEnv.playerController.player;
+    const unicorn = game.charsFactory.unicorn();
+    playerEnv.playerController.setPlayer(unicorn);
     level.entities.add(playerEnv);
+    level.entities.add(unicorn);
 
-    ['keydown', 'keyup'].forEach(eventName => {
-        window.addEventListener(eventName, event => {
-            if (event.code === 'Space') {
-                const keyState = event.type === 'keydown' ? 1 : 0;
+    function startLevel() {
+        game.timer.update = deltaTime => {
+            level.update(deltaTime);
+            game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
+            level.comp.draw(game.context, game.camera);
+        };
+    }
 
-                if (keyState > 0) {
-                    unicorn.jump.start();
-                } else {
-                    unicorn.jump.cancel();
-                }
-            } else {
-                unicorn.jump.cancel();
-            }
-        });
-    });
-
-    game.timer.update = deltaTime => {
-        level.update(deltaTime);
-        game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
-        level.comp.draw(game.context, game.camera);
-    };
+    return {
+        level, startLevel
+    }
 }

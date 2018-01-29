@@ -7,6 +7,9 @@ export class PlayerController extends Trait {
         this.checkpoint = new Vec2(0, 0);
         this.player = null;
 
+        this.levelCompeteHandler = undefined;
+        this.levelFailedHandler = undefined;
+
         this.totalScore = 0;
         this.score = 0;
         this.fireballs = 10;
@@ -17,20 +20,33 @@ export class PlayerController extends Trait {
         this.updateUiCounts(this.fireballsSelector, this.fireballs);        
     }
 
+    onLevelComplete(levelCompeteHandler) {
+        this.levelCompeteHandler = levelCompeteHandler;
+    }
+
+    onLevelFail(levelFailedHandler) {
+        this.levelFailedHandler = levelFailedHandler;
+    }
+
     setPlayer(entity) {
         this.player = entity;
 
-        this.player.picker.onPick = (picker, pickable) => {
+        this.player.picker.onPick = this.onPick.bind(this);
+        this.player.striker.onStrike = this.onStrike.bind(this);
+    }
+
+    onPick(picker, pickable) {
+        if(pickable.name === 'rainbow') {
             this.score += 50;
             this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
-        };
+        }
+    }
 
-        this.player.striker.onStrike = (bullet) => {
-            if(bullet.name === 'bullet') {
-                this.fireballs--;
-            }
-            this.updateUiCounts(this.fireballsSelector, this.fireballs);            
-        };
+    onStrike(bullet) {
+        if(bullet.name === 'bullet') {
+            this.fireballs--;
+        }
+        this.updateUiCounts(this.fireballsSelector, this.fireballs);  
     }
 
     updateUiCounts(selector, count) {
@@ -53,22 +69,26 @@ export class PlayerController extends Trait {
         this.scoreSelector.innerHTML = this.totalScore + this.score;
     }
 
-    resetDistance() {
-        this.player.run.distance = 0;
-    }
+    async update(entity, deltaTime, level) {
+        if(!this.player) {
+            return;
+        }
 
-    update(entity, deltaTime, level) {
-        if (
-            !level.entities.has(this.player) ||
-            this.player.pos.y > 1200
-        ) {
+        if(this.player.pos.x > level.distance + 100 && this.player.pos.y > 500) {
+            this.levelCompeteHandler && this.levelCompeteHandler();
+            return;
+        }
+
+        const dead = this.player.killable.dead && !level.entities.has(this.player);
+        const fall = this.player.pos.y > 1200;
+        const levelFailed = fall || dead;
+
+        if (levelFailed) {
+            this.player = undefined;
+
             this.resetScore();
-            this.resetDistance();
 
-            this.player.resetLifetime();
-            this.player.killable.revive();
-            this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
-            level.entities.add(this.player);
+            this.levelFailedHandler && this.levelFailedHandler();            
         }
     }
 }

@@ -4,7 +4,9 @@ import {TileCollider} from './TileCreation';
 import { SoundManager } from './SoundManager';
 
 export class Level {
-    constructor() {
+    constructor(name = undefined) {
+        this.name = name;
+
         this.gravity = 1500;
         this.totalTime = 0;
         this.distance = 0;
@@ -14,6 +16,10 @@ export class Level {
 
         this.entityCollider = new EntityCollider(this.entities);
         this.tileCollider = null;
+    }
+
+    setName(name) {
+        this.name = name;
     }
 
     setCollisionGrid(matrix) {

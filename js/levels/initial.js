@@ -60,19 +60,29 @@ export async function initial(game) {
     const unicorn = game.charsFactory.unicorn();
     unicorn.addTrait(new AutoJump());
 
-    const playerEnv = createPlayerEnv(unicorn);
+    const playerEnv = createPlayerEnv(game);
+    playerEnv.playerController.setPlayer(unicorn);
     level.entities.add(playerEnv);
+    level.entities.add(unicorn);
 
-    game.timer.update = deltaTime => {
-        level.update(deltaTime);
-        game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
-        level.comp.draw(game.context, game.camera);
-    };
+    function startLevel() {
+        game.timer.update = deltaTime => {
+            level.update(deltaTime);
+            game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
+            level.comp.draw(game.context, game.camera);
+        };
 
-    const onPlay = () => {
-        document.querySelector('.play-block').remove();
-        game.nextLevel();
-    };
+        const onPlay = () => {
+            game.timer.update = () => {};
+            document.querySelector('.play-block').remove();
+            game.nextLevel();
+        };
 
-    document.querySelector('.play-btn').addEventListener('click', onPlay);
+        document.querySelector('.play-btn').addEventListener('click', onPlay);
+    }
+
+    return {
+        level, startLevel
+    }
 }
+;

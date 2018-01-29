@@ -48,7 +48,7 @@ export function createLevelLoader(entityFactory) {
                 levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined
             ]))
             .then(([levelSpec, image, sounds]) => {
-                const level = new Level();
+                const level = new Level(levelSpec.name);
                 
                 setupCollision(levelSpec, level);
                 setupBackgrounds(levelSpec, level, image);

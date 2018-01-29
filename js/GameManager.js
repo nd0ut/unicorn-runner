@@ -9,44 +9,73 @@ import { createLevelLoader } from './loadLevel';
 import { Timer } from './Timer';
 import { loadSpeedBooster } from './chars/SpeedBooster';
 import { loadPortal } from './chars/Portal';
+import { splashText } from './Splash';
 
 export class GameManager {
-    constructor(context) {
-        this.levelsSequence = [
+    constructor(canvasSelector) {
+        this.canvasSelector = canvasSelector;
+        this.context = canvasSelector.getContext('2d');
+        
+        this.levels = [
             // levels.initial, 
             levels.first, 
             levels.second
         ];
-        this.currentLevel = -1;
+        this.level = undefined;
+        this.levelIdx = -1;
 
-        this.context = context;
         this.camera = new Camera();
         this.timer = new Timer();
 
         this.levelSelector = document.getElementById('current-level');
+
+        // TODO: dev
+        this.canvasSelector.classList.toggle('blur', false);  
+        document.querySelector('.play-block').remove();
 
         this.start();
     }
 
     async start() {
         this.timer.start();
-
+        
         this.charsFactory = await loadChars();
         this.loadLevel = await createLevelLoader(this.charsFactory);
-        const unicorn = this.charsFactory.unicorn();
-        this.playerEnv = createPlayerEnv(unicorn);
+        this.playerEnv = createPlayerEnv(this);
+
+        this.playerEnv.playerController.onLevelComplete(this.nextLevel.bind(this));
+        this.playerEnv.playerController.onLevelFail(this.restartLevel.bind(this));
 
         this.nextLevel();
     }
 
-    nextLevel() {
+    async restartLevel() {
+        return this.runLevel(this.levelIdx);
+    }
+
+    async nextLevel() {
+        this.levelIdx += 1;
+        return this.runLevel(this.levelIdx);
+    }
+
+    async runLevel(levelIdx) {     
+        // this.canvasSelector.classList.toggle('blur', true);
+
         this.playerEnv.playerController.commitScore();
 
-        this.currentLevel = this.currentLevel + 1;
-        this.levelSelector.innerHTML = this.currentLevel;
+        this.levelSelector.innerHTML = levelIdx;
 
-        const startLevel = this.levelsSequence[this.currentLevel];
-        startLevel(this);
+        const initLevel = this.levels[levelIdx];
+        const {level, startLevel} = await initLevel(this);
+        this.level = level;
+
+        if(level.name) {
+            // await splashText(level.name)
+        }
+        
+        // this.canvasSelector.classList.toggle('blur', false);    
+                
+        startLevel();      
     }
 }
 

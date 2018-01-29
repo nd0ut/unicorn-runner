@@ -12,7 +12,13 @@ body {
 }
 
 canvas#screen {
+    transition: filter 0.3s;    
+    border-radius: 20px;
     display: block;
+}
+
+canvas#screen.blur {
+    filter: blur(500px);
 }
 
 .main-wrapper {
