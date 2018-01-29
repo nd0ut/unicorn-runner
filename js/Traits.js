@@ -232,11 +232,15 @@ export class Striker extends Trait {
     constructor() {
         super('striker');
 
-        this.reloadDuration = 0.1;
+        this.reloadDuration = 0.2;
         this.canStrike = true;
         this.strikeTime = 0;
 
         this.onStrike = undefined;
+    }
+
+    isStriking() {
+        return this.strikeTime > 0 && this.strikeTime < this.reloadDuration;
     }
 
     strike(bullet, level) {
@@ -244,8 +248,8 @@ export class Striker extends Trait {
             return;
         }
 
-        bullet.pos.x = this.entity.pos.x + 50;
-        bullet.pos.y = this.entity.pos.y + 30;
+        bullet.pos.x = this.entity.pos.x + 100;
+        bullet.pos.y = this.entity.pos.y + 40;
         bullet.vel.x = 1000;
         level.entities.add(bullet);
 
@@ -253,7 +257,7 @@ export class Striker extends Trait {
 
         this.queue(() => {
             this.canStrike = false;
-            this.strikeTime = this.entity.lifetime;    
+            this.strikeTime = 0;    
         })
     }
 
@@ -261,11 +265,13 @@ export class Striker extends Trait {
         if(this.canStrike) {
             return;
         }
-        const diff = this.entity.lifetime - this.strikeTime;
+
+        this.strikeTime += deltaTime;
         
-        if(diff > this.reloadDuration) {
+        if(this.strikeTime > this.reloadDuration) {
             this.queue(() => {
                 this.canStrike = true;
+                this.strikeTime = 0;
             })
         }
     }

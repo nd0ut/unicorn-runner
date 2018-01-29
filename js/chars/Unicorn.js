@@ -104,6 +104,31 @@ const UNICORN_SPRITE = {
         {
             name: 'death-9',
             rect: [172 * 8, 0, 172, 142]
+        },
+
+        {
+            name: 'cast-1',
+            rect: [172 * 0, 0, 172, 142]
+        },
+        {
+            name: 'cast-2',
+            rect: [172 * 1, 0, 172, 142]
+        },
+        {
+            name: 'cast-3',
+            rect: [172 * 2, 0, 172, 142]
+        },
+        {
+            name: 'cast-4',
+            rect: [172 * 3, 0, 172, 142]
+        },
+        {
+            name: 'cast-5',
+            rect: [172 * 4, 0, 172, 142]
+        },
+        {
+            name: 'cast-6',
+            rect: [172 * 5, 0, 172, 142]
         }
     ],
 
@@ -131,6 +156,18 @@ const UNICORN_SPRITE = {
             name: 'fall',
             frameLen: 0.2,
             frames: ['fall-1', 'fall-2']
+        },
+        {
+            name: 'cast',
+            frameLen: 0.1,
+            frames: [
+                // 'cast-1', 
+                // 'cast-2',
+                // 'cast-3',
+                'cast-4',
+                // 'cast-5',
+                // 'cast-6',
+            ]
         },
         {
             name: 'death',
@@ -177,10 +214,16 @@ function animations(sprite) {
     const jumpAnim = sprite.animations.get('jump');
     const fallAnim = sprite.animations.get('fall');
     const deathAnim = sprite.animations.get('death');
+    const castAnim = sprite.animations.get('cast');
 
     return unicorn => {
         if (unicorn.killable.dead) {
             return deathAnim(unicorn.killable.deadTime);
+        }
+
+        if (unicorn.striker.isStriking()) {
+            // return castAnim(unicorn.striker.strikeTime);
+            return castAnim(unicorn.lifetime);
         }
 
         if (unicorn.jump.jumpingUp) {
