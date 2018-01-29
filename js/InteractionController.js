@@ -8,7 +8,7 @@ export class InteractionController extends Trait {
 
         this.setupHandlers();
     }
-    
+
     get entityFactory() {
         return this.game.entityFactory;
     }
@@ -42,12 +42,16 @@ export class InteractionController extends Trait {
     }
 
     strikeFireballHandler(e) {
-        if(e.repeat || !this.playerController.canStrikeFireballs()) {
+        if (e.repeat || !this.playerController.canStrikeFireballs()) {
             return;
         }
 
-        const unicorn = this.playerController.player;                    
-        unicorn.striker.strike(this.entityFactory.bullet('fireball'), this.currentLevel);
+        const unicorn = this.playerController.player;
+        const fireball = this.entityFactory.bullet({ 
+            skinName: 'fireball', 
+            ownerEntity: unicorn 
+        });
+        unicorn.striker.strike(fireball, this.currentLevel);
     }
 
     jumpHandler(e) {

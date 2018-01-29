@@ -37,9 +37,17 @@ export class SpriteSheet {
         this.tiles.set(name, buffers);
     }
 
-    draw(name, context, x, y) {
+    draw(name, context, x, y, bounds = undefined) {
         const buffer = this.tiles.get(name)[0];
         context.drawImage(buffer, x, y);
+
+        if (bounds) {
+            context.rect(bounds.left, bounds.top, bounds.width, bounds.height);
+            context.stroke();
+
+            context.rect(x, y, buffer.width, buffer.height);
+            context.stroke();
+        }
     }
 
     drawTile(name, context, x, y) {

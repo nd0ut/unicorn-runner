@@ -1,11 +1,11 @@
 import { Entity } from './Entity';
 import { loadSpriteSheet, loadSounds } from './loaders';
 
-function getDrawFn(sprite, animations) {
+function getDrawFn(sprite, animations, bounds) {
     const routeAnim = animations(sprite);
 
     return function(context) {
-        sprite.draw(routeAnim(this), context, 0, 0);
+        sprite.draw(routeAnim(this), context, 0, 0, bounds);
     };
 }
 
@@ -17,7 +17,9 @@ const defaultOptions = {
     animations: undefined,
     sounds: undefined,
     size: undefined,
-    offset: undefined
+    offset: undefined,
+
+    drawBounds: false
 };
 
 export function defineGameObject(name, options) {
@@ -28,7 +30,8 @@ export function defineGameObject(name, options) {
         animations,
         sounds,
         size,
-        offset
+        offset,
+        drawBounds
     } = { ...defaultOptions, ...options };
 
     return async () => {
@@ -52,7 +55,8 @@ export function defineGameObject(name, options) {
                 entity.addTrait(trait)
             );
 
-            entity.draw = getDrawFn(skinSprite, animations);
+            const bounds = drawBounds ? entity.bounds.clone() : undefined;
+            entity.draw = getDrawFn(skinSprite, animations, bounds);
 
             return entity;
         };

@@ -238,12 +238,11 @@ export class Striker extends Trait {
         this.onStrike = undefined;
     }
 
-    strike(createBullet, level) {
+    strike(bullet, level) {
         if (!this.canStrike) {
             return;
         }
 
-        const bullet = createBullet(this.entity);
         bullet.pos.x = this.entity.pos.x + 50;
         bullet.pos.y = this.entity.pos.y + 30;
         bullet.vel.x = 1000;

@@ -12,6 +12,22 @@ export class ClipBox {
             && this.right > box.left;
     }
 
+    clone() {
+        return new ClipBox(
+            Object.assign({}, this.pos), 
+            Object.assign({}, this.size), 
+            Object.assign({}, this.offset)
+        );
+    }
+
+    get width() {
+        return this.size.x;
+    }
+
+    get height() {
+        return this.size.y;
+    }
+
     get bottom() {
         return this.pos.y + this.size.y + this.offset.y;
     }
