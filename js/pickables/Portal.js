@@ -2,33 +2,36 @@ import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
 import { Physics, Pickable, Solid } from '../Traits';
 import { getRandomInt } from '../math';
+import { defineGameObject } from '../defineGameObject';
 
 const PORTAL = {
+    skinName: 'default',
+    
     imageURL: require('../../img/portals.png'),
     frames: [
         {
             name: 'portal-1',
-            rect: [36*0, 0, 36, 72]
+            rect: [36 * 0, 0, 36, 72]
         },
         {
             name: 'portal-2',
-            rect: [36*1, 0, 36, 72]
+            rect: [36 * 1, 0, 36, 72]
         },
         {
             name: 'portal-3',
-            rect: [36*2, 0, 36, 72]
+            rect: [36 * 2, 0, 36, 72]
         },
         {
             name: 'portal-4',
-            rect: [36*3, 0, 36, 72]
+            rect: [36 * 3, 0, 36, 72]
         },
         {
             name: 'portal-5',
-            rect: [36*4, 0, 36, 72]
+            rect: [36 * 4, 0, 36, 72]
         },
         {
             name: 'portal-6',
-            rect: [36*5, 0, 36, 72]
+            rect: [36 * 5, 0, 36, 72]
         }
     ],
     animations: [
@@ -47,10 +50,6 @@ const PORTAL = {
     ]
 };
 
-export function loadPortal() {
-    return loadSpriteSheet(PORTAL).then(createPortalFactory);
-}
-
 class BehaviorPortal extends Trait {
     constructor() {
         super('behavior');
@@ -65,33 +64,27 @@ class BehaviorPortal extends Trait {
         us.vel.set(30, -400);
         us.solid.obstructs = false;
 
-        them.pos.x += getRandomInt(-1000, 1000);
+        them.pos.x += getRandomInt(100, 1000);
         them.pos.y = 0;
     }
 }
 
-function createPortalFactory(sprite) {
-    const portalAnim = sprite.animations.get('portal');
+export const loadPortal = defineGameObject('portal', {
+    specs: [PORTAL],
+    size: [36, 72],
+    offset: [0, 0],
 
-    function routeAnim(portal) {
-        return portalAnim(portal.lifetime);
+    traits: () => [
+        new Physics(),
+        new Solid(),
+        new Pickable(),
+        new BehaviorPortal()
+    ],
+    animations: sprite => {
+        const portalAnim = sprite.animations.get('portal');
+
+        return portal => {
+            return portalAnim(portal.lifetime);
+        };
     }
-
-    function drawPortal(context) {
-        sprite.draw(routeAnim(this), context, 0, 0, this.vel.x < 0);
-    }
-
-    return function createPortal() {
-        const portal = new Entity('portal');
-        portal.size.set(36, 72);
-
-        portal.addTrait(new Physics());
-        portal.addTrait(new Solid());
-        portal.addTrait(new Pickable());
-        portal.addTrait(new BehaviorPortal());
-
-        portal.draw = drawPortal;
-
-        return portal;
-    };
-}
+});

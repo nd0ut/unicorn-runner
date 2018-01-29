@@ -24,9 +24,9 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
 }
 
 function setupEntities(levelSpec, level, entityFactory) {
-    levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
+    levelSpec.entities.forEach(({ name, skinName, pos: [x, y] }) => {
         const createEntity = entityFactory[name];
-        const entity = createEntity();
+        const entity = createEntity({skinName});
         entity.pos.set(x, y);
         level.entities.add(entity);
     });
