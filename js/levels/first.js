@@ -106,7 +106,7 @@ const levelSpec = {
     ],
     entities: [
         {
-            name: "rainbow",
+            name: "manaPot",
             pos: [408, 0]
         },
         {
