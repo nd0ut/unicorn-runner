@@ -10,6 +10,7 @@ import { Timer } from './Timer';
 import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { loadPortal } from './pickables/Portal';
 import { splashText } from './Splash';
+import { loadManaPot } from './pickables/ManaPot';
 
 export class GameManager {
     constructor(canvasSelector) {
@@ -92,6 +93,7 @@ function loadEntities() {
         loadRainbow().then(addFactory('rainbow')),
         loadSpeedBooster().then(addFactory('speedbooster')),
         loadPortal().then(addFactory('portal')),
-        loadBullet().then(addFactory('bullet'))
+        loadBullet().then(addFactory('bullet')),
+        loadManaPot().then(addFactory('manaPot')),
     ]).then(() => entityFactories);
 }

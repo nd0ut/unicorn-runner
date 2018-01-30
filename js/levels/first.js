@@ -114,7 +114,7 @@ const levelSpec = {
             pos: [780, 0]
         },
         {
-            name: "rainbow",
+            name: "manaPot",
             pos: [1608, 0]
         },
         {

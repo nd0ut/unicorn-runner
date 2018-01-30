@@ -41,6 +41,10 @@ export class PlayerController extends Trait {
             this.score += 50;
             this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
         }
+        if (pickable.name === 'manaPot') {
+            this.fireballs += 50;
+            this.updateUiCounts(this.fireballsSelector, this.fireballs);
+        }
     }
 
     onStrike(bullet) {
