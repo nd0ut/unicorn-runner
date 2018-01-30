@@ -68,7 +68,7 @@ export async function initial(game) {
     function startLevel() {
         game.timer.update = deltaTime => {
             level.update(deltaTime);
-            game.camera.pos.x = Math.max(0, unicorn.pos.x - 100);
+            game.cameraController.update({x: Math.max(0, unicorn.pos.x - 100)});
             level.comp.draw(game.context, game.camera);
         };
 

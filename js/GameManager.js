@@ -11,6 +11,7 @@ import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { loadPortal } from './pickables/Portal';
 import { splashText } from './Splash';
 import { loadManaPot } from './pickables/ManaPot';
+import { CameraController } from './CameraController';
 
 export class GameManager {
     constructor(canvasSelector) {
@@ -26,6 +27,7 @@ export class GameManager {
         this.levelIdx = -1;
 
         this.camera = new Camera();
+        this.cameraController = new CameraController(this.camera);
         this.timer = new Timer();
 
         this.levelSelector = document.getElementById('current-level');
