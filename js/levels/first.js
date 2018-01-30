@@ -1,4 +1,3 @@
-import {createPlayerEnv} from './createPlayerEnv'
 import { splashText } from '../Splash';
 import { Striker } from '../Traits';
 

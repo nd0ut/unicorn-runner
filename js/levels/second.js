@@ -1,5 +1,3 @@
-import {createPlayerEnv} from './createPlayerEnv'
-
 const levelSpec = {
     name: 'Level 2',
     layers: [

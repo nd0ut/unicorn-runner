@@ -1,6 +1,6 @@
-import { Trait } from './Entity';
-import { Vec2 } from './math';
-import {splashText} from './Splash';
+import { Trait } from '../Entity';
+import { Vec2 } from '../math';
+import {splashText} from '../Splash';
 
 export class PlayerController extends Trait {
     constructor() {

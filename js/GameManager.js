@@ -4,7 +4,7 @@ import { loadRainbow } from './pickables/Rainbow';
 import { loadBullet } from './weapon/Bullet';
 import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
-import { createPlayerEnv } from './levels/createPlayerEnv';
+import { createPlayerEnv } from './player/createPlayerEnv';
 import { createLevelLoader } from './loadLevel';
 import { Timer } from './Timer';
 import { loadSpeedBooster } from './pickables/SpeedBooster';

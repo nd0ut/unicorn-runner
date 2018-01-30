@@ -1,6 +1,6 @@
 import { getRandomInt } from '../math';
 import { AutoJump } from '../Traits';
-import { createPlayerEnv } from './createPlayerEnv';
+import { createPlayerEnv } from '../player/createPlayerEnv';
 
 const N = 100;
 

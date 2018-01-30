@@ -1,6 +1,6 @@
 import { Entity } from '../Entity';
-import { PlayerController } from '../PlayerController';
-import { InteractionController } from '../InteractionController';
+import { PlayerController } from './PlayerController';
+import { InteractionController } from './InteractionController';
 
 export function createPlayerEnv(game) {
     const playerEnv = new Entity('player');

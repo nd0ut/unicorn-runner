@@ -1,4 +1,4 @@
-import { Trait } from "./Entity";
+import { Trait } from "../Entity";
 
 export class InteractionController extends Trait {
     constructor(game) {
