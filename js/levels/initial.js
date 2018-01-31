@@ -1,4 +1,4 @@
-import { getRandomInt } from '../math';
+import { rand } from '../math';
 import { AutoJump } from '../Traits';
 import { createPlayerEnv } from '../player/createPlayerEnv';
 
@@ -10,8 +10,8 @@ function getEntities() {
     // const choose = ['portal'];
 
     const entities = Array.from(Array(N)).map((val, idx) => ({
-        name: choose[getRandomInt(0, choose.length - 1)],
-        pos: [idx * getRandomInt(100, 2000) + 500, 100]
+        name: choose[rand.int(0, choose.length - 1)],
+        pos: [idx * rand.int(100, 2000) + 500, 100]
     }));
 
     return entities;
@@ -26,7 +26,7 @@ function getRanges() {
         mul = h === 3 ? 1 : mul;
         mul = h === 7 ? -1 : mul;
 
-        const platformWidth = getRandomInt(6, 12);
+        const platformWidth = rand.int(6, 12);
 
         const range = [x, platformWidth, h, 1];
         h = h + mul;

@@ -1,7 +1,7 @@
 import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
 import { Physics, Pickable, Solid } from '../Traits';
-import { getRandomInt } from '../math';
+import { rand } from '../math';
 import { defineGameObject } from '../defineGameObject';
 
 const PORTAL = {
@@ -64,7 +64,7 @@ class BehaviorPortal extends Trait {
         us.vel.set(30, -400);
         us.solid.obstructs = false;
 
-        them.pos.x += getRandomInt(100, 1000);
+        them.pos.x += rand.int(100, 1000);
         them.pos.y = 0;
     }
 }

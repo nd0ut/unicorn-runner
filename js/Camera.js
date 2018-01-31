@@ -1,4 +1,4 @@
-import { Vec2, getRandomInt } from './math';
+import { Vec2 } from './math';
 
 export class Camera {
     constructor() {

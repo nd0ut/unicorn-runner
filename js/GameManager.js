@@ -17,7 +17,7 @@ export class GameManager {
     constructor(canvasSelector) {
         this.canvasSelector = canvasSelector;
         this.context = canvasSelector.getContext('2d');
-        
+
         this.levels = [
             // levels.initial, 
             levels.first, 
@@ -27,7 +27,7 @@ export class GameManager {
         this.levelIdx = -1;
 
         this.camera = new Camera();
-        this.cameraController = new CameraController(this.camera);
+        this.cameraController = new CameraController(this.camera, this.context);
         this.timer = new Timer();
 
         this.levelSelector = document.getElementById('current-level');

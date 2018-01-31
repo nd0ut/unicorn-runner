@@ -39,10 +39,11 @@ export class Vec2 {
     }
 }
 
-export function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (++max - min)) + min;
-}
-
 export function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
 }
+
+export const rand = {
+    int: (min, max) => Math.floor(rand.float(min, ++max)),
+    float: (min, max) => Math.random() * (max - min) + min
+};

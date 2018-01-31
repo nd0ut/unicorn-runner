@@ -1,6 +1,5 @@
 import { Trait } from './Entity';
 import { Sides } from './Entity';
-import { getRandomInt } from './math';
 
 export class Physics extends Trait {
     constructor({ applyGravity } = { applyGravity: true }) {
