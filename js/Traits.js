@@ -1,5 +1,6 @@
 import { Trait } from './Entity';
 import { Sides } from './Entity';
+import { lerp } from './math';
 
 export class Physics extends Trait {
     constructor({ applyGravity } = { applyGravity: true }) {
@@ -70,13 +71,34 @@ export class Run extends Trait {
 
         this.speed = 15000;
         // this.speed = 2000;
+        this.lastSpeed = this.speed;
+        this.originSpeed = undefined;
+        this.damping = 1;
+
         this.distance = 0;
         this.onGround = false;
     }
 
+    stop() {
+        this.originSpeed = this.speed;
+        this.speed = 1;
+    }
+
+    resume() {
+        this.speed = this.originSpeed;
+        this.originSpeed = undefined;
+    }
+
     update(entity, deltaTime) {
-        entity.vel.x = this.speed * deltaTime;
+        let speed = this.speed;
+
+        if(this.lastSpeed < this.speed) {
+            speed = lerp(this.lastSpeed, this.speed, 1/this.damping * deltaTime)
+        } 
+
+        entity.vel.x = speed * deltaTime;
         this.distance += Math.abs(entity.vel.x) * deltaTime;
+        this.lastSpeed = speed;
     }
 }
 

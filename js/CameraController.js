@@ -3,6 +3,16 @@ import { lerp, Vec2, rand } from './math';
 export class CameraController {
     constructor(camera) {
         this.cam = camera;
+ 
+        // focus
+        this.followEntity = undefined;
+        this.focusEntity = undefined;
+        this.focusTime = undefined;
+        this.focusSwitched = false;
+        this.focusReached = false;
+        this.focusRestored = false;
+        this.focusRestoredTime = undefined;
+        this.focusResolver = undefined;
 
         this.cameraOffset = this.defaultCameraOffset;
         this.damping = this.defaultDamping;
@@ -24,12 +34,58 @@ export class CameraController {
     }
 
     setFollowEntity(entity) {
+        this.followEntity = entity;
         this.entity = entity;
         this.lastVel = entity.vel.clone();
     }
 
+    switchFocus(focusEntity, time) {
+        this.focusSwitched = true;
+        this.focusEntity = focusEntity
+        this.focusTime = time;
+        this.entity = focusEntity;
+        this.followEntity.run.stop();
+        this.cameraOffset.x = this.cam.size.x / 3;
+        
+        return new Promise((res) => {
+            this.focusResolver = res;
+        })
+    }
+
+    checkFocus(deltaTime, time) {
+        if(this.focusSwitched && !this.focusReached) {
+            const dist = Math.abs(this.entity.pos.x - this.cam.pos.x);
+            if(dist < 500) {
+                this.focusReached = true;
+
+                setTimeout(() => {
+                    this.entity = this.followEntity;
+                }, this.focusTime);
+            }
+
+        }
+        if(this.focusSwitched && this.focusReached && !this.focusRestored) {
+            const dist = Math.abs(this.followEntity.pos.x - this.cam.pos.x);
+            if(dist < 500) {
+                this.focusRestored = true;
+                this.focusRestoredTime = time;
+            }
+        }
+        if(this.focusSwitched && this.focusReached && this.focusRestored) {
+            this.focusSwitched = false;
+            this.focusReached = false;
+            this.focusRestored = false;
+            this.focusEntity = undefined;
+            this.focusResolver();
+            this.focusResolver = undefined;
+            this.followEntity.run.resume();            
+        }
+    }
+
     update(deltaTime, time, { alcohol = false, earthquake = false } = {}) {
-        if (!alcohol && !earthquake) {
+        this.checkFocus(deltaTime, time);
+
+        if (!alcohol && !earthquake && !this.focusSwitched && (time - this.focusRestoredTime) > 500) {
             this.damping = this.defaultDamping;
             this.cameraOffset = this.defaultCameraOffset;
         }

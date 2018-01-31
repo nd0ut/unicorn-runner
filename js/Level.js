@@ -13,6 +13,7 @@ export class Level {
 
         this.comp = new Compositor();
         this.entities = new Set();
+        this.namedEntities = new Map();
 
         this.entityCollider = new EntityCollider(this.entities);
         this.tileCollider = null;
