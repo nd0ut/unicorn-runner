@@ -99,12 +99,12 @@ export async function first(game) {
 
     function startLevel() {
         // level.sounds.get('music').playOnce();
-        game.cameraController.setFollowEntity(unicorn);
+        game.cameraController.focus.follow(unicorn);
 
-        setTimeout(() => {
-            const en = level.namedEntities.get('boss')
-            game.cameraController.switchFocus(en, 1000);
-        }, 2000);
+        // setTimeout(() => {
+        //     const en = level.namedEntities.get('boss')
+        //     game.cameraController.focus.notice(en, 1000);
+        // }, 2000);
 
         game.timer.update = (deltaTime, time) => {
             level.update(deltaTime);

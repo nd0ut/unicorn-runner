@@ -1,17 +1,16 @@
-import { Camera } from './Camera';
+import { Camera } from './camera/Camera';
+import { CameraController } from './camera/CameraController';
 import { loadEnemyBug } from './chars/EnemyBug';
-import { loadRainbow } from './pickables/Rainbow';
-import { loadBullet } from './weapon/Bullet';
 import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
-import { createPlayerEnv } from './player/createPlayerEnv';
 import { createLevelLoader } from './loadLevel';
-import { Timer } from './Timer';
-import { loadSpeedBooster } from './pickables/SpeedBooster';
-import { loadPortal } from './pickables/Portal';
-import { splashText } from './Splash';
 import { loadManaPot } from './pickables/ManaPot';
-import { CameraController } from './CameraController';
+import { loadPortal } from './pickables/Portal';
+import { loadRainbow } from './pickables/Rainbow';
+import { loadSpeedBooster } from './pickables/SpeedBooster';
+import { createPlayerEnv } from './player/createPlayerEnv';
+import { Timer } from './Timer';
+import { loadBullet } from './weapon/Bullet';
 
 export class GameManager {
     constructor(canvasSelector) {
