@@ -230,6 +230,10 @@ function animations(sprite) {
             return jumpAnim(unicorn.jump.engageTime);
         }
 
+        if (unicorn.run.lastSpeed < 1000) {
+            return 'idle';
+        }
+
         if (unicorn.jump.fallingDown) {
             return fallAnim(unicorn.jump.engageTime);
         }

@@ -92,7 +92,7 @@ export class Run extends Trait {
     update(entity, deltaTime) {
         let speed = this.speed;
 
-        if(this.lastSpeed < this.speed) {
+        if (Math.abs(this.lastSpeed - this.speed) > 0) {
             speed = lerp(this.lastSpeed, this.speed, 1/this.damping * deltaTime)
         } 
 

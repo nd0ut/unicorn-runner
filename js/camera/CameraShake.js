@@ -26,7 +26,7 @@ export class CameraShake extends CameraExt {
         return this.controller.focus.camOffset;
     }
 
-    update(deltaTime, time, { shakeType } = { shakeType: ShakeType.Drunk }) {
+    update(deltaTime, time, { shakeType } = { }) {
         if (!shakeType) {
             this.resetFocus();
             return;
@@ -48,7 +48,7 @@ export class CameraShake extends CameraExt {
 
     resetFocus() {
         this.controller.focus.damping = this.controller.focus.defaultDamping;
-        this.controller.focus.camOffset = this.controller.focus.defaultcamOffset;
+        this.controller.focus.camOffset = this.controller.focus.defaultCamOffset;
     }
 
     drunk(deltaTime, time) {

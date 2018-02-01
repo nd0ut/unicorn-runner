@@ -5,10 +5,10 @@ const levelSpec = {
             tiles: [
                 {
                     ranges: [
-                        [
-                            0, 1,
-                            3, 4
-                        ],
+                        // [
+                        //     0, 1,
+                        //     3, 4
+                        // ],
                         [
                             1, 19,
                             6, 1
@@ -146,15 +146,22 @@ const levelSpec = {
 export async function second(game) {
     const level = await game.loadLevel(levelSpec);
     const playerEnv = game.playerEnv;
-    const unicorn = game.entityFactory.unicorn();
-    playerEnv.playerController.setPlayer(unicorn);
+    // const unicorn = game.entityFactory.unicorn();
+    const unicorn = playerEnv.playerController.player;
+    // playerEnv.playerController.setPlayer(unicorn);
     level.entities.add(playerEnv);
     level.entities.add(unicorn);
 
     function startLevel() {
-        game.timer.update = deltaTime => {
+        unicorn.pos.x = -1000;
+        unicorn.pos.y = -200;
+        // unicorn.vel.x = 2000
+
+        game.cameraController.focus.follow(unicorn);
+
+        game.timer.update = (deltaTime, time) => {
             level.update(deltaTime);
-            game.cameraController.update({x: Math.max(0, unicorn.pos.x - 100)});
+            game.cameraController.update(deltaTime, time);
             level.comp.draw(game.context, game.camera);
         };
     }

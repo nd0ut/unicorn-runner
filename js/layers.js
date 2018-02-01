@@ -78,14 +78,15 @@ export function drawStaticBackground() {
     }
 
     function drawGrass(context, camera) {
-        let BackCoordX = -camera.pos.x / 0.8;
-        let SkyCoordX = -camera.pos.x / 1.2;
+        let BackCoordX = -camera.pos.x / 2;
+        let SkyCoordX = -camera.pos.x / 3;
         let FrontCoordX = -camera.pos.x / 0.7;
+        const margin = 0;
 
-        for (let i = 0; i < 30; i++) {
-            context.drawImage(CloudsImage, SkyCoordX + BackImage.width * i + 600, 0);
-            context.drawImage(BackImage, BackCoordX + BackImage.width * i, buffer.height - BackImage.height + 1);
-            context.drawImage(FrontImage, FrontCoordX + FrontImage.width * i, buffer.height - FrontImage.height + 1);
+        for (let i = -5; i < 30; i++) {
+            context.drawImage(CloudsImage, SkyCoordX + BackImage.width * i + 2000, 0);
+            context.drawImage(BackImage, BackCoordX + BackImage.width * i, buffer.height - BackImage.height + margin);
+            context.drawImage(FrontImage, FrontCoordX + FrontImage.width * i, buffer.height - FrontImage.height + margin);
         }
     }
 

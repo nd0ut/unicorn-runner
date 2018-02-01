@@ -1,6 +1,7 @@
 import { Trait } from '../Entity';
 import { Vec2 } from '../math';
 import {splashText} from '../Splash';
+import {debounce} from '../util';
 
 export class PlayerController extends Trait {
     constructor() {
@@ -22,7 +23,7 @@ export class PlayerController extends Trait {
     }
 
     onLevelComplete(levelCompeteHandler) {
-        this.levelCompeteHandler = levelCompeteHandler;
+        this.levelCompeteHandler = debounce(levelCompeteHandler, 1000);
     }
 
     onLevelFail(levelFailedHandler) {
@@ -87,21 +88,27 @@ export class PlayerController extends Trait {
             return;
         }
 
-        if(this.player.pos.x > level.distance + 100 && this.player.pos.y > 500) {
-            this.levelCompeteHandler && this.levelCompeteHandler();
-            return;
+        const distToEnd = level.distance - this.player.pos.x;
+        if (distToEnd > 0 && distToEnd < 500) {
+            this.player.run.speed = 100000;
+
+            if (distToEnd < 100) {
+                this.player.jump.start();                
+                this.levelCompeteHandler && this.levelCompeteHandler();
+            }
+            return;            
         }
 
         const dead = this.player.killable.dead && !level.entities.has(this.player);
-        const fall = this.player.pos.y > 1200;
+        const fall = this.player.pos.y > 500;
         const levelFailed = fall || dead;
 
-        if (levelFailed) {
-            this.player = undefined;
+        if (levelFailed) {            
+            // this.player = undefined;
 
-            this.resetScore();
+            // this.resetScore();
 
-            this.levelFailedHandler && this.levelFailedHandler();            
+            // this.levelFailedHandler && this.levelFailedHandler();            
         }
     }
 }

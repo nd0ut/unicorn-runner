@@ -65,7 +65,7 @@ class BehaviorPortal extends Trait {
         us.solid.obstructs = false;
 
         them.pos.x += rand.int(100, 1000);
-        them.pos.y = 0;
+        them.pos.y = -100;
     }
 }
 
