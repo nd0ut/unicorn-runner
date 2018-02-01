@@ -1,16 +1,16 @@
-import { Trait } from '../Entity';
+import { Trait, Sides } from '../Entity';
 import { Vec2 } from '../math';
 import {splashText} from '../Splash';
 import {debounce} from '../util';
 
 export class PlayerController extends Trait {
-    constructor() {
+    constructor(game) {
         super('playerController');
+        this.game = game;
         this.checkpoint = new Vec2(0, 0);
         this.player = null;
 
-        this.levelCompeteHandler = undefined;
-        this.levelFailedHandler = undefined;
+        this.levelCompleteHandler = undefined;
 
         this.totalScore = 0;
         this.score = 0;
@@ -22,8 +22,8 @@ export class PlayerController extends Trait {
         this.updateUiCounts(this.fireballsSelector, this.fireballs);        
     }
 
-    onLevelComplete(levelCompeteHandler) {
-        this.levelCompeteHandler = debounce(levelCompeteHandler, 1000);
+    onLevelComplete(levelCompleteHandler) {
+        this.levelCompleteHandler = levelCompleteHandler
     }
 
     onLevelFail(levelFailedHandler) {
@@ -83,32 +83,60 @@ export class PlayerController extends Trait {
         this.scoreSelector.innerHTML = this.totalScore + this.score;
     }
 
+    onFinish(distToFinish) {
+        if (distToFinish < 300) {
+            this.player.jump.enabled = true;            
+            this.player.jump.start();
+            this.player.jump.enabled = false;            
+        }
+
+        if(this.player.pos.y + this.player.size.y < -10) {
+            this.levelCompleteHandler && this.levelCompleteHandler();
+            return;
+        }
+
+        if(!this.levelFinished) {
+            this.player.jump.enabled = false;
+            this.player.run.boost(100000);
+            this.levelFinished = true;        
+        }
+    }
+
+    onFail(level) {
+        if(this.levelFailed) {
+            return
+        }
+
+        this.resetScore();
+        this.levelFailedHandler();
+        // this.player.killable.revive();
+        // this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
+    }
+
     async update(entity, deltaTime, level) {
         if(!this.player) {
             return;
         }
+        
+        if(!this.player.killable.dead && !level.entities.has(this.player)) {
+            level.entities.add(this.player);
+            return;
+        }
 
-        const distToEnd = level.distance - this.player.pos.x;
-        if (distToEnd > 0 && distToEnd < 500) {
-            this.player.run.speed = 100000;
-
-            if (distToEnd < 100) {
-                this.player.jump.start();                
-                this.levelCompeteHandler && this.levelCompeteHandler();
-            }
-            return;            
+        const distToFinish = level.distance - this.player.pos.x;
+        if (distToFinish < 500) {
+           this.onFinish(distToFinish);
+           return;
         }
 
         const dead = this.player.killable.dead && !level.entities.has(this.player);
-        const fall = this.player.pos.y > 500;
-        const levelFailed = fall || dead;
+        const levelFailed = dead;
 
-        if (levelFailed) {            
-            // this.player = undefined;
-
-            // this.resetScore();
-
-            // this.levelFailedHandler && this.levelFailedHandler();            
+        if (levelFailed) {      
+            this.onFail(level);      
+            this.levelFailed = true;            
+        } else {
+            this.levelFailed = false;            
         }
     }
 }

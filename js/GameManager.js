@@ -11,6 +11,7 @@ import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { createPlayerEnv } from './player/createPlayerEnv';
 import { Timer } from './Timer';
 import { loadBullet } from './weapon/Bullet';
+import { splashText } from './Splash';
 
 export class GameManager {
     constructor(canvasSelector) {
@@ -44,7 +45,7 @@ export class GameManager {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
         this.playerEnv = createPlayerEnv(this);
-
+        
         this.playerEnv.playerController.onLevelComplete(this.nextLevel.bind(this));
         this.playerEnv.playerController.onLevelFail(this.restartLevel.bind(this));
 
@@ -61,7 +62,7 @@ export class GameManager {
     }
 
     async runLevel(levelIdx) {     
-        // this.canvasSelector.classList.toggle('blur', true);
+        this.canvasSelector.classList.toggle('blur', true);
 
         this.playerEnv.playerController.commitScore();
 
@@ -72,10 +73,10 @@ export class GameManager {
         this.level = level;
 
         if(level.name) {
-            // await splashText(level.name)
+            await splashText(level.name)
         }
         
-        // this.canvasSelector.classList.toggle('blur', false);    
+        this.canvasSelector.classList.toggle('blur', false);    
                 
         startLevel();      
     }

@@ -146,17 +146,12 @@ const levelSpec = {
 export async function second(game) {
     const level = await game.loadLevel(levelSpec);
     const playerEnv = game.playerEnv;
-    // const unicorn = game.entityFactory.unicorn();
-    const unicorn = playerEnv.playerController.player;
-    // playerEnv.playerController.setPlayer(unicorn);
+    const unicorn = game.entityFactory.unicorn();
+    playerEnv.playerController.setPlayer(unicorn);
     level.entities.add(playerEnv);
     level.entities.add(unicorn);
 
     function startLevel() {
-        unicorn.pos.x = -1000;
-        unicorn.pos.y = -200;
-        // unicorn.vel.x = 2000
-
         game.cameraController.focus.follow(unicorn);
 
         game.timer.update = (deltaTime, time) => {

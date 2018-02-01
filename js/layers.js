@@ -14,7 +14,7 @@ export function createBackgroundLayer(level, tiles, image) {
 
     const context = buffer.getContext('2d');
 
-    function redraw(startIndex, endIndex)  {
+    function redraw(startIndex, endIndex) {
         context.clearRect(0, 0, buffer.width, buffer.height);
 
         for (let x = startIndex; x <= endIndex; ++x) {
@@ -34,13 +34,11 @@ export function createBackgroundLayer(level, tiles, image) {
 
         redraw(drawFrom, drawTo);
 
-        context.drawImage(buffer,
-            -camera.pos.x % 60,
-            -camera.pos.y);
+        context.drawImage(buffer, -camera.pos.x % 60, -camera.pos.y);
     };
 }
 
-export function drawStaticBackground() {
+export function drawStaticBackground(level) {
     const buffer = document.createElement('canvas');
     buffer.width = 1024 + 60;
     buffer.height = 600;
@@ -78,15 +76,28 @@ export function drawStaticBackground() {
     }
 
     function drawGrass(context, camera) {
-        let BackCoordX = -camera.pos.x / 2;
-        let SkyCoordX = -camera.pos.x / 3;
-        let FrontCoordX = -camera.pos.x / 0.7;
-        const margin = 0;
+        const backMargin = 1000;
+        const count = Math.floor(level.distance / FrontImage.width) + 5;
 
-        for (let i = -5; i < 30; i++) {
-            context.drawImage(CloudsImage, SkyCoordX + BackImage.width * i + 2000, 0);
-            context.drawImage(BackImage, BackCoordX + BackImage.width * i, buffer.height - BackImage.height + margin);
-            context.drawImage(FrontImage, FrontCoordX + FrontImage.width * i, buffer.height - FrontImage.height + margin);
+        let SkyCoordX = -camera.pos.x / 3;
+        let BackCoordX = -camera.pos.x / 2;
+        let FrontCoordX = -camera.pos.x / 1;
+        for (let i = 0; i < count; i++) {
+            context.drawImage(
+                CloudsImage,
+                SkyCoordX + CloudsImage.width * i + backMargin,
+                0
+            );
+            context.drawImage(
+                BackImage,
+                BackCoordX + BackImage.width * i,
+                -camera.pos.y + camera.size.y - BackImage.height
+            );
+            context.drawImage(
+                FrontImage,
+                FrontCoordX + FrontImage.width * i,
+                -camera.pos.y + camera.size.y - FrontImage.height
+            );
         }
     }
 
@@ -96,7 +107,7 @@ export function drawStaticBackground() {
             drawGradient(context);
             drawGrass(context, camera);
         }
-    }
+    };
 }
 
 export function createSpriteLayer(entities, width = 172, height = 142) {
@@ -114,7 +125,8 @@ export function createSpriteLayer(entities, width = 172, height = 142) {
             context.drawImage(
                 spriteBuffer,
                 entity.pos.x - camera.pos.x,
-                entity.pos.y - camera.pos.y);
+                entity.pos.y - camera.pos.y
+            );
         });
     };
 }

@@ -12,13 +12,16 @@ body {
 }
 
 canvas#screen {
-    transition: filter 0.3s;    
+    transition: all 0.3s;    
     border-radius: 20px;
     display: block;
+    background-color: transparent;
+    opacity: 1;    
 }
 
 canvas#screen.blur {
-    filter: blur(500px);
+    /* filter: blur(500px); */
+    opacity: 0;
 }
 
 .main-wrapper {

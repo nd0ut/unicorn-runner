@@ -71,12 +71,14 @@ export class Run extends Trait {
 
         this.speed = 15000;
         // this.speed = 2000;
+
         this.lastSpeed = this.speed;
         this.originSpeed = undefined;
-        this.damping = 1;
 
+        this.damping = 1;
         this.distance = 0;
         this.onGround = false;
+        this.boosted = false;
     }
 
     stop() {
@@ -87,6 +89,22 @@ export class Run extends Trait {
     resume() {
         this.speed = this.originSpeed;
         this.originSpeed = undefined;
+    }
+
+    boost(speed, time) {
+        this.originSpeed = this.speed;
+        this.speed = speed;
+        this.boosted = true;
+    }
+
+    cancelBoost() {
+        if(!this.boosted) {
+            return
+        }
+
+        this.speed = this.originSpeed;
+        this.originSpeed = undefined;
+        this.boosted = false;            
     }
 
     update(entity, deltaTime) {
@@ -116,6 +134,8 @@ export class Jump extends Trait {
         this.gracePeriod = 0.1;
         this.speedBoost = 0.3;
         this.velocity = 200;
+
+        this.enabled = true;
     }
 
     get fallingDown() {
@@ -127,10 +147,17 @@ export class Jump extends Trait {
     }
 
     start() {
+        if(!this.enabled) {
+            return
+        }
+
         this.requestTime = this.gracePeriod;
     }
 
     cancel() {
+        if(!this.enabled) {
+            return;
+        }
         this.engageTime = 0;
         this.requestTime = 0;
     }
@@ -204,6 +231,12 @@ export class Killable extends Trait {
                     level.entities.delete(entity);
                 });
             }
+
+            return;
+        }
+
+        if(entity.pos.y > 500) {
+            this.kill();
         }
     }
 }

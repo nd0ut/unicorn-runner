@@ -14,27 +14,27 @@ const levelSpec = {
             tiles: [
                 {
                     ranges: [
-                        // [0, 1, 3, 4],
+                        [0, 1, 3, 4],
                         [1, 19, 6, 1],
-                        // [24, 10, 6, 1],
-                        // [38, 10, 4, 1],
-                        // [51, 2, 4, 1],
-                        // [55, 2, 6, 1],
-                        // [60, 1, 6, 1],
-                        // [64, 5, 8, 1],
-                        // [73, 10, 5, 1],
-                        // [87, 2, 8, 1],
-                        // [93, 4, 6, 1],
-                        // [101, 19, 6, 1],
-                        // [124, 10, 6, 1],
-                        // [138, 10, 4, 1],
-                        // [151, 2, 4, 1],
-                        // [155, 2, 6, 1],
-                        // [160, 1, 6, 1],
-                        // [164, 5, 8, 1],
-                        // [173, 10, 5, 1],
-                        // [187, 2, 8, 1],
-                        // [193, 1, 6, 1]
+                        [24, 10, 6, 1],
+                        [38, 10, 4, 1],
+                        [51, 2, 4, 1],
+                        [55, 2, 6, 1],
+                        [60, 1, 6, 1],
+                        [64, 5, 8, 1],
+                        [73, 10, 5, 1],
+                        [87, 2, 8, 1],
+                        [93, 4, 6, 1],
+                        [101, 19, 6, 1],
+                        [124, 10, 6, 1],
+                        [138, 10, 4, 1],
+                        [151, 2, 4, 1],
+                        [155, 2, 6, 1],
+                        [160, 1, 6, 1],
+                        [164, 5, 8, 1],
+                        [173, 10, 5, 1],
+                        [187, 2, 8, 1],
+                        [193, 1, 6, 1]
                     ]
                 }
             ]
@@ -98,16 +98,8 @@ export async function first(game) {
     level.entities.add(unicorn);
 
     function startLevel() {
-        unicorn.pos.x = 0;
-        unicorn.pos.y = -200;
-
         // level.sounds.get('music').playOnce();
         game.cameraController.focus.follow(unicorn);
-
-        // setTimeout(() => {
-        //     const en = level.namedEntities.get('boss')
-        //     game.cameraController.focus.notice(en, 1000);
-        // }, 2000);
 
         game.timer.update = (deltaTime, time) => {
             level.update(deltaTime);

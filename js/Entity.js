@@ -87,10 +87,6 @@ export class Entity {
         });
     }
 
-    resetLifetime() {
-        this.lifetime = 0;
-    }
-
     update(deltaTime, level) {
         this.voice && this.voice();
         

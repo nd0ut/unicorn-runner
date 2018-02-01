@@ -15,11 +15,12 @@ function setupCollision(levelSpec, level) {
 function setupBackgrounds(levelSpec, level, backgroundSprites) {
     levelSpec.layers.forEach(layer => {
         const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns);
+        level.setDistance(Math.max(level.distance, backgroundGrid.width() * 60));
+        
         const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
-        const staticBackgroundLayer = drawStaticBackground();
+        const staticBackgroundLayer = drawStaticBackground(level);
         level.comp.layers.push(staticBackgroundLayer);
         level.comp.layers.push(backgroundLayer);
-        level.setDistance(Math.max(level.distance, backgroundGrid.width() * 60));
     });
 }
 

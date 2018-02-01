@@ -20,11 +20,11 @@ export class CameraFocus extends CameraExt {
     }
 
     get defaultDamping() {
-        return 0.01;
+        return 0.4;
     }
 
     get defaultCamOffset() {
-        return new Vec2(100, 0);
+        return new Vec2(100, 100);
     }
 
     update(deltaTime, time) {
@@ -43,11 +43,11 @@ export class CameraFocus extends CameraExt {
         }
 
         let entityX = this.entity.pos.x - this.camOffset.x;
-        let entityY = this.entity.pos.y - this.camOffset.y;
+        let entityY = this.entity.pos.y;
 
-        if (this.entity.pos.x < 0) {
-            this.cam.pos.x = entityX;
-        }
+        // if(Math.abs(this.cam.pos.x - entityX) > 1000) {
+        //     this.cam.pos.x = entityX;
+        // }
 
         if (Math.abs(this.cam.pos.x - entityX) > 0.1) {
             entityX = lerp(
@@ -66,7 +66,7 @@ export class CameraFocus extends CameraExt {
         }
 
         this.cam.pos.x = entityX;
-        // this.cam.pos.y = (0 > entityY || entityY > 50) ? entityY : 0
+        this.cam.pos.y = Math.min(entityY, 0);
     }
 
     notice(noticeEntity, time) {

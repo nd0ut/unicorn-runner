@@ -58,6 +58,10 @@ export class InteractionController extends Trait {
         const unicorn = this.playerController.player;
         const keyState = e.type === 'keydown' ? 1 : 0;
 
+        if(unicorn.killable.dead) {
+            return;
+        }
+
         if (keyState > 0) {
             unicorn.jump.start();
         } else {

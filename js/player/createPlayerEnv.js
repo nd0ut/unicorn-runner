@@ -5,7 +5,7 @@ import { InteractionController } from './InteractionController';
 export function createPlayerEnv(game) {
     const playerEnv = new Entity('player');
 
-    const playerControl = new PlayerController();
+    const playerControl = new PlayerController(game);
     playerControl.checkpoint.set(64, 64);
     playerEnv.addTrait(playerControl);
 
