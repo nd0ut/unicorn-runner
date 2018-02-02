@@ -7,7 +7,8 @@ export class TileResolver {
     }
 
     toIndex(pos) {
-        return Math.floor(pos / this.tileSize);
+        const idx = Math.floor(pos / this.tileSize);
+        return Math.max(0, idx);
     }
 
     toIndexRange(pos1, pos2) {
