@@ -34,7 +34,10 @@ export function defineGameObject(name, options) {
         offset,
         drawBounds,
         afterCreate
-    } = { ...defaultOptions, ...options };
+    } = {
+        ...defaultOptions,
+        ...options
+    };
 
     return async () => {
         const [sprites, soundSets] = await Promise.all([
@@ -42,8 +45,8 @@ export function defineGameObject(name, options) {
             Promise.all(soundSpecs.map(spec => loadSounds(spec)))
         ]);
 
-        return (options = { skinName: 'default' }) => {
-            const { skinName } = options;
+        return (options = {}) => {
+            const skinName = options.skinName || 'default';
 
             const skinSprite = sprites.find(sprite => sprite.skinName === skinName);
             const skinSounds = soundSets.find(sound => sound.skinName === skinName);
@@ -53,9 +56,7 @@ export function defineGameObject(name, options) {
             entity.offset.x = offset[0];
             entity.offset.y = offset[1];
 
-            traits({ ...options, sounds: skinSounds }).forEach(trait =>
-                entity.addTrait(trait)
-            );
+            traits({ ...options, sounds: skinSounds }).forEach(trait => entity.addTrait(trait));
 
             const bounds = drawBounds ? entity.bounds.clone() : undefined;
             entity.draw = getDrawFn(skinSprite, animations, bounds);
