@@ -4,7 +4,7 @@ export function debounce(func, wait, immediate) {
         const context = this, args = arguments;
         clearTimeout(timeout);
         timeout = setTimeout(function () {
-            timeout = null;
+            timeout = undefined;
             if (!immediate) func.apply(context, args);
         }, wait);
         if (immediate && !timeout) func.apply(context, args);

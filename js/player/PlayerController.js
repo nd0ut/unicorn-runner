@@ -8,7 +8,7 @@ export class PlayerController extends Trait {
         super('playerController');
         this.game = game;
         this.checkpoint = new Vec2(0, 0);
-        this.player = null;
+        this.player = undefined;
 
         this.levelCompleteHandler = undefined;
 

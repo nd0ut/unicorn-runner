@@ -6,8 +6,8 @@ export class Sound {
         this.buffer = sound.buffer;
 
         this.isPlaying = false;
-        this.timeoutId = null;
-        this.source = null;
+        this.timeoutId = undefined;
+        this.source = undefined;
     }
 
     playOnce() {

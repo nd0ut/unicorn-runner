@@ -16,7 +16,7 @@ export class Level {
         this.namedEntities = new Map();
 
         this.entityCollider = new EntityCollider(this.entities);
-        this.tileCollider = null;
+        this.tileCollider = undefined;
     }
 
     setName(name) {
