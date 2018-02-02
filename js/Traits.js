@@ -234,10 +234,6 @@ export class Killable extends Trait {
 
             return;
         }
-
-        if(entity.pos.y > 500) {
-            this.kill();
-        }
     }
 }
 

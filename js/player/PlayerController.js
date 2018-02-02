@@ -84,20 +84,19 @@ export class PlayerController extends Trait {
     }
 
     onFinish(distToFinish) {
-        if (distToFinish < 300) {
-            this.player.jump.enabled = true;            
-            this.player.jump.start();
-            this.player.jump.enabled = false;            
-        }
-
-        if(this.player.pos.y + this.player.size.y < -10) {
+        if(this.player.pos.y + this.player.size.y < -100) {
             this.levelCompleteHandler && this.levelCompleteHandler();
             return;
         }
 
         if(!this.levelFinished) {
+            this.player.run.stop();
+            
+            const ufo = this.game.entityFactory.ufo({napEntity: this.player});
+            this.game.level.entities.add(ufo);
+            this.game.cameraController.focus.notice(ufo, 500);
+            
             this.player.jump.enabled = false;
-            this.player.run.boost(100000);
             this.levelFinished = true;        
         }
     }
@@ -109,8 +108,6 @@ export class PlayerController extends Trait {
 
         this.resetScore();
         this.levelFailedHandler();
-        // this.player.killable.revive();
-        // this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
     }
 
     async update(entity, deltaTime, level) {
@@ -124,13 +121,14 @@ export class PlayerController extends Trait {
         }
 
         const distToFinish = level.distance - this.player.pos.x;
-        if (distToFinish < 500) {
+        if (distToFinish < 300) {
            this.onFinish(distToFinish);
            return;
         }
 
-        const dead = this.player.killable.dead && !level.entities.has(this.player);
-        const levelFailed = dead;
+        const death = this.player.killable.dead && !level.entities.has(this.player);
+        const fall = this.player.pos.y > 600 && distToFinish > 500;
+        const levelFailed = death || fall;
 
         if (levelFailed) {      
             this.onFail(level);      

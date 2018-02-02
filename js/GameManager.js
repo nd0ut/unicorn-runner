@@ -12,6 +12,7 @@ import { createPlayerEnv } from './player/createPlayerEnv';
 import { Timer } from './Timer';
 import { loadBullet } from './weapon/Bullet';
 import { splashText } from './Splash';
+import { loadUfo } from './other/Ufo';
 
 export class GameManager {
     constructor(canvasSelector) {
@@ -97,5 +98,6 @@ function loadEntities() {
         loadPortal().then(addFactory('portal')),
         loadBullet().then(addFactory('bullet')),
         loadManaPot().then(addFactory('manaPot')),
+        loadUfo().then(addFactory('ufo')),
     ]).then(() => entityFactories);
 }

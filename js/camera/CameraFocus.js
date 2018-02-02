@@ -33,6 +33,10 @@ export class CameraFocus extends CameraExt {
     }
 
     follow(entity) {
+        if(this.noticeStarted) {
+            this.stopNotice();
+        }
+        
         this.followEntity = entity;
         this.entity = entity;
     }

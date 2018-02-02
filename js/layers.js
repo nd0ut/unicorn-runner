@@ -110,7 +110,7 @@ export function drawStaticBackground(level) {
     };
 }
 
-export function createSpriteLayer(entities, width = 172, height = 142) {
+export function createSpriteLayer(entities, width = 240, height = 350) {
     const spriteBuffer = document.createElement('canvas');
     spriteBuffer.width = width;
     spriteBuffer.height = height;
