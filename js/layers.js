@@ -43,11 +43,15 @@ export function drawStaticBackground(level) {
     buffer.width = 1024 + 60;
     buffer.height = 600;
 
-    let BackImage;
-    let CloudsImage;
-    let FrontImage;
-    let loaded = 0;
     const context = buffer.getContext('2d');
+
+    let images;
+
+    loadImages({
+        CloudsImage: require('../img/clouds.png'),
+        BackImage: require('../img/mountains.png'),
+        FrontImage: require('../img/forest.png')
+    }).then(result => (images = result));
 
     function drawGradient(context) {
         let gradient = context.createLinearGradient(0, 0, 0, buffer.width);
@@ -58,36 +62,32 @@ export function drawStaticBackground(level) {
         context.fillRect(0, 0, buffer.width, buffer.height);
     }
 
-    function loadGrass() {
-        loadImage(require('../img/clouds.png')).then(function(result) {
-            CloudsImage = result;
-            loaded++;
-        });
+    function loadImages(urlMap) {
+        const names = Object.keys(urlMap);
+        const urls = Object.values(urlMap);
 
-        loadImage(require('../img/mountains.png')).then(function(result) {
-            BackImage = result;
-            loaded++;
-        });
-
-        loadImage(require('../img/forest.png')).then(function(result) {
-            FrontImage = result;
-            loaded++;
-        });
+        return Promise.all(urls.map(url => loadImage(url))).then(images =>
+            images.reduce((result, image, idx) => {
+                result[names[idx]] = image;
+                return result;
+            }, {})
+        );
     }
 
-    function drawGrass(context, camera) {
+    function drawImages(context, camera) {
+        let CloudsImage = images.CloudsImage;
+        let BackImage = images.BackImage;
+        let FrontImage = images.FrontImage;
+
         const backMargin = 1000;
         const count = Math.floor(level.distance / FrontImage.width) + 5;
 
         let SkyCoordX = -camera.pos.x / 3;
         let BackCoordX = -camera.pos.x / 2;
         let FrontCoordX = -camera.pos.x / 1;
+
         for (let i = 0; i < count; i++) {
-            context.drawImage(
-                CloudsImage,
-                SkyCoordX + CloudsImage.width * i + backMargin,
-                0
-            );
+            context.drawImage(CloudsImage, SkyCoordX + CloudsImage.width * i + backMargin, 0);
             context.drawImage(
                 BackImage,
                 BackCoordX + BackImage.width * i,
@@ -101,11 +101,11 @@ export function drawStaticBackground(level) {
         }
     }
 
-    loadGrass();
     return function drawBackgroundLayer(context, camera) {
-        if (loaded > 2) {
-            drawGradient(context);
-            drawGrass(context, camera);
+        drawGradient(context);
+
+        if (images) {
+            drawImages(context, camera);
         }
     };
 }
