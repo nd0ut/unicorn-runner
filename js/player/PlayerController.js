@@ -83,34 +83,7 @@ export class PlayerController extends Trait {
         this.scoreSelector.innerHTML = this.totalScore + this.score;
     }
 
-    onFinish(distToFinish) {
-        if(this.player.pos.y + this.player.size.y < -100) {
-            this.levelCompleteHandler && this.levelCompleteHandler();
-            return;
-        }
-
-        if(!this.levelFinished) {
-            this.player.run.stop();
-            
-            const ufo = this.game.entityFactory.ufo({napEntity: this.player});
-            this.game.level.entities.add(ufo);
-            this.game.cameraController.focus.notice(ufo, 500);
-            
-            this.player.jump.enabled = false;
-            this.levelFinished = true;        
-        }
-    }
-
-    onFail(level) {
-        if(this.levelFailed) {
-            return
-        }
-
-        this.resetScore();
-        this.levelFailedHandler();
-    }
-
-    async update(entity, deltaTime, level) {
+    update(entity, deltaTime, level) {
         if(!this.player) {
             return;
         }
@@ -118,23 +91,6 @@ export class PlayerController extends Trait {
         if(!this.player.killable.dead && !level.entities.has(this.player)) {
             level.entities.add(this.player);
             return;
-        }
-
-        const distToFinish = level.distance - this.player.pos.x;
-        if (distToFinish < 300) {
-           this.onFinish(distToFinish);
-           return;
-        }
-
-        const death = this.player.killable.dead && !level.entities.has(this.player);
-        const fall = this.player.pos.y > 600 && distToFinish > 500;
-        const levelFailed = death || fall;
-
-        if (levelFailed) {      
-            this.onFail(level);      
-            this.levelFailed = true;            
-        } else {
-            this.levelFailed = false;            
         }
     }
 }

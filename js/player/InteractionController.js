@@ -18,7 +18,7 @@ export class InteractionController extends Trait {
     }
 
     get currentLevel() {
-        return this.game.level;
+        return this.game.levelManager.level;
     }
 
     setupHandlers() {

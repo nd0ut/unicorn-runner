@@ -2,7 +2,7 @@ import { rand } from '../math';
 import { AutoJump } from '../Traits';
 import { createPlayerEnv } from '../player/createPlayerEnv';
 
-const N = 100;
+const N = 2;
 
 function getEntities() {
     const choose = ['speedbooster'];
@@ -62,23 +62,33 @@ export async function initial(game) {
 
     const playerEnv = createPlayerEnv(game);
     playerEnv.playerController.setPlayer(unicorn);
+
     level.entities.add(playerEnv);
     level.entities.add(unicorn);
 
+    function checkFinish() {
+        if(unicorn.pos.x > level.distance) {
+            unicorn.pos.x = 64;
+            unicorn.pos.y = 64;
+        }
+    }
+
     function startLevel() {
-        game.timer.update = deltaTime => {
+        game.cameraController.focus.follow(unicorn);
+        
+        game.timer.update = (deltaTime, time) => {
+            checkFinish();
             level.update(deltaTime);
-            game.cameraController.update({x: Math.max(0, unicorn.pos.x - 100)});
+            game.cameraController.update(deltaTime, time);
             level.comp.draw(game.context, game.camera);
         };
 
-        const onPlay = () => {
-            game.timer.update = () => {};
+        const onPlayClick = () => {
             document.querySelector('.play-block').remove();
-            game.nextLevel();
+            game.levelManager.nextLevel();
         };
 
-        document.querySelector('.play-btn').addEventListener('click', onPlay);
+        document.querySelector('.play-btn').addEventListener('click', onPlayClick);
     }
 
     return {

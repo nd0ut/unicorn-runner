@@ -13,29 +13,16 @@ import { Timer } from './Timer';
 import { loadBullet } from './weapon/Bullet';
 import { splashText } from './Splash';
 import { loadUfo } from './other/Ufo';
+import { LevelManager } from './LevelManager';
 
 export class GameManager {
     constructor(canvasSelector) {
         this.canvasSelector = canvasSelector;
         this.context = canvasSelector.getContext('2d');
 
-        this.levels = [
-            // levels.initial, 
-            levels.first, 
-            levels.second
-        ];
-        this.level = undefined;
-        this.levelIdx = -1;
-
         this.camera = new Camera();
         this.cameraController = new CameraController(this.camera, this.context);
         this.timer = new Timer();
-
-        this.levelSelector = document.getElementById('current-level');
-
-        // TODO: dev
-        this.canvasSelector.classList.toggle('blur', false);  
-        document.querySelector('.play-block').remove();
 
         this.start();
     }
@@ -46,40 +33,9 @@ export class GameManager {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
         this.playerEnv = createPlayerEnv(this);
-        
-        this.playerEnv.playerController.onLevelComplete(this.nextLevel.bind(this));
-        this.playerEnv.playerController.onLevelFail(this.restartLevel.bind(this));
-
-        this.nextLevel();
-    }
-
-    async restartLevel() {
-        return this.runLevel(this.levelIdx);
-    }
-
-    async nextLevel() {
-        this.levelIdx += 1;
-        return this.runLevel(this.levelIdx);
-    }
-
-    async runLevel(levelIdx) {     
-        this.canvasSelector.classList.toggle('blur', true);
-
-        this.playerEnv.playerController.commitScore();
-
-        this.levelSelector.innerHTML = levelIdx;
-
-        const initLevel = this.levels[levelIdx];
-        const {level, startLevel} = await initLevel(this);
-        this.level = level;
-
-        if(level.name) {
-            await splashText(level.name)
-        }
-        
-        this.canvasSelector.classList.toggle('blur', false);    
-                
-        startLevel();      
+        this.levelManager = new LevelManager(this);
+            
+        this.levelManager.nextLevel();
     }
 }
 
