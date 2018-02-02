@@ -30,6 +30,9 @@ export class LevelManager {
         this.fallDistance = 600;
 
         this.levelSelector = document.getElementById('current-level');
+
+        this.finishedHandler = undefined;
+        this.failedHandler = undefined;
     }
 
     get playerController() {
@@ -38,6 +41,14 @@ export class LevelManager {
 
     get player() {
         return this.game.playerEnv.playerController.player;
+    }
+
+    onLevelFinished(finishedHandler) {
+        this.finishedHandler = finishedHandler
+    }
+
+    onLevelFailed(failedHandler) {
+        this.failedHandler = failedHandler;
     }
 
     async restartLevel() {
@@ -96,7 +107,7 @@ export class LevelManager {
 
         if (animationEnd) {
             this.levelState = LevelState.FINISHED;
-            this.nextLevel();
+            this.onFinish();
             return;
         }
 
@@ -120,8 +131,13 @@ export class LevelManager {
         }
     }
 
+    onFinish() {
+        this.onLevelFinished();
+        this.nextLevel();
+    }
+
     onFail() {
-        this.playerController.resetScore();
+        this.onLevelFailed();
         this.restartLevel();
     }
 }

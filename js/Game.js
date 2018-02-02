@@ -30,8 +30,8 @@ export class Game {
 
         this.cameraController = new CameraController(this.camera);
 
-        this.playerEnv = createPlayerEnv(this);
         this.levelManager = new LevelManager(this);
+        this.playerEnv = createPlayerEnv(this);
 
         this.levelManager.nextLevel();
 

@@ -10,7 +10,8 @@ export class PlayerController extends Trait {
         this.checkpoint = new Vec2(0, 0);
         this.player = undefined;
 
-        this.levelCompleteHandler = undefined;
+        this.game.levelManager.onLevelFinished(this.onLevelFinised.bind(this));
+        this.game.levelManager.onLevelFailed(this.onLevelFailed.bind(this));
 
         this.totalScore = 0;
         this.score = 0;
@@ -20,14 +21,6 @@ export class PlayerController extends Trait {
         this.scoreSelector = document.getElementById('unicorn-score');
 
         this.updateUiCounts(this.fireballsSelector, this.fireballs);        
-    }
-
-    onLevelComplete(levelCompleteHandler) {
-        this.levelCompleteHandler = levelCompleteHandler
-    }
-
-    onLevelFail(levelFailedHandler) {
-        this.levelFailedHandler = levelFailedHandler;
     }
 
     setPlayer(entity) {
@@ -92,5 +85,13 @@ export class PlayerController extends Trait {
             level.entities.add(this.player);
             return;
         }
+    }
+
+    onLevelFinised() {
+        this.commitScore();
+    }
+
+    onLevelFailed() {
+        this.resetScore();
     }
 }
