@@ -3,20 +3,24 @@ body {
     color: #fff;
     margin: 0;
     padding: 0;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Arcade', sans-serif;
     line-height: 1;
-
     display: flex;
     align-items: center;
     flex-direction: column;
 }
 
+@font-face {
+    font-family: 'Arcade';
+    src: url('../fonts/ARCADECLASSIC.TTF');
+}
+
 canvas#screen {
-    transition: all 0.3s;    
+    transition: all 0.3s;
     border-radius: 20px;
     display: block;
     background-color: transparent;
-    opacity: 1;    
+    opacity: 1;
 }
 
 canvas#screen.blur {
@@ -103,7 +107,7 @@ canvas#screen.blur {
 .play-btn {
     width: 200px;
     height: 200px;
-    border-radius: 150px;    
+    border-radius: 150px;
     transition: all .3s;
     box-shadow: 0px 0px 0px 0px violet;
 }
@@ -121,7 +125,7 @@ canvas#screen.blur {
 }
 
 .splash-text {
-    opacity: 0;    
+    opacity: 0;
     animation-duration: 1s;
     animation-fill-mode: both;
     font-size: 100pt;
@@ -133,38 +137,27 @@ canvas#screen.blur {
 }
 
 @keyframes jackInTheBox {
-  from {
-    opacity: 0;
-    transform: scale(0.1) rotate(30deg);
-    transform-origin: center bottom;
-  }
-
-  30% {
-    transform: rotate(-10deg);
-  }
-
-  50% {
-    transform: rotate(3deg);
-  }
-
-  70% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  to {
-      opacity: 0;
-      transform: scale(0.1) rotate(0deg);
-  }
+    from {
+        opacity: 0;
+        transform: scale(0.1) rotate(30deg);
+        transform-origin: center bottom;
+    }
+    30% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(3deg);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.1) rotate(0deg);
+    }
 }
 
 .play-btn:hover {
-    box-shadow: 
-    0 0 15px 10px violet,
-    0 0 15px 20px indigo,
-    0 0 15px 30px blue,
-    0 0 15px 40px green,
-    0 0 15px 50px yellow,
-    0 0 15px 60px orange,
-    0 0 15px 70px red;
+    box-shadow: 0 0 15px 10px violet, 0 0 15px 20px indigo, 0 0 15px 30px blue, 0 0 15px 40px green, 0 0 15px 50px yellow, 0 0 15px 60px orange, 0 0 15px 70px red;
 }
