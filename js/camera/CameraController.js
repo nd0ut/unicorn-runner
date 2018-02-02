@@ -1,24 +1,15 @@
-import { lerp, Vec2, rand } from '../math';
-import {CameraFocus} from './CameraFocus';
-import { CameraShake } from './CameraShake';
-
 export class CameraController {
-    constructor(camera) {
+    constructor(camera, extensions) {
         this.cam = camera;
-        this.extensions = this.loadExtensions();
+        this.extensions = this.loadExtensions(extensions);
     }
 
-    loadExtensions() {
-        let extensions = [
-            CameraShake,
-            CameraFocus
-        ].map(ExtKlass => {
+    loadExtensions(extensions) {
+        return extensions.map(ExtKlass => {
             const ext = new ExtKlass(this);
             this[ext.name] = ext;
             return ext;
         });
-
-        return extensions;
     }
 
     update(deltaTime, time, { alcohol = false, earthquake = false } = {}) {

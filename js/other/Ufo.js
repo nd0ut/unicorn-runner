@@ -45,7 +45,7 @@ class BehaviorUfo extends Trait {
     canCatch() {
         const ufoCenter = this.entity.pos.x + this.entity.size.x / 2;
         const napCenter = this.napEntity.pos.x + this.napEntity.size.x / 2;
-        const canCatch = Math.abs(ufoCenter - napCenter) < 10;
+        const canCatch = Math.abs(ufoCenter - napCenter) < 100;
 
         return canCatch;
     }

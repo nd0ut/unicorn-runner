@@ -1,21 +1,19 @@
-import { Camera } from './camera/Camera';
-import { CameraController } from './camera/CameraController';
-import { loadEnemyBug } from './chars/EnemyBug';
-import { loadUnicorn } from './chars/Unicorn';
+import { Camera } from '../camera/Camera';
+import { loadEnemyBug } from '../chars/EnemyBug';
+import { loadUnicorn } from '../chars/Unicorn';
+import { createLevelLoader } from '../loadLevel';
+import { loadUfo } from '../other/Ufo';
+import { loadManaPot } from '../pickables/ManaPot';
+import { loadPortal } from '../pickables/Portal';
+import { loadRainbow } from '../pickables/Rainbow';
+import { loadSpeedBooster } from '../pickables/SpeedBooster';
+import { Timer } from '../Timer';
+import { loadBullet } from '../weapon/Bullet';
 import { LevelManager } from './LevelManager';
-import { createLevelLoader } from './loadLevel';
-import { loadUfo } from './other/Ufo';
-import { loadManaPot } from './pickables/ManaPot';
-import { loadPortal } from './pickables/Portal';
-import { loadRainbow } from './pickables/Rainbow';
-import { loadSpeedBooster } from './pickables/SpeedBooster';
-import { createPlayerEnv } from './player/createPlayerEnv';
-import { Timer } from './Timer';
-import { loadBullet } from './weapon/Bullet';
-import { CameraShake } from './camera/CameraShake';
-import { CameraFocus } from './camera/CameraFocus';
+import { MouseController } from './MouseController';
+import { InteractionController } from './InteractionController';
 
-export class Game {
+export class Editor {
     constructor(canvasSelector) {
         this.canvasSelector = canvasSelector;
         this.context = canvasSelector.getContext('2d');
@@ -30,12 +28,12 @@ export class Game {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
 
-        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
+        this.mouse = new MouseController(this);
 
         this.levelManager = new LevelManager(this);
-        this.playerEnv = createPlayerEnv(this);
+        this.levelManager.runLevel(0);
 
-        this.levelManager.nextLevel();
+        this.interactionController = new InteractionController(this);
 
         this.timer.start();
     }

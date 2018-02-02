@@ -1,7 +1,7 @@
 import { splashText } from '../Splash';
 import { Striker } from '../Traits';
 
-const levelSpec = {
+export const firstLevelSpec = {
     name: 'Level 1',
     sounds: [
         {
@@ -90,7 +90,7 @@ const levelSpec = {
 };
 
 export async function first(game) {
-    const level = await game.loadLevel(levelSpec);
+    const level = await game.loadLevel(firstLevelSpec);
     const playerEnv = game.playerEnv;
     const unicorn = game.entityFactory.unicorn();
     level.entities.add(playerEnv);

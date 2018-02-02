@@ -12,10 +12,17 @@ export class ClipBox {
             && this.right > box.left;
     }
 
+    contains(pos) {
+        return this.bottom > pos.y
+            && this.top < pos.y
+            && this.left < pos.x
+            && this.right > pos.x
+    }
+
     clone() {
         return new ClipBox(
-            Object.assign({}, this.pos), 
-            Object.assign({}, this.size), 
+            Object.assign({}, this.pos),
+            Object.assign({}, this.size),
             Object.assign({}, this.offset)
         );
     }

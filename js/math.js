@@ -19,6 +19,10 @@ export class Matrix {
         this.grid[x][y] = value;
     }
 
+    remove(x, y) {
+        delete this.grid[x][y];
+    }
+
     width() {
         return this.grid.length;
     }
@@ -37,6 +41,11 @@ export class Vec2 {
     clone() {
         return new Vec2(this.x, this.y);
     }
+
+    distance(vec) {
+        const dist = Math.sqrt(Math.pow(vec.x - this.x, 2) + Math.pow(vec.y - this.y, 2));
+        return dist;
+    }
 }
 
 export function lerp(v0, v1, t) {
@@ -47,3 +56,7 @@ export const rand = {
     int: (min, max) => Math.floor(rand.float(min, ++max)),
     float: (min, max) => Math.random() * (max - min) + min
 };
+
+export function clamp(val, min, max) {
+    return val > max ? max : val < min ? min : val;
+}
