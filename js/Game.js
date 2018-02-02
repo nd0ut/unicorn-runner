@@ -2,8 +2,9 @@ import { Camera } from './camera/Camera';
 import { CameraController } from './camera/CameraController';
 import { loadEnemyBug } from './chars/EnemyBug';
 import { loadUnicorn } from './chars/Unicorn';
-import * as levels from './levels';
+import { LevelManager } from './LevelManager';
 import { createLevelLoader } from './loadLevel';
+import { loadUfo } from './other/Ufo';
 import { loadManaPot } from './pickables/ManaPot';
 import { loadPortal } from './pickables/Portal';
 import { loadRainbow } from './pickables/Rainbow';
@@ -11,31 +12,30 @@ import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { createPlayerEnv } from './player/createPlayerEnv';
 import { Timer } from './Timer';
 import { loadBullet } from './weapon/Bullet';
-import { splashText } from './Splash';
-import { loadUfo } from './other/Ufo';
-import { LevelManager } from './LevelManager';
 
-export class GameManager {
+export class Game {
     constructor(canvasSelector) {
         this.canvasSelector = canvasSelector;
         this.context = canvasSelector.getContext('2d');
 
         this.camera = new Camera();
-        this.cameraController = new CameraController(this.camera, this.context);
         this.timer = new Timer();
 
         this.start();
     }
 
     async start() {
-        this.timer.start();
-        
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
+
+        this.cameraController = new CameraController(this.camera);
+
         this.playerEnv = createPlayerEnv(this);
         this.levelManager = new LevelManager(this);
-            
+
         this.levelManager.nextLevel();
+
+        this.timer.start();
     }
 }
 
@@ -54,6 +54,6 @@ function loadEntities() {
         loadPortal().then(addFactory('portal')),
         loadBullet().then(addFactory('bullet')),
         loadManaPot().then(addFactory('manaPot')),
-        loadUfo().then(addFactory('ufo')),
+        loadUfo().then(addFactory('ufo'))
     ]).then(() => entityFactories);
 }

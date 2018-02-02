@@ -1,30 +1,30 @@
-import { Camera } from './camera/Camera';
-import { CameraController } from './camera/CameraController';
-import { loadEnemyBug } from './chars/EnemyBug';
-import { loadUnicorn } from './chars/Unicorn';
 import * as levels from './levels';
-import { createLevelLoader } from './loadLevel';
-import { loadManaPot } from './pickables/ManaPot';
-import { loadPortal } from './pickables/Portal';
-import { loadRainbow } from './pickables/Rainbow';
-import { loadSpeedBooster } from './pickables/SpeedBooster';
-import { createPlayerEnv } from './player/createPlayerEnv';
-import { Timer } from './Timer';
-import { loadBullet } from './weapon/Bullet';
 import { splashText } from './Splash';
-import { loadUfo } from './other/Ufo';
+
+const LevelState = {
+    IDLE: Symbol('idle'),
+
+    FAILED: Symbol('failed'),
+    FINISH_ANIMATION: Symbol('finish_animation'),
+    FINISHED: Symbol('finished')
+};
 
 export class LevelManager {
     constructor(game) {
         this.game = game;
 
-        this.levels = [
-            levels.initial, 
-            levels.first, 
-            levels.second
-        ];
-        this.level = undefined;
+        const showInitialLevel = false;
+
+        this.levels = [levels.initial, levels.first, levels.second];
         this.levelIdx = -1;
+        this.levelState = LevelState.IDLE;
+
+        if (!showInitialLevel) {
+            document.querySelector('.play-block').remove();
+            this.levelIdx += 1;
+        }
+
+        this.level = undefined;
 
         this.finishDistance = 500;
         this.fallDistance = 600;
@@ -37,7 +37,7 @@ export class LevelManager {
     }
 
     get player() {
-        return this.game.playerEnv.playerController.player;        
+        return this.game.playerEnv.playerController.player;
     }
 
     async restartLevel() {
@@ -49,7 +49,7 @@ export class LevelManager {
         return this.runLevel(this.levelIdx);
     }
 
-    async runLevel(levelIdx) {     
+    async runLevel(levelIdx) {
         this.game.canvasSelector.classList.toggle('blur', true);
 
         this.playerController.commitScore();
@@ -57,62 +57,71 @@ export class LevelManager {
         this.levelSelector.innerHTML = levelIdx;
 
         const initLevel = this.levels[levelIdx];
-        const {level, startLevel} = await initLevel(this.game);
+        const { level, startLevel } = await initLevel(this.game);
         this.level = level;
 
-        if(level.name) {
-            await splashText(level.name)
+        if (level.name) {
+            await splashText(level.name);
         }
 
-        this.game.canvasSelector.classList.toggle('blur', false);    
+        this.game.canvasSelector.classList.toggle('blur', false);
 
-        startLevel();      
+        startLevel();
+
+        this.levelState = LevelState.IDLE;
     }
 
     update(deltaTime) {
-        const distToFinish = this.level.distance - this.player.pos.x;
-
-        if (distToFinish < this.finishDistance) {
-           this.onFinish(distToFinish);
-           return;
-        } else {
-            this.levelFinished = false;
-            this.ufo = undefined;            
+        if (this.levelState === LevelState.FINISHED) {
+            return;
         }
 
-        const death = this.player.killable.dead && !this.level.entities.has(this.player);
-        const fall = this.player.pos.y > this.fallDistance && distToFinish > this.finishDistance;
-        const levelFailed = death || fall;
+        if ([LevelState.FINISH_ANIMATION, LevelState.IDLE].includes(this.levelState)) {
+            this.checkFinished();
+        }
 
-        if (levelFailed) {      
-            this.onFail();      
-            this.levelFailed = true;            
-        } else {
-            this.levelFailed = false;            
+        if (this.levelState === LevelState.IDLE) {
+            this.checkFailed();
         }
     }
 
-    onFinish(distToFinish) {
-        if(this.player.pos.y + this.player.size.y < -100) {
+    checkFinished() {
+        const distToFinish = this.level.distance - this.player.pos.x;
+
+        if (distToFinish > this.finishDistance) {
+            return;
+        }
+
+        const animationEnd = this.player.pos.y + this.player.size.y < -100;
+
+        if (animationEnd) {
+            this.levelState = LevelState.FINISHED;
             this.nextLevel();
             return;
         }
 
-        if(!this.levelFinished) {
-            this.ufo = this.game.entityFactory.ufo({napEntity: this.player});
+        if (this.levelState === LevelState.IDLE) {
+            this.levelState = LevelState.FINISH_ANIMATION;
+
+            this.ufo = this.game.entityFactory.ufo({ napEntity: this.player });
             this.level.entities.add(this.ufo);
             this.game.cameraController.focus.notice(this.ufo, 3000);
+        }
+    }
 
-            this.levelFinished = true;        
+    checkFailed() {
+        const death = this.player.killable.dead && !this.level.entities.has(this.player);
+        const fall = this.player.pos.y > this.fallDistance;
+        const levelFailed = death || fall;
+
+        if (levelFailed) {
+            this.onFail();
+            this.levelState = LevelState.FAILED;
         }
     }
 
     onFail() {
-        if(this.levelFailed) {
-            return
-        }
-
-        this.resetScore();
+        this.playerController.resetScore();
         this.restartLevel();
     }
 }

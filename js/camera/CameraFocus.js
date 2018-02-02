@@ -1,7 +1,7 @@
-import { CameraExt } from "./CameraExt";
-import { lerp, Vec2 } from "../math";
+import { CameraExt } from './CameraExt';
+import { lerp, Vec2 } from '../math';
 
-export class CameraFocus extends CameraExt {  
+export class CameraFocus extends CameraExt {
     constructor(controller) {
         super('focus', controller);
 
@@ -14,8 +14,8 @@ export class CameraFocus extends CameraExt {
         this.followRestored = false;
         this.noticeResolver = undefined;
 
-        this.damping = this.defaultDamping
-        this.camOffset = this.defaultCamOffset
+        this.damping = this.defaultDamping;
+        this.camOffset = this.defaultCamOffset;
         this.reachDistance = 500;
     }
 
@@ -33,10 +33,13 @@ export class CameraFocus extends CameraExt {
     }
 
     follow(entity) {
-        if(this.noticeStarted) {
+        this.cam.pos.x = 0;
+        this.cam.pos.y = 0;
+
+        if (this.noticeStarted) {
             this.stopNotice();
         }
-        
+
         this.followEntity = entity;
         this.entity = entity;
     }
@@ -49,24 +52,12 @@ export class CameraFocus extends CameraExt {
         let entityX = this.entity.pos.x - this.camOffset.x;
         let entityY = this.entity.pos.y;
 
-        // if(Math.abs(this.cam.pos.x - entityX) > 1000) {
-        //     this.cam.pos.x = entityX;
-        // }
-
         if (Math.abs(this.cam.pos.x - entityX) > 0.1) {
-            entityX = lerp(
-                this.cam.pos.x,
-                entityX,
-                1 / this.damping * deltaTime
-            );
+            entityX = lerp(this.cam.pos.x, entityX, 1 / this.damping * deltaTime);
         }
 
         if (Math.abs(this.cam.pos.y - entityY) > 0.1) {
-            entityY = lerp(
-                this.cam.pos.y,
-                entityY,
-                1 / this.damping * deltaTime
-            );
+            entityY = lerp(this.cam.pos.y, entityY, 1 / this.damping * deltaTime);
         }
 
         this.cam.pos.x = entityX;
@@ -75,15 +66,15 @@ export class CameraFocus extends CameraExt {
 
     notice(noticeEntity, time) {
         this.noticeStarted = true;
-        this.noticeEntity = noticeEntity
+        this.noticeEntity = noticeEntity;
         this.noticeTime = time;
         this.entity = noticeEntity;
         this.followEntity.run.stop();
         this.camOffset.x = this.cam.size.x / 3;
 
-        return new Promise((res) => {
+        return new Promise(res => {
             this.noticeResolver = res;
-        })
+        });
     }
 
     onNoticeReach() {
@@ -99,22 +90,21 @@ export class CameraFocus extends CameraExt {
     }
 
     checkNotice(deltaTime, time) {
-        if(this.noticeStarted && this.noticeReached && this.followRestored) {
+        if (this.noticeStarted && this.noticeReached && this.followRestored) {
             this.stopNotice();
             return;
         }
 
-        if(this.noticeStarted && !this.noticeReached) {
+        if (this.noticeStarted && !this.noticeReached) {
             const distToNotice = Math.abs(this.entity.pos.x - this.cam.pos.x);
-            if(distToNotice < this.reachDistance) {
+            if (distToNotice < this.reachDistance) {
                 this.onNoticeReach();
             }
-
         }
 
-        if(this.noticeStarted && this.noticeReached && !this.followRestored) {
+        if (this.noticeStarted && this.noticeReached && !this.followRestored) {
             const distToFollow = Math.abs(this.followEntity.pos.x - this.cam.pos.x);
-            if(distToFollow < this.reachDistance) {
+            if (distToFollow < this.reachDistance) {
                 this.onFollowReach(time);
             }
         }

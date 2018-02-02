@@ -1,4 +1,4 @@
-import { GameManager } from './GameManager';
+import { Game } from './Game';
 
 const canvas = document.getElementById('screen'); 
-const game = new GameManager(canvas);
+const game = new Game(canvas);
