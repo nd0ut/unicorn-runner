@@ -61,6 +61,17 @@ export class Entity {
         this[trait.NAME] = trait;
     }
 
+    removeTrait(traitName) {
+        const idx = this.traits.findIndex(trait => trait.NAME === traitName);
+        
+        if(idx === -1) {
+            return;
+        }
+
+        this.traits.splice(idx, 1);
+        this[traitName] = undefined;
+    }
+
     collides(candidate) {
         this.traits.forEach(trait => {
             trait.collides(this, candidate);
