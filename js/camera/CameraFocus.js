@@ -1,6 +1,13 @@
 import { CameraExt } from './CameraExt';
 import { lerp, Vec2 } from '../math';
 
+const NoticeState = {
+    IDLE: Symbol('IDLE'),
+    STARTED: Symbol('STARTED'),
+    REACHED: Symbol('REACHED'),
+    RESTORED: Symbol('RESTORED')
+}
+
 export class CameraFocus extends CameraExt {
     constructor(controller) {
         super('focus', controller);
@@ -8,10 +15,9 @@ export class CameraFocus extends CameraExt {
         this.followEntity = undefined;
         this.noticeEntity = undefined;
 
+        this.noticeState = NoticeState.IDLE;
+
         this.noticeTime = undefined;
-        this.noticeStarted = false;
-        this.noticeReached = false;
-        this.followRestored = false;
         this.noticeResolver = undefined;
 
         this.damping = this.defaultDamping;
@@ -33,15 +39,15 @@ export class CameraFocus extends CameraExt {
     }
 
     follow(entity) {
-        this.cam.pos.x = 0;
-        this.cam.pos.y = 0;
-
-        if (this.noticeStarted) {
+        if (this.noticeState !== NoticeState.IDLE) {
             this.stopNotice();
         }
 
         this.followEntity = entity;
         this.entity = entity;
+
+        this.cam.pos.x = entity.pos.x;
+        this.cam.pos.y = 0
     }
 
     following(deltaTime, time) {
@@ -65,7 +71,8 @@ export class CameraFocus extends CameraExt {
     }
 
     notice(noticeEntity, time) {
-        this.noticeStarted = true;
+        this.noticeState = NoticeState.NOTICE_STARTED;
+
         this.noticeEntity = noticeEntity;
         this.noticeTime = time;
         this.entity = noticeEntity;
@@ -78,48 +85,41 @@ export class CameraFocus extends CameraExt {
     }
 
     onNoticeReach() {
-        this.noticeReached = true;
+        this.noticeState = NoticeState.REACHED;
 
         setTimeout(() => {
             this.entity = this.followEntity;
         }, this.noticeTime);
     }
 
-    onFollowReach(time) {
-        this.followRestored = true;
+    onNoticeRestore(time) {
+        this.stopNotice();        
     }
 
     checkNotice(deltaTime, time) {
-        if (this.noticeStarted && this.noticeReached && this.followRestored) {
-            this.stopNotice();
-            return;
-        }
-
-        if (this.noticeStarted && !this.noticeReached) {
+        if (this.noticeState === NoticeState.STARTED) {
             const distToNotice = Math.abs(this.entity.pos.x - this.cam.pos.x);
             if (distToNotice < this.reachDistance) {
                 this.onNoticeReach();
             }
         }
 
-        if (this.noticeStarted && this.noticeReached && !this.followRestored) {
+        if (this.noticeState === NoticeState.REACHED) {
             const distToFollow = Math.abs(this.followEntity.pos.x - this.cam.pos.x);
             if (distToFollow < this.reachDistance) {
-                this.onFollowReach(time);
+                this.onNoticeRestore(time);
             }
         }
     }
 
     stopNotice() {
+        this.noticeState = NoticeState.IDLE;
+        this.followEntity.run.resume();
+        this.camOffset = this.defaultCamOffset;
+        
         this.noticeResolver();
 
         this.noticeTime = undefined;
-        this.noticeStarted = false;
-        this.noticeReached = false;
-        this.followRestored = false;
         this.noticeResolver = undefined;
-
-        this.followEntity.run.resume();
-        this.camOffset = this.defaultCamOffset;
     }
 }

@@ -2,8 +2,8 @@ import { rand, lerp } from '../math';
 import { CameraExt } from './CameraExt';
 
 export const ShakeType = {
-    DRUNK: Symbol('drunk'),
-    EARTH: Symbol('earth')
+    DRUNK: Symbol('DRUNK'),
+    EARTH: Symbol('EARTH')
 };
 
 export class CameraShake extends CameraExt {

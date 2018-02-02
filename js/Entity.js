@@ -2,10 +2,10 @@ import {Vec2} from './math';
 import {ClipBox} from './ClipBox';
 
 export const Sides = {
-    TOP: Symbol('top'),
-    BOTTOM: Symbol('bottom'),
-    LEFT: Symbol('left'),
-    RIGHT: Symbol('right'),
+    TOP: Symbol('TOP'),
+    BOTTOM: Symbol('BOTTOM'),
+    LEFT: Symbol('LEFT'),
+    RIGHT: Symbol('RIGHT'),
 };
 
 export class Trait {

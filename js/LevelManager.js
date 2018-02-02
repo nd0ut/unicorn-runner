@@ -2,11 +2,11 @@ import * as levels from './levels';
 import { splashText } from './Splash';
 
 const LevelState = {
-    IDLE: Symbol('idle'),
+    IDLE: Symbol('IDLE'),
 
-    FAILED: Symbol('failed'),
-    FINISH_ANIMATION: Symbol('finish_animation'),
-    FINISHED: Symbol('finished')
+    FAILED: Symbol('FAILED'),
+    FINISH_ANIMATION: Symbol('FINISH_ANIMATION'),
+    FINISHED: Symbol('FINISHED')
 };
 
 export class LevelManager {
