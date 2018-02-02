@@ -8,7 +8,8 @@
   "scripts": {
     "start": "parcel index.html --no-hmr"
   },
-  "devDependencies": {
-    "babel-preset-stage-2": "^6.24.1"
+  "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   }
 }
