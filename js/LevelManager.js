@@ -13,7 +13,7 @@ export class LevelManager {
     constructor(game) {
         this.game = game;
 
-        const showInitialLevel = false;
+        const showInitialLevel = true;
 
         this.levels = [levels.initial, levels.first, levels.second];
         this.levelIdx = -1;

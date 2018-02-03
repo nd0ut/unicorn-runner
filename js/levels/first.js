@@ -41,51 +41,51 @@ export const firstLevelSpec = {
         }
     ],
     entities: [
-        {
-            name: 'rainbow',
-            pos: [408, 0]
-        },
-        {
-            name: 'speedbooster',
-            pos: [780, 0]
-        },
-        {
-            name: 'manaPot',
-            pos: [1608, 0]
-        },
-        {
-            name: 'enemyBug',
-            pos: [1800, 0]
-        },
-        {
-            name: 'enemyBug',
-            pos: [2580, 0]
-        },
-        {
-            name: 'portal',
-            pos: [3288, 0]
-        },
-        {
-            name: 'enemyBug',
-            pos: [3960, 0]
-        },
-        {
-            name: 'rainbow',
-            pos: [4448, 0]
-        },
-        {
-            name: 'enemyBug',
-            pos: [4620, 0]
-        },
-        {
-            name: 'rainbow',
-            pos: [5588, 0]
-        },
-        {
-            name: 'rainbow',
-            id: 'boss',
-            pos: [7388, 0]
-        }
+    //     {
+    //         name: 'rainbow',
+    //         pos: [408, 0]
+    //     },
+    //     {
+    //         name: 'speedbooster',
+    //         pos: [780, 0]
+    //     },
+    //     {
+    //         name: 'manaPot',
+    //         pos: [1608, 0]
+    //     },
+    //     {
+    //         name: 'enemyBug',
+    //         pos: [1800, 0]
+    //     },
+    //     {
+    //         name: 'enemyBug',
+    //         pos: [2580, 0]
+    //     },
+    //     {
+    //         name: 'portal',
+    //         pos: [3288, 0]
+    //     },
+    //     {
+    //         name: 'enemyBug',
+    //         pos: [3960, 0]
+    //     },
+    //     {
+    //         name: 'rainbow',
+    //         pos: [4448, 0]
+    //     },
+    //     {
+    //         name: 'enemyBug',
+    //         pos: [4620, 0]
+    //     },
+    //     {
+    //         name: 'rainbow',
+    //         pos: [5588, 0]
+    //     },
+    //     {
+    //         name: 'rainbow',
+    //         id: 'boss',
+    //         pos: [7388, 0]
+    //     }
     ]
 };
 

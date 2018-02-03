@@ -1,7 +1,7 @@
 import { Camera } from '../camera/Camera';
 import { loadEnemyBug } from '../chars/EnemyBug';
 import { loadUnicorn } from '../chars/Unicorn';
-import { createLevelLoader } from '../loadLevel';
+import { createEditorLevelLoader } from './createEditorLevelLoader';
 import { loadUfo } from '../other/Ufo';
 import { loadManaPot } from '../pickables/ManaPot';
 import { loadPortal } from '../pickables/Portal';
@@ -22,11 +22,13 @@ export class Editor {
         this.timer = new Timer();
 
         this.start();
+
+        window.editor = this;
     }
 
     async start() {
         this.entityFactory = await loadEntities();
-        this.loadLevel = await createLevelLoader(this.entityFactory);
+        this.loadLevel = await createEditorLevelLoader(this.entityFactory);
 
         this.mouse = new MouseController(this);
 

@@ -2,7 +2,7 @@ import { rand } from '../math';
 import { AutoJump } from '../Traits';
 import { createPlayerEnv } from '../player/createPlayerEnv';
 
-const N = 100;
+const N = 50;
 
 function getEntities() {
     const choose = ['speedbooster'];
@@ -23,7 +23,7 @@ function getRanges() {
     let x = 0;
 
     const ranges = Array.from(Array(N)).map(() => {
-        mul = h === 3 ? 1 : mul;
+        mul = h === 0 ? 1 : mul;
         mul = h === 7 ? -1 : mul;
 
         const platformWidth = rand.int(6, 12);
