@@ -1,6 +1,7 @@
 import { loadImage } from './loaders';
 import { SpriteSheet } from './SpriteSheet';
 import { TileResolver } from './TileCreation';
+import { clamp } from './math';
 
 export function createBackgroundLayer(level, tiles, image) {
     const resolver = new TileResolver(tiles);
@@ -21,12 +22,12 @@ export function createBackgroundLayer(level, tiles, image) {
         const endX = x + width;
         const startY = y;
         const endY = y + height;
-        
+
         for (let x = startX; x <= endX; ++x) {
-            for (let y = startY; y <= endY; y++) {                
+            for (let y = startY; y <= endY; y++) {
                 const tile = tiles.get(x, y);
-                if(tile) {
-                    sprites.drawTile('ground', context, x - startX, y - startY);    
+                if (tile) {
+                    sprites.drawTile('ground', context, x - startX, y - startY);
                 }
             }
         }
@@ -62,11 +63,18 @@ export function drawStaticBackground(level) {
         FrontImage: require('../img/forest.png')
     }).then(result => (images = result));
 
-    function drawGradient(context) {
-        let gradient = context.createLinearGradient(0, 0, 0, buffer.width);
-        gradient.addColorStop(0, '#256bcc');
-        gradient.addColorStop(0.4, '#2278c6');
-        gradient.addColorStop(0.8, '#00c7a4');
+    function drawGradient(context, camera) {
+        const gradient = context.createLinearGradient(0, 0, 0, buffer.width);
+
+        const camY = Math.abs(camera.pos.y);
+
+        const step1 = clamp(0, 0, 1);
+        const step2 = clamp(0.4 - camY * 0.0001, 0, 1);
+        const step3 = clamp(0.8, 0, 1);
+
+        gradient.addColorStop(step1, '#256bcc');
+        gradient.addColorStop(step2, '#2278c6');
+        gradient.addColorStop(step3, '#00c7a4');
         context.fillStyle = gradient;
         context.fillRect(0, 0, buffer.width, buffer.height);
     }
@@ -84,34 +92,42 @@ export function drawStaticBackground(level) {
     }
 
     function drawImages(context, camera) {
-        let CloudsImage = images.CloudsImage;
-        let BackImage = images.BackImage;
-        let FrontImage = images.FrontImage;
+        const CloudsImage = images.CloudsImage;
+        const BackImage = images.BackImage;
+        const FrontImage = images.FrontImage;
 
         const backMargin = 1000;
         const count = Math.floor(level.distance / FrontImage.width) + 5;
 
-        let SkyCoordX = -camera.pos.x / 3;
-        let BackCoordX = -camera.pos.x / 2;
-        let FrontCoordX = -camera.pos.x / 1;
+        const SkyCoordX = -camera.pos.x / 3;
+        const BackCoordX = -camera.pos.x / 2;
+        const FrontCoordX = -camera.pos.x / 1;
+
+        const SkyCoordY = -camera.pos.y * 0.05;
+        const BackCoordY = -camera.pos.y * 0.07;
+        const FrontCoordY = -camera.pos.y * 0.2;
 
         for (let i = 0; i < count; i++) {
-            context.drawImage(CloudsImage, SkyCoordX + CloudsImage.width * i + backMargin, 0);
+            context.drawImage(
+                CloudsImage,
+                SkyCoordX + CloudsImage.width * i + backMargin,
+                SkyCoordY
+            );
             context.drawImage(
                 BackImage,
                 BackCoordX + BackImage.width * i,
-                -camera.pos.y + camera.size.y - BackImage.height
+                BackCoordY + camera.size.y - BackImage.height
             );
             context.drawImage(
                 FrontImage,
                 FrontCoordX + FrontImage.width * i,
-                -camera.pos.y + camera.size.y - FrontImage.height
+                FrontCoordY + camera.size.y - FrontImage.height
             );
         }
     }
 
     return function drawStaticBackgroundLayer(context, camera) {
-        drawGradient(context);
+        drawGradient(context, camera);
 
         if (images) {
             drawImages(context, camera);
