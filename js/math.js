@@ -1,9 +1,13 @@
 export class Matrix {
     constructor() {
         this.grid = [];
+        this.offset = 10; // hack for negative indices
     }
 
     get(x, y) {
+        x += this.offset;
+        y += this.offset;
+
         const col = this.grid[x];
         if (col) {
             return col[y];
@@ -12,6 +16,9 @@ export class Matrix {
     }
 
     set(x, y, value) {
+        x += this.offset;
+        y += this.offset;
+
         if (!this.grid[x]) {
             this.grid[x] = [];
         }
@@ -20,11 +27,14 @@ export class Matrix {
     }
 
     remove(x, y) {
+        x += this.offset;
+        y += this.offset;
+
         delete this.grid[x][y];
     }
 
     width() {
-        return this.grid.length;
+        return this.grid.length - this.offset;
     }
 }
 

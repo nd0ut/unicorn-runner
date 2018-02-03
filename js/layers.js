@@ -10,38 +10,47 @@ export function createBackgroundLayer(level, tiles, image) {
     sprites.define('ground', 0, 0, 60, 60);
 
     buffer.width = 1024 + 60;
-    buffer.height = 600;
+    buffer.height = 600 + 60;
 
     const context = buffer.getContext('2d');
 
-    function redraw(startIndex, endIndex) {
+    function redraw(x, y, width, height) {
         context.clearRect(0, 0, buffer.width, buffer.height);
 
-        for (let x = startIndex; x <= endIndex; ++x) {
-            const col = tiles.grid[x];
-            if (col) {
-                col.forEach((tile, y) => {
-                    sprites.drawTile('ground', context, x - startIndex, y);
-                });
+        const startX = x;
+        const endX = x + width;
+        const startY = y;
+        const endY = y + height;
+        
+        for (let x = startX; x <= endX; ++x) {
+            for (let y = startY; y <= endY; y++) {                
+                const tile = tiles.get(x, y);
+                if(tile) {
+                    sprites.drawTile('ground', context, x - startX, y - startY);    
+                }
             }
         }
     }
 
     return function drawBackgroundLayer(context, camera) {
-        const drawWidth = resolver.toIndex(camera.size.x);
-        const drawFrom = resolver.toIndex(camera.pos.x);
-        const drawTo = drawFrom + drawWidth;
+        const width = resolver.toIndex(camera.size.x);
+        const height = resolver.toIndex(camera.size.y);
+        const x = resolver.toIndex(camera.pos.x);
+        const y = resolver.toIndex(camera.pos.y);
 
-        redraw(drawFrom, drawTo);
+        const xOffset = x < 0 ? 60 : 0;
+        const yOffset = y < 0 ? 60 : 0;
 
-        context.drawImage(buffer, -camera.pos.x % 60, -camera.pos.y);
+        redraw(x, y, width, height);
+
+        context.drawImage(buffer, -camera.pos.x % 60 - xOffset, -camera.pos.y % 60 - yOffset);
     };
 }
 
 export function drawStaticBackground(level) {
     const buffer = document.createElement('canvas');
     buffer.width = 1024 + 60;
-    buffer.height = 600;
+    buffer.height = 600 + 60;
 
     const context = buffer.getContext('2d');
 
@@ -101,7 +110,7 @@ export function drawStaticBackground(level) {
         }
     }
 
-    return function drawBackgroundLayer(context, camera) {
+    return function drawStaticBackgroundLayer(context, camera) {
         drawGradient(context);
 
         if (images) {

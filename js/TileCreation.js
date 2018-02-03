@@ -7,11 +7,14 @@ export class TileResolver {
     }
 
     toIndex(pos) {
-        const idx = Math.floor(pos / this.tileSize);
-        return Math.max(0, idx);
+        if(pos >= 0) {
+            return Math.floor(pos / this.tileSize); 
+        }  else {
+            return Math.ceil(pos / this.tileSize) - 1; 
+        }
     }
 
-    toIndexRange(pos1, pos2) {
+    toIndexRange(pos1, pos2, toIndex) {
         const pMax = Math.ceil(pos2 / this.tileSize) * this.tileSize;
         const range = [];
         let pos = pos1;
@@ -39,10 +42,24 @@ export class TileResolver {
         }
     }
 
+    getTilePos(indexX, indexY) {
+        const x1 = indexX * this.tileSize;
+        const x2 = x1 + this.tileSize;
+        const y1 = indexY * this.tileSize;
+        const y2 = y1 + this.tileSize;
+        
+        return {
+            x1,
+            x2,
+            y1,
+            y2,
+        };
+    }
+
     searchByPosition(posX, posY) {
-        return this.getByIndex(
-            this.toIndex(posX),
-            this.toIndex(posY));
+        const x = this.toIndex(posX);
+        const y = this.toIndex(posY);
+        return this.getByIndex(x, y);
     }
 
     searchByRange(x1, x2, y1, y2) {

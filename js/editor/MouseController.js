@@ -6,7 +6,8 @@ export class MouseController {
 
         this.clickHandler = undefined;    
         this.dragHandler = undefined;    
-
+        this.moveHandler = undefined;
+        
         this.pos = new Vec2(0, 0);
 
         this.downTime = 0;
@@ -21,6 +22,10 @@ export class MouseController {
         return this.editor.camera;
     }
 
+    toGamePos(x, y) {
+        return new Vec2(this.cam.pos.x + x, this.cam.pos.y + y)
+    }
+
     initHandlers() {
         const canvas = this.editor.canvasSelector;
 
@@ -31,14 +36,12 @@ export class MouseController {
     }
 
     handleDown(e) {
-        const { layerX, layerY } = e;
+        const { offsetX, offsetY } = e;
         this.downTime = new Date().valueOf();
-        this.downPos.set(layerX, layerY);
+        this.downPos.set(offsetX, offsetY);
     }
 
     handleUp(e) {
-        const { layerX, layerY } = e;
-
         if (this.dragging) {
             this.handleDrag(e, 'stop');            
             this.dragging = false;
@@ -55,20 +58,23 @@ export class MouseController {
     }
 
     handleMove(e) {
-        const { layerX, layerY } = e;
-        this.pos.set(layerX, layerY);
+        const { offsetX, offsetY } = e;        
+        this.pos = this.toGamePos(offsetX, offsetY);
 
         const drag = this.downTime > 0 && this.pos.distance(this.downPos) > 10;
         if(drag) {
             this.handleDrag(e, this.dragging ? 'dragging' : 'start');
             this.dragging = true;
         }
+
+        this.moveHandler(e, this.pos);
     }
 
     handleClick(e) {
-        const { layerX, layerY } = e;
+        const { offsetX, offsetY } = e;
+        const gamePos = this.toGamePos(offsetX, offsetY);
 
-        this.clickHandler(new Vec2(layerX, layerY));
+        this.clickHandler(gamePos);
     }
 
     handleWheel(e) {
@@ -79,7 +85,7 @@ export class MouseController {
         this.cam.pos.x += deltaX;
         this.cam.pos.y += deltaY;
 
-        this.cam.pos.x = clamp(this.cam.pos.x, 0, Infinity);
+        this.cam.pos.x = clamp(this.cam.pos.x, -1000, Infinity);
         this.cam.pos.y = clamp(this.cam.pos.y, -5000, 0);
     }
 
@@ -93,5 +99,9 @@ export class MouseController {
 
     onDrag(dragHandler) {
         this.dragHandler = dragHandler;
+    }
+
+    onMove(moveHandler) {
+        this.moveHandler = moveHandler;
     }
 }
