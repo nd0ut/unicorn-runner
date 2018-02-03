@@ -16,6 +16,7 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
     levelSpec.layers.forEach(layer => {
         const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns);
         level.setDistance(Math.max(level.distance, backgroundGrid.width() * 60));
+        level.setBackgroundGrid(backgroundGrid);
         
         const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
         const staticBackgroundLayer = drawStaticBackground(level);
@@ -52,7 +53,7 @@ export function createLevelLoader(entityFactory) {
                 levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined
             ]))
             .then(([levelSpec, image, sounds]) => {
-                const level = new Level(levelSpec.name);
+                const level = new Level(levelSpec);
                 
                 setupCollision(levelSpec, level);
                 setupBackgrounds(levelSpec, level, image);

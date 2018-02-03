@@ -1,33 +1,22 @@
-import * as levels from '../levels';
-import { loadEditorLevel } from './loadEditorLevel';
 import { Vec2 } from '../math';
-import { TileResolver } from '../TileCreation';
 
-export class EditorLevelManager {
+export class Picker {
     constructor(editor) {
         this.editor = editor;
-
-        this.levelSpec = undefined;
-        this.level = undefined;
-        this.tileResolver = undefined;
     }
 
-    async runLevel(spec) {
-        const { level, startLevel } = await loadEditorLevel(this.editor, spec);
+    get tileResolver() {
+        return this.editor.tileResolver;
+    }
 
-        this.level = level;
-        this.levelSpec = spec;
-        this.tileResolver = new TileResolver(this.level.tileGrid);
-
-        this.disableTraits();
-
-        startLevel();
+    get level() {
+        return this.editor.level;
     }
 
     exportRanges() {
         const ranges = [];
 
-        for (const { x, y, tile } of this.level.tileGrid) {
+        for (const { x, y, tile } of this.level.backgroundGrid) {
             ranges.push([x, y]);
         }
 

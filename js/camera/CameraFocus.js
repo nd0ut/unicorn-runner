@@ -33,7 +33,11 @@ export class CameraFocus extends CameraExt {
         return new Vec2(100, 100);
     }
 
-    update(deltaTime, time) {
+    update(deltaTime, time, level) {
+        if(level.frozen) {
+            return;
+        }
+
         this.checkNotice(deltaTime, time);
         this.following(deltaTime, time);
     }

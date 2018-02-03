@@ -1,6 +1,6 @@
 import { clamp, lerp, Vec2 } from '../math';
 
-export class MouseController {
+export class Mouse {
     constructor(editor) {
         this.editor = editor;
 

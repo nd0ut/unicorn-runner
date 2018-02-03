@@ -4,12 +4,14 @@ import {TileCollider} from './TileCreation';
 import { SoundManager } from './SoundManager';
 
 export class Level {
-    constructor(name = undefined) {
-        this.name = name;
+    constructor(levelSpec) {
+        this.spec = levelSpec;
+        this.name = levelSpec.name;
 
         this.gravity = 1500;
         this.totalTime = 0;
         this.distance = 0;
+        this.freeze = false;
 
         this.comp = new Compositor();
         this.entities = new Set();
@@ -17,6 +19,9 @@ export class Level {
 
         this.entityCollider = new EntityCollider(this.entities);
         this.tileCollider = undefined;
+
+        this.collisionGrid = undefined;
+        this.backgroundGrid = undefined;
     }
 
     setName(name) {
@@ -24,7 +29,12 @@ export class Level {
     }
 
     setCollisionGrid(matrix) {
+        this.collisionGrid = matrix;
         this.tileCollider = new TileCollider(matrix);
+    }
+
+    setBackgroundGrid(matrix) {
+        this.backgroundGrid = matrix;
     }
 
     setDistance(distance) {
@@ -32,6 +42,10 @@ export class Level {
     }
 
     update(deltaTime) {
+        if(this.frozen) {
+            return;
+        }
+
         this.entities.forEach(entity => {
             entity.update(deltaTime, this);
         });

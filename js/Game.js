@@ -22,6 +22,8 @@ export class Game {
 
         this.camera = new Camera();
         this.timer = new Timer();
+        this.levelManager = new LevelManager(this);        
+        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);        
 
         this.start();
     }
@@ -30,9 +32,6 @@ export class Game {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
 
-        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
-
-        this.levelManager = new LevelManager(this);
         this.playerEnv = createPlayerEnv(this);
 
         this.levelManager.nextLevel();

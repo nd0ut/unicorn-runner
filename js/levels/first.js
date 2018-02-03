@@ -1,7 +1,7 @@
 import { splashText } from '../Splash';
 import { Striker } from '../Traits';
 
-export const firstLevelSpec = {
+const spec = {
     name: 'Level 1',
     sounds: [
         {
@@ -41,81 +41,80 @@ export const firstLevelSpec = {
         }
     ],
     entities: [
-    //     {
-    //         name: 'rainbow',
-    //         pos: [408, 0]
-    //     },
-    //     {
-    //         name: 'speedbooster',
-    //         pos: [780, 0]
-    //     },
-    //     {
-    //         name: 'manaPot',
-    //         pos: [1608, 0]
-    //     },
-    //     {
-    //         name: 'enemyBug',
-    //         pos: [1800, 0]
-    //     },
-    //     {
-    //         name: 'enemyBug',
-    //         pos: [2580, 0]
-    //     },
-    //     {
-    //         name: 'portal',
-    //         pos: [3288, 0]
-    //     },
-    //     {
-    //         name: 'enemyBug',
-    //         pos: [3960, 0]
-    //     },
-    //     {
-    //         name: 'rainbow',
-    //         pos: [4448, 0]
-    //     },
-    //     {
-    //         name: 'enemyBug',
-    //         pos: [4620, 0]
-    //     },
-    //     {
-    //         name: 'rainbow',
-    //         pos: [5588, 0]
-    //     },
-    //     {
-    //         name: 'rainbow',
-    //         id: 'boss',
-    //         pos: [7388, 0]
-    //     }
+            {
+                name: 'rainbow',
+                pos: [408, 0]
+            },
+            {
+                name: 'speedbooster',
+                pos: [780, 0]
+            },
+            {
+                name: 'manaPot',
+                pos: [1608, 0]
+            },
+            {
+                name: 'enemyBug',
+                pos: [1800, 0]
+            },
+            {
+                name: 'enemyBug',
+                pos: [2580, 0]
+            },
+            {
+                name: 'portal',
+                pos: [3288, 0]
+            },
+            {
+                name: 'enemyBug',
+                pos: [3960, 0]
+            },
+            {
+                name: 'rainbow',
+                pos: [4448, 0]
+            },
+            {
+                name: 'enemyBug',
+                pos: [4620, 0]
+            },
+            {
+                name: 'rainbow',
+                pos: [5588, 0]
+            },
+            {
+                name: 'rainbow',
+                id: 'boss',
+                pos: [7388, 0]
+            }
     ]
 };
 
-export const first = {
-    spec: firstLevelSpec,
-    load: load
-}
-
-async function load(game) {
-    const level = await game.loadLevel(firstLevelSpec);
+async function init(game) {
+    const level = await game.loadLevel(spec);
     const playerEnv = game.playerEnv;
     const unicorn = game.entityFactory.unicorn();
     level.entities.add(playerEnv);
-    
+
     function startLevel() {
         playerEnv.playerController.setPlayer(unicorn);
         game.cameraController.focus.follow(unicorn);
-        
+
         // level.sounds.get('music').playOnce();
 
         game.timer.update = (deltaTime, time) => {
             level.update(deltaTime);
-            game.levelManager.update(deltaTime, time);
-            game.cameraController.update(deltaTime, time);
+            game.levelManager.update(deltaTime, time, level);
+            game.cameraController.update(deltaTime, time, level);
             level.comp.draw(game.context, game.camera);
         };
     }
 
     return {
-        level,
-        startLevel
+        level, startLevel
     };
+}
+
+export const first = {
+    spec,
+    init
 }

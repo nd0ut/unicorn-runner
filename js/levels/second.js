@@ -1,4 +1,4 @@
-const levelSpec = {
+const spec = {
     name: 'Level 2',
     layers: [
         {
@@ -142,9 +142,8 @@ const levelSpec = {
     ]
 };
 
-
-export async function second(game) {
-    const level = await game.loadLevel(levelSpec);
+async function init(game) {
+    const level = await game.loadLevel(spec);
     const playerEnv = game.playerEnv;
     const unicorn = game.entityFactory.unicorn();
     level.entities.add(playerEnv);
@@ -155,8 +154,8 @@ export async function second(game) {
 
         game.timer.update = (deltaTime, time) => {
             level.update(deltaTime);
-            game.levelManager.update(deltaTime, time);
-            game.cameraController.update(deltaTime, time);
+            game.levelManager.update(deltaTime, time, level);
+            game.cameraController.update(deltaTime, time, level);
             level.comp.draw(game.context, game.camera);
         };
     }
@@ -164,4 +163,8 @@ export async function second(game) {
     return {
         level, startLevel
     }
+}
+
+export const second = {
+    spec, init
 }

@@ -1,6 +1,6 @@
 import { rand } from '../math';
-import { AutoJump } from '../Traits';
 import { createPlayerEnv } from '../player/createPlayerEnv';
+import { AutoJump } from '../Traits';
 
 const N = 50;
 
@@ -41,7 +41,7 @@ function getRanges() {
 const ranges = getRanges();
 const entities = getEntities();
 
-const levelConfig = {
+const spec = {
     layers: [
         {
             tiles: [
@@ -54,8 +54,8 @@ const levelConfig = {
     entities
 };
 
-export async function initial(game) {
-    const level = await game.loadLevel(levelConfig);
+async function init(game) {
+    const level = await game.loadLevel(spec);
 
     const unicorn = game.entityFactory.unicorn();
     unicorn.addTrait(new AutoJump());
@@ -65,20 +65,20 @@ export async function initial(game) {
     level.entities.add(playerEnv);
 
     function checkFinish() {
-        if(unicorn.pos.x > level.distance) {
+        if (unicorn.pos.x > level.distance) {
             unicorn.pos.x = 64;
             unicorn.pos.y = 64;
         }
     }
 
     function startLevel() {
-        playerEnv.playerController.setPlayer(unicorn);        
+        playerEnv.playerController.setPlayer(unicorn);
         game.cameraController.focus.follow(unicorn);
-        
+
         game.timer.update = (deltaTime, time) => {
             checkFinish();
             level.update(deltaTime);
-            game.cameraController.update(deltaTime, time);
+            game.cameraController.update(deltaTime, time, level);
             level.comp.draw(game.context, game.camera);
         };
 
@@ -94,4 +94,7 @@ export async function initial(game) {
         level, startLevel
     }
 }
-;
+
+export const initial = {
+    spec, init
+}

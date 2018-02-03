@@ -13,7 +13,7 @@ export class LevelManager {
     constructor(game) {
         this.game = game;
 
-        const showInitialLevel = true;
+        const showInitialLevel = false;
 
         this.levels = [levels.initial, levels.first, levels.second];
         this.levelIdx = -1;
@@ -67,8 +67,8 @@ export class LevelManager {
 
         this.levelSelector.innerHTML = levelIdx;
 
-        const initLevel = this.levels[levelIdx];
-        const { level, startLevel } = await initLevel(this.game);
+        const { init, spec } = this.levels[levelIdx];
+        const { level, startLevel } = await init(this.game);
         this.level = level;
 
         if (level.name) {
@@ -80,9 +80,15 @@ export class LevelManager {
         startLevel();
 
         this.levelState = LevelState.IDLE;
+
+        return level;
     }
 
     update(deltaTime) {
+        if (!this.level) {
+            return;
+        }
+
         if (this.levelState === LevelState.FINISHED) {
             return;
         }
