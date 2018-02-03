@@ -1,17 +1,24 @@
 import { Camera } from '../camera/Camera';
+import { CameraController } from '../camera/CameraController';
+import { CameraFocus } from '../camera/CameraFocus';
+import { CameraShake } from '../camera/CameraShake';
 import { loadEnemyBug } from '../chars/EnemyBug';
 import { loadUnicorn } from '../chars/Unicorn';
-import { createEditorLevelLoader } from './createEditorLevelLoader';
+import { LevelManager } from './LevelManager';
+import { createLevelLoader } from '../loadLevel';
 import { loadUfo } from '../other/Ufo';
 import { loadManaPot } from '../pickables/ManaPot';
 import { loadPortal } from '../pickables/Portal';
 import { loadRainbow } from '../pickables/Rainbow';
 import { loadSpeedBooster } from '../pickables/SpeedBooster';
+import { createPlayerEnv } from '../player/createPlayerEnv';
 import { Timer } from '../Timer';
 import { loadBullet } from '../weapon/Bullet';
-import { LevelManager } from './LevelManager';
-import { MouseController } from './MouseController';
+import { createEditorLevelLoader } from './createEditorLevelLoader';
+import { EditorLevelManager } from './EditorLevelManager';
 import { InteractionController } from './InteractionController';
+import { MouseController } from './MouseController';
+import { first } from '../levels/first';
 
 export class Editor {
     constructor(canvasSelector) {
@@ -21,23 +28,48 @@ export class Editor {
         this.camera = new Camera();
         this.timer = new Timer();
 
-        this.start();
+        this.mouse = new MouseController(this);
+        this.interactionController = new InteractionController(this);
+        
+        this.levels = [
+            first
+        ];
+        this.editLevelIdx = 0;
+        this.editMode = true;
 
+        this.startEditor();
+        this.timer.start();
+        
         window.editor = this;
     }
 
-    async start() {
+    async startPlayer() {
+        this.entityFactory = await loadEntities();
+        this.loadLevel = await createLevelLoader(this.entityFactory);
+
+        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
+
+        this.levelManager = new LevelManager(this);
+        this.playerEnv = createPlayerEnv(this);
+
+        this.level = this.levels[this.editLevelIdx];
+        this.levelManager.runLevel(this.level.load);
+
+        this.editMode = false;
+    }
+
+    async startEditor() {
+        this.timer.update = () => {};
         this.entityFactory = await loadEntities();
         this.loadLevel = await createEditorLevelLoader(this.entityFactory);
 
-        this.mouse = new MouseController(this);
 
-        this.levelManager = new LevelManager(this);
-        this.levelManager.runLevel(0);
+        this.editorLevelManager = new EditorLevelManager(this);
+        
+        this.level = this.levels[this.editLevelIdx];        
+        this.editorLevelManager.runLevel(this.level.spec);
 
-        this.interactionController = new InteractionController(this);
-
-        this.timer.start();
+        this.editMode = true;
     }
 }
 

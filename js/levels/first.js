@@ -14,7 +14,7 @@ export const firstLevelSpec = {
             tiles: [
                 {
                     ranges: [
-                        [0, 1, 3, 4],
+                        // [0, 0],
                         [1, 19, 6, 1],
                         [24, 10, 6, 1],
                         [38, 10, 4, 1],
@@ -89,7 +89,12 @@ export const firstLevelSpec = {
     ]
 };
 
-export async function first(game) {
+export const first = {
+    spec: firstLevelSpec,
+    load: load
+}
+
+async function load(game) {
     const level = await game.loadLevel(firstLevelSpec);
     const playerEnv = game.playerEnv;
     const unicorn = game.entityFactory.unicorn();

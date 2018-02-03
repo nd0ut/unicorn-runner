@@ -8,7 +8,7 @@ body {
     display: flex;
     align-items: left;
     flex-direction: column;
-    padding: 0px 50px;
+    padding: 10px;
 }
 
 @font-face {

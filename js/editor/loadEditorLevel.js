@@ -7,7 +7,6 @@ export async function loadEditorLevel(editor, levelSpec) {
     function startLevel() {
         editor.timer.update = (deltaTime, time) => {
             level.update(deltaTime);
-            editor.levelManager.update(deltaTime, time);
             level.comp.draw(editor.context, editor.camera);
         };
     }

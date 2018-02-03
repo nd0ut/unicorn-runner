@@ -86,7 +86,7 @@ export class MouseController {
         this.cam.pos.y += deltaY;
 
         this.cam.pos.x = clamp(this.cam.pos.x, -1000, Infinity);
-        this.cam.pos.y = clamp(this.cam.pos.y, -5000, 0);
+        this.cam.pos.y = clamp(this.cam.pos.y, -1000, 0);
     }
 
     handleDrag(e, dragState) {

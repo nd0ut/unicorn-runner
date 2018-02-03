@@ -1,7 +1,7 @@
 export class Matrix {
     constructor() {
         this.grid = [];
-        this.offset = 10; // hack for negative indices
+        this.offset = 100;
     }
 
     get(x, y) {
@@ -34,7 +34,24 @@ export class Matrix {
     }
 
     width() {
-        return this.grid.length - this.offset;
+        return this.grid.length;
+    }
+
+    *[Symbol.iterator]() {
+        for (let x = 0; x < this.grid.length; x++) {
+            if (this.grid[x]) {
+                for (let y = 0; y < this.grid[x].length; y++) {
+                    const tile = this.grid[x][y];
+                    if (tile) {
+                        yield ({ 
+                            tile ,
+                            x: x - this.offset, 
+                            y: y - this.offset
+                        })
+                    }
+                }
+            }
+        }
     }
 }
 
