@@ -1,0 +1,27 @@
+import { loadEnemyBug } from './chars/EnemyBug';
+import { loadUnicorn } from './chars/Unicorn';
+import { loadUfo } from './other/Ufo';
+import { loadManaPot } from './pickables/ManaPot';
+import { loadPortal } from './pickables/Portal';
+import { loadRainbow } from './pickables/Rainbow';
+import { loadSpeedBooster } from './pickables/SpeedBooster';
+import { loadBullet } from './weapon/Bullet';
+
+export function loadEntities() {
+    const entityFactories = {};
+
+    function addFactory(name) {
+        return factory => (entityFactories[name] = factory);
+    }
+
+    return Promise.all([
+        loadUnicorn().then(addFactory('unicorn')),
+        loadEnemyBug().then(addFactory('enemyBug')),
+        loadRainbow().then(addFactory('rainbow')),
+        loadSpeedBooster().then(addFactory('speedBooster')),
+        loadPortal().then(addFactory('portal')),
+        loadBullet().then(addFactory('bullet')),
+        loadManaPot().then(addFactory('manaPot')),
+        loadUfo().then(addFactory('ufo'))
+    ]).then(() => entityFactories);
+}

@@ -2,23 +2,16 @@ import { Camera } from '../camera/Camera';
 import { CameraController } from '../camera/CameraController';
 import { CameraFocus } from '../camera/CameraFocus';
 import { CameraShake } from '../camera/CameraShake';
-import { loadEnemyBug } from '../chars/EnemyBug';
-import { loadUnicorn } from '../chars/Unicorn';
 import { LevelManager } from '../LevelManager';
-import { first } from '../levels/first';
 import { createLevelLoader } from '../loadLevel';
-import { loadUfo } from '../other/Ufo';
-import { loadManaPot } from '../pickables/ManaPot';
-import { loadPortal } from '../pickables/Portal';
-import { loadRainbow } from '../pickables/Rainbow';
-import { loadSpeedBooster } from '../pickables/SpeedBooster';
 import { createPlayerEnv } from '../player/createPlayerEnv';
+import { TileResolver } from '../TileCreation';
 import { Timer } from '../Timer';
-import { loadBullet } from '../weapon/Bullet';
 import { Interaction } from './Interaction';
+import { loadEntities } from '../loadEntities';
 import { Mouse } from './Mouse';
 import { Picker } from './Picker';
-import { TileResolver } from '../TileCreation';
+import { Selection } from './Selection';
 
 export class Editor {
     constructor(canvasSelector) {
@@ -33,6 +26,7 @@ export class Editor {
         this.interaction = new Interaction(this);
         this.picker = new Picker(this);
         this.levelManager = new LevelManager(this);
+        this.selection = new Selection(this);
 
         this.editLevelIdx = 1;
         this.level = undefined
@@ -62,25 +56,8 @@ export class Editor {
         this.level = await this.levelManager.runLevel(this.editLevelIdx);
         this.tileResolver = new TileResolver(this.level.backgroundGrid);
 
+        this.pause();
+
         this.timer.start();
     }
-}
-
-function loadEntities() {
-    const entityFactories = {};
-
-    function addFactory(name) {
-        return factory => (entityFactories[name] = factory);
-    }
-
-    return Promise.all([
-        loadUnicorn().then(addFactory('unicorn')),
-        loadEnemyBug().then(addFactory('enemyBug')),
-        loadRainbow().then(addFactory('rainbow')),
-        loadSpeedBooster().then(addFactory('speedbooster')),
-        loadPortal().then(addFactory('portal')),
-        loadBullet().then(addFactory('bullet')),
-        loadManaPot().then(addFactory('manaPot')),
-        loadUfo().then(addFactory('ufo'))
-    ]).then(() => entityFactories);
 }

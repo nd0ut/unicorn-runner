@@ -7,8 +7,13 @@ body {
     line-height: 1;
     display: flex;
     align-items: left;
-    flex-direction: column;
+    flex-direction: row;
     padding: 10px;
+}
+
+.sidebar {
+    padding: 10px 20px;
+    flex: 1;
 }
 
 @font-face {

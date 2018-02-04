@@ -5,8 +5,8 @@ import { AutoJump } from '../Traits';
 const N = 50;
 
 function getEntities() {
-    const choose = ['speedbooster'];
-    // const choose = ['rainbow', 'speedbooster', 'portal'];
+    const choose = ['speedBooster'];
+    // const choose = ['rainbow', 'speedBooster', 'portal'];
     // const choose = ['portal'];
 
     const entities = Array.from(Array(N)).map((val, idx) => ({

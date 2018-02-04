@@ -46,7 +46,7 @@ const spec = {
                 pos: [408, 0]
             },
             {
-                name: 'speedbooster',
+                name: 'speedBooster',
                 pos: [780, 0]
             },
             {

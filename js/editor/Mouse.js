@@ -67,7 +67,7 @@ export class Mouse {
             this.dragging = true;
         }
 
-        this.moveHandler(e, this.pos);
+        this.moveHandler(this.pos);
     }
 
     handleClick(e) {
@@ -90,7 +90,7 @@ export class Mouse {
     }
 
     handleDrag(e, dragState) {
-        this.dragHandler && this.dragHandler(e, dragState);
+        this.dragHandler && this.dragHandler(dragState);
     }
 
     onClick(clickHandler) {

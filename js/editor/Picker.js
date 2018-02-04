@@ -32,11 +32,23 @@ export class Picker {
     }
 
     pickEntity(pos) {
+        if (!this.level) {
+            return;
+        }
         for (const entity of this.level.entities) {
             if (entity.bounds.contains(pos)) {
                 return entity;
             }
         }
+    }
+
+    pickTile(pos) {
+        if (!this.tileResolver) {
+            return;
+        }
+        const tileIndexes = this.pickTileIndex(pos);        
+        const tile = this.tileResolver.getByIndex(tileIndexes.x, tileIndexes.y);
+        return tile;
     }
 
     pickTilePos(pos) {
@@ -49,6 +61,9 @@ export class Picker {
     }
 
     pickTileIndex(pos) {
+        if (!this.tileResolver) {
+            return;
+        }
         const indexX = this.tileResolver.toIndex(pos.x);
         const indexY = this.tileResolver.toIndex(pos.y);
 

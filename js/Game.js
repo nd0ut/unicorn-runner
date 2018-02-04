@@ -1,19 +1,12 @@
 import { Camera } from './camera/Camera';
 import { CameraController } from './camera/CameraController';
-import { loadEnemyBug } from './chars/EnemyBug';
-import { loadUnicorn } from './chars/Unicorn';
+import { CameraFocus } from './camera/CameraFocus';
+import { CameraShake } from './camera/CameraShake';
 import { LevelManager } from './LevelManager';
+import { loadEntities } from './loadEntities';
 import { createLevelLoader } from './loadLevel';
-import { loadUfo } from './other/Ufo';
-import { loadManaPot } from './pickables/ManaPot';
-import { loadPortal } from './pickables/Portal';
-import { loadRainbow } from './pickables/Rainbow';
-import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { createPlayerEnv } from './player/createPlayerEnv';
 import { Timer } from './Timer';
-import { loadBullet } from './weapon/Bullet';
-import { CameraShake } from './camera/CameraShake';
-import { CameraFocus } from './camera/CameraFocus';
 
 export class Game {
     constructor(canvasSelector) {
@@ -22,8 +15,8 @@ export class Game {
 
         this.camera = new Camera();
         this.timer = new Timer();
-        this.levelManager = new LevelManager(this);        
-        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);        
+        this.levelManager = new LevelManager(this);
+        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
 
         this.start();
     }
@@ -38,23 +31,4 @@ export class Game {
 
         this.timer.start();
     }
-}
-
-function loadEntities() {
-    const entityFactories = {};
-
-    function addFactory(name) {
-        return factory => (entityFactories[name] = factory);
-    }
-
-    return Promise.all([
-        loadUnicorn().then(addFactory('unicorn')),
-        loadEnemyBug().then(addFactory('enemyBug')),
-        loadRainbow().then(addFactory('rainbow')),
-        loadSpeedBooster().then(addFactory('speedbooster')),
-        loadPortal().then(addFactory('portal')),
-        loadBullet().then(addFactory('bullet')),
-        loadManaPot().then(addFactory('manaPot')),
-        loadUfo().then(addFactory('ufo'))
-    ]).then(() => entityFactories);
 }
