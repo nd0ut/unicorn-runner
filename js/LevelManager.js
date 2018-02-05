@@ -13,13 +13,13 @@ export class LevelManager {
     constructor(game) {
         this.game = game;
 
-        const showInitialLevel = false;
+        const showDemoLevel = false;
 
-        this.levels = [levels.initial, levels.first, levels.second];
+        this.levels = [levels.demo, levels.first, levels.second];
         this.levelIdx = -1;
         this.levelState = LevelState.IDLE;
 
-        if (!showInitialLevel) {
+        if (!showDemoLevel) {
             document.querySelector('.play-block').remove();
             this.levelIdx += 1;
         }

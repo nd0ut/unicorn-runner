@@ -95,6 +95,6 @@ async function init(game) {
     }
 }
 
-export const initial = {
+export const demo = {
     spec, init
 }
