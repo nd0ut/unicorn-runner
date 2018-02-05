@@ -13,10 +13,10 @@ export class ClipBox {
     }
 
     contains(pos) {
-        return this.bottom > pos.y
-            && this.top < pos.y
-            && this.left < pos.x
-            && this.right > pos.x
+        return this.bottom >= pos.y
+            && this.top <= pos.y
+            && this.left <= pos.x
+            && this.right >= pos.x
     }
 
     clone() {

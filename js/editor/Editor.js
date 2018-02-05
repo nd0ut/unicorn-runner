@@ -12,6 +12,7 @@ import { loadEntities } from '../loadEntities';
 import { Mouse } from './Mouse';
 import { Picker } from './Picker';
 import { Selection } from './Selection';
+import { createDebugLayer } from '../layers';
 
 export class Editor {
     constructor(canvasSelector) {
@@ -46,6 +47,11 @@ export class Editor {
         this.paused = false;
     }
 
+    addDebugLayer() {
+        const debugLayer = createDebugLayer(this.level);
+        this.level.comp.addLayer(debugLayer);
+    }
+
     async start() {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
@@ -55,6 +61,8 @@ export class Editor {
 
         this.level = await this.levelManager.runLevel(this.editLevelIdx);
         this.tileResolver = new TileResolver(this.level.backgroundGrid);
+
+        this.addDebugLayer();
 
         this.pause();
 

@@ -20,8 +20,8 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
         
         const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
         const staticBackgroundLayer = drawStaticBackground(level);
-        level.comp.layers.push(staticBackgroundLayer);
-        level.comp.layers.push(backgroundLayer);
+        level.comp.addLayer(staticBackgroundLayer);
+        level.comp.addLayer(backgroundLayer);
     });
 }
 
@@ -37,7 +37,7 @@ function setupEntities(levelSpec, level, entityFactory) {
     });
 
     const spriteLayer = createSpriteLayer(level.entities);
-    level.comp.layers.push(spriteLayer);
+    level.comp.addLayer(spriteLayer);
 }
 
 function setupSounds(level, sounds) {

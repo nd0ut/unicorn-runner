@@ -73,6 +73,8 @@ export class Vec2 {
         const dist = Math.sqrt(Math.pow(vec.x - this.x, 2) + Math.pow(vec.y - this.y, 2));
         return dist;
     }
+    
+    static zero = new Vec2(0, 0);
 }
 
 export function lerp(v0, v1, t) {
