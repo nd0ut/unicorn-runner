@@ -26,11 +26,12 @@ function setupBackgrounds(levelSpec, level, backgroundSprites) {
 }
 
 function setupEntities(levelSpec, level, entityFactory) {
-    levelSpec.entities.forEach(({ name, id, skinName, pos: [x, y] }) => {
+    levelSpec.entities.forEach(({ name, id, skinName, pos: [x, y] }, idx) => {
         skinName = skinName || 'default';
         const createEntity = entityFactory[name];
         const entity = createEntity({skinName});
         entity.pos.set(x, y);
+        entity.idx = idx;
 
         level.entities.add(entity);
         id && level.namedEntities.set(id, entity)
@@ -53,7 +54,7 @@ export function createLevelLoader(entityFactory) {
                 levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined
             ]))
             .then(([levelSpec, image, sounds]) => {
-                const level = new Level(levelSpec);
+                const level = new Level(levelSpec.name);
                 
                 setupCollision(levelSpec, level);
                 setupBackgrounds(levelSpec, level, image);

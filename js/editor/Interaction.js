@@ -1,26 +1,34 @@
+import { clamp } from '../math';
+import { MouseEvents, DragState } from './Mouse';
+import { updateTileGrid, updateEntity } from './SpecUpdate';
+
 export const InteractionMode = {
     SELECT: Symbol('SELECT'),
     TILE: Symbol('TILE'),
     ENTITY: Symbol('ENTITY')
-}
+};
 
 export class Interaction {
     constructor(editor) {
         this.editor = editor;
         this.mode = InteractionMode.SELECT;
 
-        this.editor.mouse.onClick(this.onClick.bind(this));
-        this.editor.mouse.onMove(this.onMove.bind(this));
+        this.editor.mouse.on(MouseEvents.CLICK, this.onClick.bind(this));
+        this.editor.mouse.on(MouseEvents.DRAG, this.onDrag.bind(this));
+        this.editor.mouse.on(MouseEvents.MOVE, this.onMove.bind(this));
+        this.editor.mouse.on(MouseEvents.WHEEL, this.onWheel.bind(this));
 
         window.addEventListener('keypress', this.onKeyPress.bind(this));
+
+        this.dragging = {};
     }
 
     get level() {
         return this.editor.level;
     }
 
-    get spec() {
-        return this.editor.level.spec;
+    get cam() {
+        return this.editor.camera;
     }
 
     setMode(mode) {
@@ -36,6 +44,9 @@ export class Interaction {
             case 'KeyT':
                 this.editor.paused ? this.editor.resume() : this.editor.pause();
                 break;
+            case 'KeyR':
+                this.editor.restart();
+                break;
             default:
                 break;
         }
@@ -43,7 +54,45 @@ export class Interaction {
 
     onMove(pos) {
         const entity = this.editor.picker.pickEntity(pos);
-        const tile = this.editor.picker.pickTile(pos);        
+        const tile = this.editor.picker.pickTile(pos);
+    }
+
+    onDrag(dragState, pos) {
+        if(this.mode === InteractionMode.SELECT) {
+            this.tryDragEntity(dragState, pos);
+        }
+    }
+
+    tryDragEntity(dragState, pos) {
+        if(dragState === DragState.START) {
+            const entity = this.editor.picker.pickEntity(pos);
+            
+            if(entity) {
+                this.editor.selection.selectEntity(entity);                
+                this.dragging.entity = entity;
+                this.dragging.offsetX = pos.x - entity.pos.x;
+                this.dragging.offsetY = pos.y - entity.pos.y;
+            }
+
+            return;
+        }
+
+        if(!this.dragging.entity) {
+            return;
+        }
+
+        const x = pos.x - this.dragging.offsetX;
+        const y = pos.y - this.dragging.offsetY;
+        this.dragging.entity.pos.x = x;
+        this.dragging.entity.pos.y = y;
+
+        updateEntity(this.editor.levelSpec, this.dragging.entity.idx, {
+            pos: [x, y]
+        })
+
+        if (dragState === DragState.STOP) {
+            this.dragging = {};
+        }
     }
 
     onClick(pos) {
@@ -55,15 +104,23 @@ export class Interaction {
                 this.clickTile(pos);
                 break;
             case InteractionMode.ENTITY:
-                this.clickEntity(pos);                
+                this.clickEntity(pos);
             default:
                 break;
         }
     }
 
+    onWheel({deltaX, deltaY}) {
+        this.cam.pos.x += deltaX;
+        this.cam.pos.y += deltaY;
+
+        this.cam.pos.x = clamp(this.cam.pos.x, -1000, Infinity);
+        this.cam.pos.y = clamp(this.cam.pos.y, -1000, 0);
+    }
+
     clickEntity(pos) {
         const entity = this.editor.picker.pickEntity(pos);
-        
+
         console.log('entity', entity);
     }
 
@@ -74,24 +131,25 @@ export class Interaction {
             const tile = 1;
             this.level.backgroundGrid.set(tileIndex.x, tileIndex.y, tile);
             this.level.collisionGrid.set(tileIndex.x, tileIndex.y, tile);
-            this.spec.layers[0].tiles[0].ranges = this.editor.picker.exportRanges();
+
+            updateTileGrid(this.editor.levelSpec, this.level.backgroundGrid);
         }
 
-        console.log('tile', tileIndex);        
+        console.log('tile', tileIndex);
     }
-    
+
     clickSelect(pos) {
         const entity = this.editor.picker.pickEntity(pos);
-        if(entity) {
+        if (entity) {
             this.editor.selection.selectEntity(entity);
             return;
         }
 
         const tile = this.editor.picker.pickTile(pos);
-        if(tile) {
+        if (tile) {
             this.editor.selection.selectTile(tile);
-            return
-        }        
+            return;
+        }
 
         this.editor.selection.clear();
     }

@@ -32,12 +32,9 @@ export class Selection {
         }
 
         if (this.selectedEntity) {
-            const entities = this.editor.level.spec.entities;
-            const spec = entities.find(entity => {
-                return entity.name === this.selectedEntity.name && 
-                    entity.pos[0] === this.selectedEntity.pos.x &&
-                    entity.pos[1] === this.selectedEntity.pos.y
-            });
+            const entities = this.editor.levelSpec.entities;
+            const spec = entities[this.selectedEntity.idx];
+            
             return spec;
         }
     }

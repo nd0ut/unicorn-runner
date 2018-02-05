@@ -46,6 +46,6 @@ export class EventEmitter {
             handler(...args);
         }
         
-        await Promise.all(handlers.map(handler => handler.bind(undefined, ...args)));
+        await Promise.all(handlers.map(handler => handler.bind(handler, ...args)));
     }
 }

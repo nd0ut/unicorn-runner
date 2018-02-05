@@ -1,13 +1,24 @@
-import { clamp, lerp, Vec2 } from '../math';
+import { clamp, Vec2 } from '../math';
+import { EventEmitter } from '../util';
 
+export const MouseEvents = {
+    CLICK: Symbol('CLICK'),
+    DRAG: Symbol('DRAG'),
+    MOVE: Symbol('MOVE'),
+    WHEEL: Symbol('WHEEL')
+};
+
+export const DragState = {
+    START: Symbol('START'),
+    DRAGGING: Symbol('DRAGGING'),
+    STOP: Symbol('STOP')
+};
+
+@EventEmitter.decorator
 export class Mouse {
     constructor(editor) {
         this.editor = editor;
 
-        this.clickHandler = undefined;    
-        this.dragHandler = undefined;    
-        this.moveHandler = undefined;
-        
         this.pos = new Vec2(0, 0);
 
         this.downTime = 0;
@@ -18,12 +29,9 @@ export class Mouse {
         this.initHandlers();
     }
 
-    get cam() {
-        return this.editor.camera;
-    }
-
     toGamePos(x, y) {
-        return new Vec2(this.cam.pos.x + x, this.cam.pos.y + y)
+        const cam = this.editor.camera;
+        return new Vec2(cam.pos.x + x, cam.pos.y + y);
     }
 
     initHandlers() {
@@ -42,39 +50,40 @@ export class Mouse {
     }
 
     handleUp(e) {
+        const { offsetX, offsetY } = e;
+        const pos = this.toGamePos(offsetX, offsetY);
+
         if (this.dragging) {
-            this.handleDrag(e, 'stop');            
+            this.handleDrag(e, DragState.STOP, pos);
             this.dragging = false;
-            this.downTime = 0;            
+            this.downTime = 0;
             return;
         }
 
-        const isClick = new Date().valueOf() - this.downTime < 50;
-        if (isClick) {
-            this.handleClick(e);
-            this.downTime = 0;            
-            return;
-        }
+        this.handleClick(e);
+        this.downTime = 0;
+        return;
     }
 
     handleMove(e) {
-        const { offsetX, offsetY } = e;        
+        const { offsetX, offsetY } = e;
         this.pos = this.toGamePos(offsetX, offsetY);
-
-        const drag = this.downTime > 0 && this.pos.distance(this.downPos) > 10;
-        if(drag) {
-            this.handleDrag(e, this.dragging ? 'dragging' : 'start');
+        
+        const drag = this.downTime > 0 && this.pos.distance(this.downPos) > 2;
+        if (drag) {
+            const dragState = this.dragging ? DragState.DRAGGING : DragState.START;
+            this.handleDrag(e, dragState, this.pos);
             this.dragging = true;
         }
 
-        this.moveHandler(this.pos);
+        this.emit(MouseEvents.MOVE, this.pos);
     }
 
     handleClick(e) {
         const { offsetX, offsetY } = e;
-        const gamePos = this.toGamePos(offsetX, offsetY);
+        const pos = this.toGamePos(offsetX, offsetY);
 
-        this.clickHandler(gamePos);
+        this.emit(MouseEvents.CLICK, pos);
     }
 
     handleWheel(e) {
@@ -82,26 +91,10 @@ export class Mouse {
 
         const { deltaX, deltaY } = e;
 
-        this.cam.pos.x += deltaX;
-        this.cam.pos.y += deltaY;
-
-        this.cam.pos.x = clamp(this.cam.pos.x, -1000, Infinity);
-        this.cam.pos.y = clamp(this.cam.pos.y, -1000, 0);
+        this.emit(MouseEvents.WHEEL, { deltaX, deltaY });
     }
 
-    handleDrag(e, dragState) {
-        this.dragHandler && this.dragHandler(dragState);
-    }
-
-    onClick(clickHandler) {
-        this.clickHandler = clickHandler;
-    }
-
-    onDrag(dragHandler) {
-        this.dragHandler = dragHandler;
-    }
-
-    onMove(moveHandler) {
-        this.moveHandler = moveHandler;
+    handleDrag(e, dragState, pos) {
+        this.emit(MouseEvents.DRAG, dragState, pos);
     }
 }

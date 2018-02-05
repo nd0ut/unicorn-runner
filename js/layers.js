@@ -156,7 +156,7 @@ export function createSpriteLayer(entities, width = 240, height = 350) {
     };
 }
 
-export function createDebugLayer(level) {
+export function createDebugLayer(editor) {
     const buffer = document.createElement('canvas');
     buffer.width = 1024 + 60;
     buffer.height = 600 + 60;
@@ -165,13 +165,17 @@ export function createDebugLayer(level) {
 
     function drawEntityBounds(camera) {
         context.clearRect(0, 0, buffer.width, buffer.height);
+
         const camBounds = camera.getBounds();
+        const selectedEntity = editor.selection.selectedEntity;
+        const level = editor.level;
 
         for(const e of level.entities) {    
             if(!camBounds.overlaps(e.bounds)) {
                 continue;
             }
             context.beginPath();
+            context.strokeStyle = selectedEntity === e ? 'red' : 'black';
             context.rect(e.bounds.left - camBounds.left, e.bounds.top - camBounds.top, e.size.x, e.size.y);
             context.stroke();
             context.closePath();        

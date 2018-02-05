@@ -52,6 +52,8 @@ export class Entity {
         this.lifetime = 0;
 
         this.traits = [];
+
+        this.idx = undefined;
     }
 
     addTrait(trait) {

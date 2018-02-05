@@ -13,7 +13,7 @@ import { Mouse } from './Mouse';
 import { Picker } from './Picker';
 import { Selection } from './Selection';
 import { createDebugLayer } from '../layers';
-import {Game} from '../Game';
+import { Game } from '../Game';
 
 export class Editor extends Game {
     constructor(canvasSelector) {
@@ -33,8 +33,13 @@ export class Editor extends Game {
         return this.levelManager.level;
     }
 
+    get levelSpec() {
+        const { spec } = this.levelManager.levels[this.levelIdx];
+        return spec;
+    }
+
     addDebugLayer(level) {
-        const debugLayer = createDebugLayer(level);
+        const debugLayer = createDebugLayer(this);
         level.comp.addLayer(debugLayer);
     }
 
@@ -45,16 +50,20 @@ export class Editor extends Game {
         this.addDebugLayer(level);
     }
 
+    async restart() {
+        this.startEditing(this.levelIdx);
+    }
+
     async onLoad() {
         await this.startEditing(this.levelIdx);
         this.pause();
     }
 
     onLevelFinished() {
-        this.startEditing(this.levelIdx);       
+        this.restart();
     }
 
     onLevelFailed() {
-        this.startEditing(this.levelIdx);          
+        this.restart();
     }
 }

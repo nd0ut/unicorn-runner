@@ -13,16 +13,6 @@ export class Picker {
         return this.editor.level;
     }
 
-    exportRanges() {
-        const ranges = [];
-
-        for (const { x, y, tile } of this.level.backgroundGrid) {
-            ranges.push([x, y]);
-        }
-
-        return ranges;
-    }
-
     disableTraits(level) {
         for (const entity of this.level.entities) {
             entity.physics && entity.removeTrait('physics');

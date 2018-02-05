@@ -59,11 +59,11 @@ export class LevelManager {
         
         this.levelSelector.innerHTML = levelIdx;
 
-        const { init, spec } = this.levels[levelIdx];
+        const { init } = this.levels[levelIdx];
         const { level, startLevel } = await init(this.game);
         this.level = level;
 
-        if (this.showSplash && spec.name) {
+        if (this.showSplash && level.name) {
             await splashText(level.name);
         }
         this.game.canvasSelector.classList.toggle('blur', false);      
