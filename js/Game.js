@@ -2,7 +2,7 @@ import { Camera } from './camera/Camera';
 import { CameraController } from './camera/CameraController';
 import { CameraFocus } from './camera/CameraFocus';
 import { CameraShake } from './camera/CameraShake';
-import { LevelManager } from './LevelManager';
+import { LevelManager, LevelEvents } from './LevelManager';
 import { loadEntities } from './loadEntities';
 import { createLevelLoader } from './loadLevel';
 import { createPlayerEnv } from './player/createPlayerEnv';
@@ -17,18 +17,43 @@ export class Game {
         this.timer = new Timer();
         this.levelManager = new LevelManager(this);
         this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
+        this.playerEnv = createPlayerEnv(this);
 
-        this.start();
+        this.paused = false;
+
+        this.levelManager.on(LevelEvents.FINISHED, this.onLevelFinished.bind(this));
+        this.levelManager.on(LevelEvents.FAILED, this.onLevelFailed.bind(this));
+
+        this.loadResources();
     }
 
-    async start() {
+    async loadResources() {
         this.entityFactory = await loadEntities();
         this.loadLevel = await createLevelLoader(this.entityFactory);
 
-        this.playerEnv = createPlayerEnv(this);
+        this.timer.start();                
+        this.onLoad();
+    }
 
+    async onLoad() {
         this.levelManager.nextLevel();
+    }
 
-        this.timer.start();
+    onLevelFinished() {
+        this.levelManager.nextLevel();
+    }
+
+    onLevelFailed() {
+        this.levelManager.restartLevel();        
+    }
+
+    pause() {
+        this.levelManager.level.frozen = true;
+        this.paused = true;
+    }
+
+    resume() {
+        this.levelManager.level.frozen = false;
+        this.paused = false;
     }
 }

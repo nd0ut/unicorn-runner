@@ -13,59 +13,48 @@ import { Mouse } from './Mouse';
 import { Picker } from './Picker';
 import { Selection } from './Selection';
 import { createDebugLayer } from '../layers';
+import {Game} from '../Game';
 
-export class Editor {
+export class Editor extends Game {
     constructor(canvasSelector) {
-        this.canvasSelector = canvasSelector;
-        this.context = canvasSelector.getContext('2d');
-
-        this.camera = new Camera();
-        this.timer = new Timer();
-        this.paused = false;
+        super(canvasSelector);
 
         this.mouse = new Mouse(this);
         this.interaction = new Interaction(this);
         this.picker = new Picker(this);
-        this.levelManager = new LevelManager(this);
         this.selection = new Selection(this);
 
-        this.editLevelIdx = 1;
-        this.level = undefined
-        this.levelSpec = undefined
+        this.levelIdx = 1;
         this.tileResolver = undefined;
-
-        this.start();
+        this.levelManager.showSplash = false;
     }
 
-    pause() {
-        this.levelManager.level.frozen = true;
-        this.paused = true;
+    get level() {
+        return this.levelManager.level;
     }
 
-    resume() {
-        this.levelManager.level.frozen = false;
-        this.paused = false;
+    addDebugLayer(level) {
+        const debugLayer = createDebugLayer(level);
+        level.comp.addLayer(debugLayer);
     }
 
-    addDebugLayer() {
-        const debugLayer = createDebugLayer(this.level);
-        this.level.comp.addLayer(debugLayer);
+    async startEditing(levelIdx) {
+        const level = await this.levelManager.runLevel(this.levelIdx);
+        this.tileResolver = new TileResolver(level.backgroundGrid);
+
+        this.addDebugLayer(level);
     }
 
-    async start() {
-        this.entityFactory = await loadEntities();
-        this.loadLevel = await createLevelLoader(this.entityFactory);
-
-        this.cameraController = new CameraController(this.camera, [CameraShake, CameraFocus]);
-        this.playerEnv = createPlayerEnv(this);
-
-        this.level = await this.levelManager.runLevel(this.editLevelIdx);
-        this.tileResolver = new TileResolver(this.level.backgroundGrid);
-
-        this.addDebugLayer();
-
+    async onLoad() {
+        await this.startEditing(this.levelIdx);
         this.pause();
+    }
 
-        this.timer.start();
+    onLevelFinished() {
+        this.startEditing(this.levelIdx);       
+    }
+
+    onLevelFailed() {
+        this.startEditing(this.levelIdx);          
     }
 }

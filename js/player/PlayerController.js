@@ -1,7 +1,7 @@
-import { Trait, Sides } from '../Entity';
+import { Trait } from '../Entity';
+import { LevelEvents } from '../LevelManager';
 import { Vec2 } from '../math';
-import {splashText} from '../Splash';
-import {debounce} from '../util';
+import { splashText } from '../Splash';
 
 export class PlayerController extends Trait {
     constructor(game) {
@@ -10,8 +10,8 @@ export class PlayerController extends Trait {
         this.checkpoint = new Vec2(0, 0);
         this.player = undefined;
 
-        this.game.levelManager.onLevelFinished(this.onLevelFinised.bind(this));
-        this.game.levelManager.onLevelFailed(this.onLevelFailed.bind(this));
+        this.game.levelManager.on(LevelEvents.FINISHED, this.onLevelFinished.bind(this));
+        this.game.levelManager.on(LevelEvents.FAILED, this.onLevelFailed.bind(this));
 
         this.totalScore = 0;
         this.score = 0;
@@ -20,7 +20,7 @@ export class PlayerController extends Trait {
         this.fireballsSelector = document.getElementById('current-fireballs');
         this.scoreSelector = document.getElementById('unicorn-score');
 
-        this.updateUiCounts(this.fireballsSelector, this.fireballs);        
+        this.updateUiCounts(this.fireballsSelector, this.fireballs);
     }
 
     setPlayer(entity) {
@@ -31,7 +31,7 @@ export class PlayerController extends Trait {
     }
 
     onPick(picker, pickable) {
-        if(pickable.name === 'rainbow') {
+        if (pickable.name === 'rainbow') {
             this.score += 50;
             this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
         }
@@ -42,14 +42,13 @@ export class PlayerController extends Trait {
     }
 
     onStrike(bullet) {
-        if(bullet.name === 'bullet') {
+        if (bullet.name === 'bullet') {
             this.fireballs--;
         }
-        this.updateUiCounts(this.fireballsSelector, this.fireballs);  
+        this.updateUiCounts(this.fireballsSelector, this.fireballs);
     }
 
     updateUiCounts(selector, count) {
-
         setTimeout(() => {
             selector.innerHTML = count;
         }, 0);
@@ -81,17 +80,17 @@ export class PlayerController extends Trait {
     }
 
     update(entity, deltaTime, level) {
-        if(!this.player) {
+        if (!this.player) {
             return;
         }
-        
-        if(!this.player.killable.dead && !level.entities.has(this.player)) {
+
+        if (!this.player.killable.dead && !level.entities.has(this.player)) {
             level.entities.add(this.player);
             return;
         }
     }
 
-    onLevelFinised() {
+    onLevelFinished() {
         this.commitScore();
     }
 

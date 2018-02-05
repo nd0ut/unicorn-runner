@@ -1,5 +1,6 @@
 import * as levels from './levels';
 import { splashText } from './Splash';
+import { EventEmitter } from './util';
 
 const LevelState = {
     IDLE: Symbol('IDLE'),
@@ -9,30 +10,29 @@ const LevelState = {
     FINISHED: Symbol('FINISHED')
 };
 
+export const LevelEvents = {
+    FAILED: Symbol('FAILED'),
+    FINISHED: Symbol('FINISHED'),
+}
+
+@EventEmitter.decorator
 export class LevelManager {
     constructor(game) {
         this.game = game;
-
-        const showDemoLevel = false;
 
         this.levels = [levels.demo, levels.first, levels.second];
         this.levelIdx = -1;
         this.levelState = LevelState.IDLE;
 
-        if (!showDemoLevel) {
-            document.querySelector('.play-block').remove();
-            this.levelIdx += 1;
-        }
-
         this.level = undefined;
 
+        this.showSplash = true;
+        this.showDemoLevel = false;
+        
         this.finishDistance = 500;
         this.fallDistance = 600;
 
         this.levelSelector = document.getElementById('current-level');
-
-        this.finishedHandler = undefined;
-        this.failedHandler = undefined;
     }
 
     get playerController() {
@@ -41,14 +41,6 @@ export class LevelManager {
 
     get player() {
         return this.game.playerEnv.playerController.player;
-    }
-
-    onLevelFinished(finishedHandler) {
-        this.finishedHandler = finishedHandler
-    }
-
-    onLevelFailed(failedHandler) {
-        this.failedHandler = failedHandler;
     }
 
     async restartLevel() {
@@ -61,21 +53,20 @@ export class LevelManager {
     }
 
     async runLevel(levelIdx) {
-        this.game.canvasSelector.classList.toggle('blur', true);
+        this.game.canvasSelector.classList.toggle('blur', true);      
 
-        this.playerController.commitScore();
-
+        this.levelIdx = levelIdx;
+        
         this.levelSelector.innerHTML = levelIdx;
 
         const { init, spec } = this.levels[levelIdx];
         const { level, startLevel } = await init(this.game);
         this.level = level;
 
-        if (level.name) {
+        if (this.showSplash && spec.name) {
             await splashText(level.name);
         }
-
-        this.game.canvasSelector.classList.toggle('blur', false);
+        this.game.canvasSelector.classList.toggle('blur', false);      
 
         startLevel();
 
@@ -138,12 +129,10 @@ export class LevelManager {
     }
 
     onFinish() {
-        this.onLevelFinished();
-        this.nextLevel();
+        this.emit(LevelEvents.FINISHED);
     }
 
     onFail() {
-        this.onLevelFailed();
-        this.restartLevel();
+        this.emit(LevelEvents.FAILED);
     }
 }
