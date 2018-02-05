@@ -16,6 +16,7 @@ export class Interaction {
         this.mode = InteractionMode.SELECT;
 
         this.editor.mouse.on(MouseEvents.CLICK, this.onClick.bind(this));
+        this.editor.mouse.on(MouseEvents.RIGHTCLICK, this.onRightClick.bind(this));
         this.editor.mouse.on(MouseEvents.DRAG, this.onDrag.bind(this));
         this.editor.mouse.on(MouseEvents.MOVE, this.onMove.bind(this));
         this.editor.mouse.on(MouseEvents.WHEEL, this.onWheel.bind(this));
@@ -64,7 +65,7 @@ export class Interaction {
     onDrag(dragState, pos) {
         if(this.mode === InteractionMode.SELECT) {
             this.tryDragEntity(dragState, pos);
-        }
+        } 
     }
 
     tryDragEntity(dragState, pos) {
@@ -116,6 +117,12 @@ export class Interaction {
         }
     }
 
+    onRightClick(pos) {
+        if(this.mode === InteractionMode.TILE) {
+            this.removeTile(pos);
+        }
+    }
+
     onWheel({deltaX, deltaY}) {
         this.cam.pos.x += deltaX;
         this.cam.pos.y += deltaY;
@@ -152,8 +159,17 @@ export class Interaction {
 
             updateTileGrid(this.editor.levelSpec, this.level.backgroundGrid);
         }
+    }
 
-        console.log('tile', tileIndex);
+    removeTile(pos) {
+        const tileIndex = this.editor.picker.pickTileIndex(pos);
+
+        if (tileIndex) {
+            this.level.backgroundGrid.remove(tileIndex.x, tileIndex.y);
+            this.level.collisionGrid.remove(tileIndex.x, tileIndex.y);
+
+            updateTileGrid(this.editor.levelSpec, this.level.backgroundGrid);
+        }
     }
 
     selectInPosition(pos) {
@@ -172,7 +188,7 @@ export class Interaction {
         this.editor.selection.clear();
     }
 
-    onEntityNameChange(entityName) {
+    setCreateEntityName(entityName) {
         this.createEntityName = entityName;
     }
 }

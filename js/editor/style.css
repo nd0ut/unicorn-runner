@@ -14,6 +14,7 @@ body {
 .sidebar {
     padding: 10px 20px;
     flex: 1;
+    max-width: 250px;
 }
 
 @font-face {

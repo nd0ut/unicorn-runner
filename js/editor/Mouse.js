@@ -3,6 +3,7 @@ import { EventEmitter } from '../util';
 
 export const MouseEvents = {
     CLICK: Symbol('CLICK'),
+    RIGHTCLICK: Symbol('RIGHTCLICK'),
     DRAG: Symbol('DRAG'),
     MOVE: Symbol('MOVE'),
     WHEEL: Symbol('WHEEL')
@@ -41,10 +42,16 @@ export class Mouse {
         canvas.addEventListener('mousedown', this.handleDown.bind(this));
         canvas.addEventListener('mouseup', this.handleUp.bind(this));
         canvas.addEventListener('wheel', this.handleWheel.bind(this));
+        canvas.addEventListener('contextmenu', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        });
     }
 
     handleDown(e) {
         const { offsetX, offsetY } = e;
+
         this.downTime = new Date().valueOf();
         this.downPos.set(offsetX, offsetY);
     }
@@ -68,7 +75,7 @@ export class Mouse {
     handleMove(e) {
         const { offsetX, offsetY } = e;
         this.pos = this.toGamePos(offsetX, offsetY);
-        
+
         const drag = this.downTime > 0 && this.pos.distance(this.downPos) > 2;
         if (drag) {
             const dragState = this.dragging ? DragState.DRAGGING : DragState.START;
@@ -83,7 +90,14 @@ export class Mouse {
         const { offsetX, offsetY } = e;
         const pos = this.toGamePos(offsetX, offsetY);
 
-        this.emit(MouseEvents.CLICK, pos);
+        if (e.which === 1) {
+            this.emit(MouseEvents.CLICK, pos);
+        } else if (e.which === 3) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.emit(MouseEvents.RIGHTCLICK, pos);
+        }
+
     }
 
     handleWheel(e) {

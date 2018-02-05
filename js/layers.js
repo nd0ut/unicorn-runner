@@ -175,7 +175,8 @@ export function createDebugLayer(editor) {
                 continue;
             }
             context.beginPath();
-            context.strokeStyle = selectedEntity === e ? 'red' : 'black';
+            context.strokeStyle = selectedEntity === e ? 'white' : 'black';
+            context.lineWidth = selectedEntity === e ? 2 : 1;
             context.rect(e.bounds.left - camBounds.left, e.bounds.top - camBounds.top, e.size.x, e.size.y);
             context.stroke();
             context.closePath();        
