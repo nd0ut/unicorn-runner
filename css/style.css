@@ -124,6 +124,14 @@ canvas#screen.blur {
     pointer-events: none;
 }
 
+.splash-text--hide {
+    animation-name: zoomOut;
+}
+
+.splash-text--show {
+    animation-name: jackInTheBox;
+}
+
 .splash-text {
     opacity: 0;
     animation-duration: 1s;
@@ -132,31 +140,42 @@ canvas#screen.blur {
     transition: opacity .3s;
 }
 
-.splash-text--show {
-    animation-name: jackInTheBox;
-}
-
 @keyframes jackInTheBox {
     from {
-        opacity: 0;
-        transform: scale(0.1) rotate(30deg);
-        transform-origin: center bottom;
+      opacity: 0;
+      transform: scale(0.1) rotate(30deg);
+      transform-origin: center bottom;
     }
-    30% {
-        transform: rotate(-10deg);
-    }
+  
     50% {
-        transform: rotate(3deg);
+      transform: rotate(-10deg);
     }
+  
     70% {
-        opacity: 1;
-        transform: scale(1);
+      transform: rotate(3deg);
     }
+  
     to {
-        opacity: 0;
-        transform: scale(0.1) rotate(0deg);
+      opacity: 1;
+      transform: scale(1);
     }
-}
+  }
+
+@keyframes zoomOut {
+    from {
+      opacity: 1;
+    }
+  
+    50% {
+      opacity: 0;
+      -webkit-transform: scale3d(0.3, 0.3, 0.3);
+      transform: scale3d(0.3, 0.3, 0.3);
+    }
+  
+    to {
+      opacity: 0;
+    }
+  }
 
 .play-btn:hover {
     box-shadow: 0 0 15px 10px violet, 0 0 15px 20px indigo, 0 0 15px 30px blue, 0 0 15px 40px green, 0 0 15px 50px yellow, 0 0 15px 60px orange, 0 0 15px 70px red;

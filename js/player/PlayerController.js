@@ -59,8 +59,12 @@ export class PlayerController extends Trait {
         const alive = this.player && !this.player.killable.dead;
         const haveBalls = this.fireballs > 0;
 
-        if(alive && this.fireballs === 0) {
-            splashText('not enough balls!', 1000, 70, 'red')
+        if (alive && this.fireballs === 0) {
+            splashText('not enough balls!', {
+                timeout: 1000,
+                size: 70,
+                color: 'red'
+            });
         }
 
         return alive && haveBalls;
