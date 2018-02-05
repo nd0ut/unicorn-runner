@@ -47,6 +47,13 @@ export class Editor extends Game {
         const level = await this.levelManager.runLevel(this.levelIdx);
         this.tileResolver = new TileResolver(level.backgroundGrid);
 
+        const origUpdate = this.timer.update;
+
+        this.timer.update = (...args) => {
+            origUpdate(...args);
+            this.onUpdate && this.onUpdate();
+        }
+
         this.addDebugLayer(level);
     }
 

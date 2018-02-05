@@ -1,11 +1,12 @@
+import { EventEmitter } from '../util';
+
+@EventEmitter.decorator
 export class Selection {
     constructor(editor) {
         this.editor = editor;
 
         this.selectedTile = undefined;
         this.selectedEntity = undefined;
-
-        this.changeHandler = undefined;
     }
 
     get empty() {
@@ -16,14 +17,18 @@ export class Selection {
         this.selectedTile = tile;
         this.selectedEntity = undefined;
         console.log(tile);
-        this.changeHandler();
+        this.emit('change');
     }
 
     selectEntity(entity) {
+        if(this.selectedEntity === entity) {
+            return;
+        }
+
         this.selectedEntity = entity;
         this.selectedTile = undefined;
 
-        this.changeHandler();
+        this.emit('change');
     }
 
     getSpec() {
@@ -34,7 +39,7 @@ export class Selection {
         if (this.selectedEntity) {
             const entities = this.editor.levelSpec.entities;
             const spec = entities[this.selectedEntity.idx];
-            
+
             return spec;
         }
     }
@@ -43,10 +48,6 @@ export class Selection {
         this.selectedEntity = undefined;
         this.selectedTile = undefined;
 
-        this.changeHandler();
-    }
-
-    onChange(changeHandler) {
-        this.changeHandler = changeHandler;
+        this.emit('change');
     }
 }

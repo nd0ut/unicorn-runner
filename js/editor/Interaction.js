@@ -1,6 +1,7 @@
-import { clamp } from '../math';
+import { clamp, Vec2 } from '../math';
 import { MouseEvents, DragState } from './Mouse';
-import { updateTileGrid, updateEntity } from './SpecUpdate';
+import { updateTileGrid, updateEntity, createEntity } from './SpecUpdate';
+import { EventEmitter } from '../util';
 
 export const InteractionMode = {
     SELECT: Symbol('SELECT'),
@@ -8,6 +9,7 @@ export const InteractionMode = {
     ENTITY: Symbol('ENTITY')
 };
 
+@EventEmitter.decorator
 export class Interaction {
     constructor(editor) {
         this.editor = editor;
@@ -21,6 +23,7 @@ export class Interaction {
         window.addEventListener('keypress', this.onKeyPress.bind(this));
 
         this.dragging = {};
+        this.createEntityName = undefined;
     }
 
     get level() {
@@ -33,6 +36,7 @@ export class Interaction {
 
     setMode(mode) {
         this.mode = mode;
+        this.emit('change');
     }
 
     onKeyPress(e) {
@@ -93,18 +97,20 @@ export class Interaction {
         if (dragState === DragState.STOP) {
             this.dragging = {};
         }
+
+        this.emit('change');        
     }
 
     onClick(pos) {
         switch (this.mode) {
             case InteractionMode.SELECT:
-                this.clickSelect(pos);
+                this.selectInPosition(pos);
                 break;
             case InteractionMode.TILE:
-                this.clickTile(pos);
+                this.createTile(pos);
                 break;
             case InteractionMode.ENTITY:
-                this.clickEntity(pos);
+                this.createEntity(pos);
             default:
                 break;
         }
@@ -118,13 +124,25 @@ export class Interaction {
         this.cam.pos.y = clamp(this.cam.pos.y, -1000, 0);
     }
 
-    clickEntity(pos) {
-        const entity = this.editor.picker.pickEntity(pos);
+    createEntity(pos) {
+        const entityCreator = this.editor.entityFactory[this.createEntityName];
+        const entity = entityCreator();
 
-        console.log('entity', entity);
+        const x = pos.x - entity.size.x / 2;
+        const y = pos.y - entity.size.y / 2;
+
+        const idx = createEntity(this.editor.levelSpec, {
+            name: entity.name,
+            pos: [x, y]
+        });
+
+        entity.pos.set(x, y);
+        entity.idx = idx;
+
+        this.editor.level.entities.add(entity);
     }
 
-    clickTile(pos) {
+    createTile(pos) {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
         if (tileIndex) {
@@ -138,7 +156,7 @@ export class Interaction {
         console.log('tile', tileIndex);
     }
 
-    clickSelect(pos) {
+    selectInPosition(pos) {
         const entity = this.editor.picker.pickEntity(pos);
         if (entity) {
             this.editor.selection.selectEntity(entity);
@@ -152,5 +170,9 @@ export class Interaction {
         }
 
         this.editor.selection.clear();
+    }
+
+    onEntityNameChange(entityName) {
+        this.createEntityName = entityName;
     }
 }

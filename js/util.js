@@ -1,9 +1,10 @@
 export function debounce(func, wait, immediate) {
     let timeout;
-    return function () {
-        const context = this, args = arguments;
+    return function() {
+        const context = this,
+            args = arguments;
         clearTimeout(timeout);
-        timeout = setTimeout(function () {
+        timeout = setTimeout(function() {
             timeout = undefined;
             if (!immediate) func.apply(context, args);
         }, wait);
@@ -11,13 +12,30 @@ export function debounce(func, wait, immediate) {
     };
 }
 
-
 export class EventEmitter {
-    static decorator(target) {
-        const eventEmitter = new EventEmitter();
+    static emitters = new WeakMap();
 
-        target.prototype.on = eventEmitter.on.bind(eventEmitter);
-        target.prototype.emit = eventEmitter.emit.bind(eventEmitter);
+    static getEmitter(instance) {
+        let emitter = EventEmitter.emitters.get(instance);
+
+        if (!emitter) {
+            emitter = new EventEmitter();
+            EventEmitter.emitters.set(instance, emitter);
+        }
+
+        return emitter;
+    }
+
+    static decorator(target) {
+        target.prototype.on = function on(...args) {
+            const emitter = EventEmitter.getEmitter(this);
+            emitter.on.call(emitter, ...args);
+        }
+
+        target.prototype.emit = function emit(...args) {
+            const emitter = EventEmitter.getEmitter(this);
+            emitter.emit.call(emitter, ...args);
+        }
     }
 
     constructor(instance) {
@@ -27,7 +45,7 @@ export class EventEmitter {
     on(event, handler) {
         let handlers = this.events.get(event);
 
-        if(handlers) {
+        if (handlers) {
             handlers.push(handler);
         } else {
             handlers = [handler];
@@ -38,14 +56,14 @@ export class EventEmitter {
     async emit(event, ...args) {
         const handlers = this.events.get(event);
 
-        if(!handlers) {
+        if (!handlers) {
             return;
         }
 
-        for(const handler of handlers) {
+        for (const handler of handlers) {
             handler(...args);
         }
-        
+
         await Promise.all(handlers.map(handler => handler.bind(handler, ...args)));
     }
 }
