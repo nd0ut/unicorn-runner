@@ -3,7 +3,7 @@ import { Trait } from '../Entity';
 import { Physics, Solid } from '../Traits';
 
 const FIREBALL_SPRITE = {
-    skinName: 'fireball',
+    skinName: 'default',
     imageURL: require('../../img/fireball.png'),
     frames: [
         {

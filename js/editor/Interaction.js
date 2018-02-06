@@ -62,44 +62,83 @@ export class Interaction {
         const tile = this.editor.picker.pickTile(pos);
     }
 
-    onDrag(dragState, pos) {
-        if(this.mode === InteractionMode.SELECT) {
-            this.tryDragEntity(dragState, pos);
-        } 
+    onDrag(dragState, pos, delta) {
+        if (this.tryDragCamera(dragState, pos, delta)) {
+            return;
+        }
+
+        if (this.mode === InteractionMode.SELECT) {
+            this.tryDragEntity(dragState, pos, delta);
+        }
     }
 
-    tryDragEntity(dragState, pos) {
-        if(dragState === DragState.START) {
+    tryDragCamera(dragState, pos, delta) {
+        if (dragState === DragState.START) {
             const entity = this.editor.picker.pickEntity(pos);
-            
-            if(entity) {
-                this.editor.selection.selectEntity(entity);                
-                this.dragging.entity = entity;
-                this.dragging.offsetX = pos.x - entity.pos.x;
-                this.dragging.offsetY = pos.y - entity.pos.y;
+            const tile = this.editor.picker.pickTile(pos);
+
+            if (!entity && !tile) {
+                this.dragging.moveCamera = true;
+                this.dragging.startPos = pos;
+                this.dragging.offsetX = pos.x - this.cam.pos.x;
+                this.dragging.offsetY = pos.y - this.cam.pos.y;
+                return true;
             }
-
-            return;
         }
 
-        if(!this.dragging.entity) {
-            return;
+        if (!this.dragging.moveCamera) {
+            return false;
         }
 
-        const x = pos.x - this.dragging.offsetX;
-        const y = pos.y - this.dragging.offsetY;
-        this.dragging.entity.pos.x = x;
-        this.dragging.entity.pos.y = y;
+        if (dragState === DragState.DRAGGING) {
+            const x = this.dragging.startPos.x - this.dragging.offsetX - delta.x;
+            const y = this.dragging.startPos.y - this.dragging.offsetY - delta.y;
 
-        updateEntity(this.editor.levelSpec, this.dragging.entity.idx, {
-            pos: [x, y]
-        })
+            this.setCamPos(x, y);
+        }
 
         if (dragState === DragState.STOP) {
             this.dragging = {};
         }
 
-        this.emit('change');        
+        return true;
+    }
+
+    tryDragEntity(dragState, pos) {
+        if (dragState === DragState.START) {
+            const entity = this.editor.picker.pickEntity(pos);
+
+            if (entity) {
+                this.editor.selection.selectEntity(entity);
+                this.dragging.entity = entity;
+                this.dragging.offsetX = pos.x - entity.pos.x;
+                this.dragging.offsetY = pos.y - entity.pos.y;
+                return true;
+            }
+        }
+
+        if (!this.dragging.entity) {
+            return false;
+        }
+
+        if (dragState === DragState.DRAGGING) {
+            const x = pos.x - this.dragging.offsetX;
+            const y = pos.y - this.dragging.offsetY;
+            this.dragging.entity.pos.x = x;
+            this.dragging.entity.pos.y = y;
+
+            updateEntity(this.editor.levelSpec, this.dragging.entity.idx, {
+                pos: [x, y]
+            });
+        }
+
+        if (dragState === DragState.STOP) {
+            this.dragging = {};
+        }
+
+        this.emit('change');
+
+        return true;
     }
 
     onClick(pos) {
@@ -118,25 +157,29 @@ export class Interaction {
     }
 
     onRightClick(pos) {
-        if(this.mode === InteractionMode.TILE) {
+        if (this.mode === InteractionMode.TILE) {
             this.removeTile(pos);
         }
     }
 
-    onWheel({deltaX, deltaY}) {
-        this.cam.pos.x += deltaX;
-        this.cam.pos.y += deltaY;
+    onWheel(delta) {
+        const x = this.cam.pos.x + delta.x;
+        const y = this.cam.pos.y + delta.y;
 
-        this.cam.pos.x = clamp(this.cam.pos.x, -1000, Infinity);
-        this.cam.pos.y = clamp(this.cam.pos.y, -1000, 0);
+        this.setCamPos(x, y);
+    }
+
+    setCamPos(x, y) {
+        this.cam.pos.x = clamp(x, -1000, Infinity);
+        this.cam.pos.y = clamp(y, -1000, 0);
     }
 
     createEntity(pos) {
         const entityCreator = this.editor.entityFactory[this.createEntityName];
         const entity = entityCreator();
 
-        const x = pos.x - entity.size.x / 2;
-        const y = pos.y - entity.size.y / 2;
+        const x = pos.x - entity.size.x / 2 - entity.offset.x;
+        const y = pos.y - entity.size.y / 2 - entity.offset.y;
 
         const idx = createEntity(this.editor.levelSpec, {
             name: entity.name,

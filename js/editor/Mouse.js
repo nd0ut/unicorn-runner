@@ -74,16 +74,19 @@ export class Mouse {
 
     handleMove(e) {
         const { offsetX, offsetY } = e;
-        this.pos = this.toGamePos(offsetX, offsetY);
+        const downPos = this.toGamePos(this.downPos.x, this.downPos.y);
+        const pos = this.toGamePos(offsetX, offsetY);
+        const delta = new Vec2(pos.x - downPos.x, pos.y - downPos.y);
 
-        const drag = this.downTime > 0 && this.pos.distance(this.downPos) > 2;
+        const drag = this.downTime > 0 && pos.distance(this.downPos) > 2;
         if (drag) {
             const dragState = this.dragging ? DragState.DRAGGING : DragState.START;
-            this.handleDrag(e, dragState, this.pos);
+            this.handleDrag(e, dragState, pos, delta);
             this.dragging = true;
         }
 
-        this.emit(MouseEvents.MOVE, this.pos);
+        this.emit(MouseEvents.MOVE, pos);
+        this.pos = pos;
     }
 
     handleClick(e) {
@@ -105,10 +108,10 @@ export class Mouse {
 
         const { deltaX, deltaY } = e;
 
-        this.emit(MouseEvents.WHEEL, { deltaX, deltaY });
+        this.emit(MouseEvents.WHEEL, new Vec2(deltaX, deltaY));
     }
 
-    handleDrag(e, dragState, pos) {
-        this.emit(MouseEvents.DRAG, dragState, pos);
+    handleDrag(e, dragState, pos, delta) {
+        this.emit(MouseEvents.DRAG, dragState, pos, delta);
     }
 }
