@@ -1,6 +1,6 @@
 import { clamp, Vec2 } from '../math';
 import { MouseEvents, DragState } from './Mouse';
-import { updateTileGrid, updateEntity, createEntity } from './SpecUpdate';
+import { updateTileGrid, updateEntity, createEntity, removeEntity } from './SpecUpdate';
 import { EventEmitter } from '../util';
 
 export const InteractionMode = {
@@ -52,6 +52,15 @@ export class Interaction {
             case 'KeyR':
                 this.editor.restart();
                 break;
+            case 'KeyQ':
+                this.setMode(InteractionMode.SELECT);
+                break;
+            case 'KeyW':
+                this.setMode(InteractionMode.TILE);
+                break;
+            case 'KeyE':
+                this.setMode(InteractionMode.ENTITY);
+                break;
             default:
                 break;
         }
@@ -63,13 +72,42 @@ export class Interaction {
     }
 
     onDrag(dragState, pos, delta) {
-        if (this.tryDragCamera(dragState, pos, delta)) {
+        if (dragState === DragState.STOP) {
+            this.dragging = {};
             return;
         }
 
-        if (this.mode === InteractionMode.SELECT) {
+        this.tryDrawTiles(dragState, pos, delta) ||
+            this.tryDragCamera(dragState, pos, delta) ||
             this.tryDragEntity(dragState, pos, delta);
+    }
+
+    tryDrawTiles(dragState, pos) {
+        const tile = this.editor.picker.pickTile(pos);
+
+        if(!tile && this.mode !== InteractionMode.TILE) {
+            return false;
         }
+
+        if (dragState === DragState.START) {
+            this.dragging.drawTiles = true;
+            this.dragging.remove = tile ? true : false;
+            return true;
+        }
+
+        if (!this.dragging.drawTiles) {
+            return false;
+        }
+
+        if (dragState === DragState.DRAGGING) {
+            if (this.dragging.remove && tile) {
+                this.removeTile(pos);
+            } else if (!this.dragging.remove && !tile) {
+                this.createTile(pos);
+            }
+        }
+
+        return true;
     }
 
     tryDragCamera(dragState, pos, delta) {
@@ -95,10 +133,6 @@ export class Interaction {
             const y = this.dragging.startPos.y - this.dragging.offsetY - delta.y;
 
             this.setCamPos(x, y);
-        }
-
-        if (dragState === DragState.STOP) {
-            this.dragging = {};
         }
 
         return true;
@@ -132,10 +166,6 @@ export class Interaction {
             });
         }
 
-        if (dragState === DragState.STOP) {
-            this.dragging = {};
-        }
-
         this.emit('change');
 
         return true;
@@ -157,9 +187,15 @@ export class Interaction {
     }
 
     onRightClick(pos) {
-        if (this.mode === InteractionMode.TILE) {
-            this.removeTile(pos);
+        const entity = this.editor.picker.pickEntity(pos);
+        if(entity) {
+            this.removeEntity(pos);
         }
+
+        const tile = this.editor.picker.pickTile(pos);
+        if(tile) {
+            this.removeTile(pos);            
+        }        
     }
 
     onWheel(delta) {
@@ -192,6 +228,12 @@ export class Interaction {
         this.editor.level.entities.add(entity);
     }
 
+    removeEntity(pos) {
+        const entity = this.editor.picker.pickEntity(pos);
+        removeEntity(this.editor.levelSpec, entity.idx);
+        this.editor.level.entities.delete(entity);
+    }
+
     createTile(pos) {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
@@ -208,6 +250,7 @@ export class Interaction {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
         if (tileIndex) {
+            console.log('remove');
             this.level.backgroundGrid.remove(tileIndex.x, tileIndex.y);
             this.level.collisionGrid.remove(tileIndex.x, tileIndex.y);
 

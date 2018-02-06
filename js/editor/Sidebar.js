@@ -22,27 +22,24 @@ class Sidebar extends Component {
             <div>
                 <Controls />
                 <Mode {...this.props} />
-                {mode === InteractionMode.SELECT && (
-                    <SelectionMode {...this.props} />
-                )}
-                {mode === InteractionMode.ENTITY && (
-                    <EntityMode {...this.props} />
-                )}
+                {mode === InteractionMode.SELECT && <SelectionMode {...this.props} />}
+                {mode === InteractionMode.ENTITY && <EntityMode {...this.props} />}
             </div>
         );
     }
 }
 
 function Controls() {
-    return (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    return <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>Controls:</div>
             <div>
                 <div>T - pause/resume</div>
                 <div>R - restart</div>
+                <div style={{'margin-top': '5px'}}>Q - select mode</div>
+                <div>W - tile mode</div>
+                <div>E - entity mode</div>
             </div>
-        </div>
-    );
+        </div>;
 }
 
 function Mode({ editor: { interaction } }) {
@@ -73,7 +70,13 @@ function Mode({ editor: { interaction } }) {
     }
 
     return (
-        <div style={{ display: 'flex', 'margin-top': '15px', 'justify-content': 'space-between' }}>
+        <div
+            style={{
+                display: 'flex',
+                'margin-top': '15px',
+                'justify-content': 'space-between'
+            }}
+        >
             <div>mode: </div>
             <div style={{ display: 'flex' }}>
                 <ModeItem mode={InteractionMode.SELECT} />
@@ -99,7 +102,9 @@ function SelectionMode({ editor: { selection } }) {
         : `[${entity.pos.x}, ${entity.pos.y}]`;
 
     return (
-        <div style={{ 'display': 'flex', 'margin-top': '15px', 'flex-direction': 'column' }}>
+        <div
+            style={{ display: 'flex', 'margin-top': '15px', 'flex-direction': 'column' }}
+        >
             <div style={{ display: 'flex' }}>
                 <div style={{ marginRight: '10px' }}>Selection:</div>
                 <span>
@@ -118,13 +123,14 @@ function Spec({ spec }) {
 
     const rows = keys.map(key => {
         const value = spec[key];
-        return ([
-            <div>{key}: </div>,
-            <div>{value}</div>
-        ]);
+        return [<div>{key}: </div>, <div>{value}</div>];
     });
 
-    const table = <div style={{ display: 'grid', 'grid-template-columns': 'repeat(2, 1fr)' }}>{rows}</div>;
+    const table = (
+        <div style={{ display: 'grid', 'grid-template-columns': 'repeat(2, 1fr)' }}>
+            {rows}
+        </div>
+    );
 
     return <div>{table}</div>;
 }
@@ -133,7 +139,7 @@ function EntityMode({ editor: { entityFactory, interaction } }) {
     const entityNames = Object.keys(entityFactory);
 
     function onSelect(e) {
-        const value = e.target.value
+        const value = e.target.value;
         interaction.setCreateEntityName(value);
     }
 
@@ -144,7 +150,11 @@ function EntityMode({ editor: { entityFactory, interaction } }) {
     return (
         <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
             <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
-                {entityNames.map((name, idx) => <option selected={name === defaultSelected} value={name}>{name}</option>)}
+                {entityNames.map((name, idx) => (
+                    <option selected={name === defaultSelected} value={name}>
+                        {name}
+                    </option>
+                ))}
             </select>
         </div>
     );

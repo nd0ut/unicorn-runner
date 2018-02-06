@@ -22,3 +22,7 @@ export function createEntity(levelSpec, entitySpec) {
     levelSpec.entities[idx] = entitySpec;
     return idx;
 }
+
+export function removeEntity(levelSpec, idx) {
+    delete levelSpec.entities[idx]
+}

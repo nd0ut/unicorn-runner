@@ -48,7 +48,7 @@ export class InteractionController extends Trait {
 
         const unicorn = this.playerController.player;
         const fireball = this.entityFactory.bullet({ 
-            skinName: 'fireball', 
+            skinName: 'default', 
             ownerEntity: unicorn 
         });
         unicorn.striker.strike(fireball, this.currentLevel);
