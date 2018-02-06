@@ -74,7 +74,7 @@ function createTileGrid(tiles) {
 
     for (const { skinName, x, y } of expandTiles(tiles)) {
         const tile = {
-            skinName
+            skinName: skinName || 'default'
         };
         grid.set(x, y, tile);
     }

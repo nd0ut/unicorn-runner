@@ -16,12 +16,11 @@ export class Selection {
     selectTile(tile) {
         this.selectedTile = tile;
         this.selectedEntity = undefined;
-        console.log(tile);
         this.emit('change');
     }
 
     selectEntity(entity) {
-        if(this.selectedEntity === entity) {
+        if (this.selectedEntity === entity) {
             return;
         }
 
@@ -40,6 +39,11 @@ export class Selection {
             const entities = this.editor.levelSpec.entities;
             const spec = entities[this.selectedEntity.idx];
 
+            return spec;
+        }
+
+        if (this.selectedTile) {
+            const spec = { skinName: this.selectedTile.skinName };
             return spec;
         }
     }

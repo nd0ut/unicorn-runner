@@ -2,7 +2,7 @@ export function updateTileGrid(spec, grid) {
     const ranges = [];
 
     for (const { x, y, tile } of grid) {
-        ranges.push([x, y]);
+        ranges.push([tile.skinName || 'default', x, y]);
     }
 
     spec.tiles = ranges;

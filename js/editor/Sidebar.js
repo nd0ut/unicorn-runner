@@ -24,6 +24,7 @@ class Sidebar extends Component {
                 <LevelSelector {...this.props} />
                 <Mode {...this.props} />
                 {mode === InteractionMode.SELECT && <SelectionMode {...this.props} />}
+                {mode === InteractionMode.TILE && <TileMode {...this.props} />}
                 {mode === InteractionMode.ENTITY && <EntityMode {...this.props} />}
                 <Save {...this.props} />
             </div>
@@ -157,7 +158,7 @@ function Mode({ editor: { interaction } }) {
     );
 }
 
-function SelectionMode({ editor: { selection } }) {
+function SelectionMode({ editor: { selection, interaction } }) {
     if (selection.empty) {
         return;
     }
@@ -181,7 +182,7 @@ function SelectionMode({ editor: { selection } }) {
                     {type} {pos}
                 </span>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', marginTop: 10 }}>
                 <Spec spec={{ ...spec }} />
             </div>
         </div>
@@ -204,6 +205,33 @@ function Spec({ spec }) {
 
     return <div>{table}</div>;
 }
+
+function TileMode({ editor }) {
+    const interaction = editor.interaction;
+    const tileSkinNames = editor.levelSpec.tileSprite.frames.map(f => f.name);
+
+    function onSelect(e) {
+        const value = e.target.value;
+        interaction.setCreateTileSkin(value);
+    }
+
+    const defaultSelected = tileSkinNames[0];
+
+    interaction.setCreateEntityName(defaultSelected);
+
+    return (
+        <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
+            <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
+                {tileSkinNames.map((name, idx) => (
+                    <option selected={name === defaultSelected} value={name}>
+                        {name}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+}
+
 
 function EntityMode({ editor: { entityFactory, interaction } }) {
     const entityNames = Object.keys(entityFactory);

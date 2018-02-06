@@ -1,7 +1,13 @@
-import { clamp, Vec2 } from '../math';
-import { MouseEvents, DragState } from './Mouse';
-import { updateTileGrid, updateEntity, createEntity, removeEntity, saveLocal } from './SpecTools';
+import { clamp } from '../math';
 import { EventEmitter } from '../util';
+import { DragState, MouseEvents } from './Mouse';
+import {
+    createEntity,
+    removeEntity,
+    saveLocal,
+    updateEntity,
+    updateTileGrid
+} from './SpecTools';
 
 export const InteractionMode = {
     SELECT: Symbol('SELECT'),
@@ -25,6 +31,7 @@ export class Interaction {
 
         this.dragging = {};
         this.createEntityName = undefined;
+        this.createTileSkin = undefined;
     }
 
     get level() {
@@ -241,8 +248,7 @@ export class Interaction {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
         if (tileIndex) {
-            // TODO: dont forget
-            const tile = {};
+            const tile = { skinName: this.createTileSkin };
             this.level.tileGrid.set(tileIndex.x, tileIndex.y, tile);
             updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
@@ -253,6 +259,15 @@ export class Interaction {
 
         if (tileIndex) {
             this.level.tileGrid.remove(tileIndex.x, tileIndex.y);
+            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
+        }
+    }
+
+    updateTile(pos, tile) {
+        const tileIndex = this.editor.picker.pickTileIndex(pos);
+
+        if (tileIndex) {
+            this.level.tileGrid.set(tileIndex.x, tileIndex.y, tile);
             updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
     }
@@ -277,8 +292,12 @@ export class Interaction {
         this.createEntityName = entityName;
     }
 
+    setCreateTileSkin(skinName) {
+        this.createTileSkin = skinName;
+    }
+
     async saveToFile() {
-        const {success} = await saveLocal(this.editor.levelIdx, this.editor.levelSpec);
+        const { success } = await saveLocal(this.editor.levelIdx, this.editor.levelSpec);
 
         return success;
     }

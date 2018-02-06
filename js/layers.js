@@ -1,7 +1,5 @@
-import { loadImage } from './loaders';
-import { SpriteSheet } from './SpriteSheet';
-import { TileResolver } from './TileCreation';
 import { clamp } from './math';
+import { TileResolver } from './TileCreation';
 
 export function createBackgroundLayer(level, tileSprite) {
     const resolver = new TileResolver(level.tileGrid);
@@ -42,7 +40,11 @@ export function createBackgroundLayer(level, tileSprite) {
 
         redraw(x, y, width, height);
 
-        context.drawImage(buffer, -camera.pos.x % 60 - xOffset, -camera.pos.y % 60 - yOffset);
+        context.drawImage(
+            buffer,
+            -camera.pos.x % 60 - xOffset,
+            -camera.pos.y % 60 - yOffset
+        );
     };
 }
 
@@ -56,7 +58,7 @@ export function createStaticBackgroundLayer(level, backgroundSprites) {
     const images = {
         SkyImage: backgroundSprites.sky,
         BackImage: backgroundSprites.back,
-        FrontImage: backgroundSprites.front,
+        FrontImage: backgroundSprites.front
     };
 
     function drawGradient(context, camera) {
@@ -112,7 +114,7 @@ export function createStaticBackgroundLayer(level, backgroundSprites) {
 
     return function drawStaticBackgroundLayer(context, camera) {
         drawGradient(context, camera);
-        drawImages(context, camera);        
+        drawImages(context, camera);
     };
 }
 
@@ -148,26 +150,44 @@ export function createDebugLayer(editor) {
         context.clearRect(0, 0, buffer.width, buffer.height);
 
         const camBounds = camera.getBounds();
-        const selectedEntity = editor.selection.selectedEntity;
         const level = editor.level;
 
-        for(const e of level.entities) {    
-            if(!camBounds.overlaps(e.bounds)) {
-                continue;
+        const selectedEntity = editor.selection.selectedEntity;
+        const selectedTile = editor.selection.selectedTile;
+
+        if (selectedEntity) {
+            for (const e of level.entities) {
+                if (!camBounds.overlaps(e.bounds)) {
+                    continue;
+                }
+                context.beginPath();
+                context.strokeStyle = selectedEntity === e ? 'white' : 'black';
+                context.lineWidth = selectedEntity === e ? 2 : 1;
+                context.rect(
+                    e.bounds.left - camBounds.left,
+                    e.bounds.top - camBounds.top,
+                    e.size.x,
+                    e.size.y
+                );
+                context.stroke();
+                context.closePath();
             }
+        } else if (selectedTile) {
+            const tile = selectedTile;
+
             context.beginPath();
-            context.strokeStyle = selectedEntity === e ? 'white' : 'black';
-            context.lineWidth = selectedEntity === e ? 2 : 1;
-            context.rect(e.bounds.left - camBounds.left, e.bounds.top - camBounds.top, e.size.x, e.size.y);
+            context.strokeStyle = 'white';
+            context.lineWidth = 2;
+            context.rect(tile.x1, tile.y1, tile.x2 - tile.x1, tile.y2 - tile.y1);
             context.stroke();
-            context.closePath();        
+            context.closePath();
         }
     }
 
     function drawLayer(context, camera) {
-        drawEntityBounds(camera)
-        
-        context.drawImage(buffer, 0, 0);        
+        drawEntityBounds(camera);
+
+        context.drawImage(buffer, 0, 0);
     }
 
     return function drawDebugLayer(context, camera) {
