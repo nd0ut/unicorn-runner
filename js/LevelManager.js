@@ -1,4 +1,4 @@
-import * as levels from './levels';
+import levels from './levels';
 import { splashText } from './Splash';
 import { EventEmitter } from './util';
 
@@ -20,7 +20,7 @@ export class LevelManager {
     constructor(game) {
         this.game = game;
 
-        this.levels = [levels.demo, levels.first, levels.second];
+        this.levels = levels;
         this.levelIdx = -1;
         this.levelState = LevelState.IDLE;
 

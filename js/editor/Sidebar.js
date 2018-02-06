@@ -21,6 +21,7 @@ class Sidebar extends Component {
         return (
             <div>
                 <Controls />
+                <LevelSelector {...this.props} />
                 <Mode {...this.props} />
                 {mode === InteractionMode.SELECT && <SelectionMode {...this.props} />}
                 {mode === InteractionMode.ENTITY && <EntityMode {...this.props} />}
@@ -30,22 +31,45 @@ class Sidebar extends Component {
     }
 }
 
+function LevelSelector({ editor }) {
+    const levels = editor.levelManager.levels;
+    const level = levels[editor.levelIdx];
+
+    const onSelect = e => {
+        const levelIdx = parseInt(e.target.dataset.idx);
+        editor.startEditing(levelIdx);
+        editor.pause();
+        this.forceUpdate();
+    };
+
+    return (
+        <div>
+            <div>{level.spec.name}</div>
+            <div style={{ display: 'flex' }}>
+                {levels.map((l, idx) => {
+                    if (idx === 0) {
+                        return;
+                    }
+                    const style = {
+                        cursor: 'default',
+                        padding: '5px 10px',
+                        color: editor.levelIdx === idx ? 'black' : 'white',
+                        backgroundColor: editor.levelIdx === idx ? 'white' : 'black'
+                    };
+                    return (
+                        <div data-idx={idx} onClick={onSelect} style={style}>
+                            {idx}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
 class Save extends Component {
     async save() {
-        const url = 'http://localhost:12345/spec';
-        const spec = JSON.stringify(this.props.editor.levelSpec);
-
-        try {
-            const resp = await fetch(url, {
-                method: 'POST',
-                body: spec
-            });
-            const { success } = await resp.json();
-            this.success = success;
-        } catch (e) {
-            this.success = false;
-        }
-
+        this.success = await this.props.editor.interaction.saveToFile();
         this.forceUpdate();
 
         setTimeout(() => {
@@ -59,16 +83,14 @@ class Save extends Component {
             cursor: 'pointer',
             marginRight: 10,
             fontSize: 50
-        }
+        };
 
         return (
-            <div style={{marginTop: 50, textAlign: 'center'}}>
-                <div style={btnStyle} onClick={this.save.bind(this)}>SAVE</div>
-                <div>
-                    {this.success !== undefined
-                        ? this.success ? 'ok' : 'fail'
-                        : undefined}
+            <div style={{ marginTop: 50, textAlign: 'center' }}>
+                <div style={btnStyle} onClick={this.save.bind(this)}>
+                    SAVE
                 </div>
+                <div>{this.success !== undefined && (this.success ? 'ok' : 'fail')}</div>
             </div>
         );
     }
@@ -81,6 +103,7 @@ function Controls() {
             <div>
                 <div>T - pause/resume</div>
                 <div>R - restart</div>
+                <div>C-s - save</div>
                 <div style={{ 'margin-top': '5px' }}>Q - select mode</div>
                 <div>W - tile mode</div>
                 <div>E - entity mode</div>

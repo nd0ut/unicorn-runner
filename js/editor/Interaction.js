@@ -1,6 +1,6 @@
 import { clamp, Vec2 } from '../math';
 import { MouseEvents, DragState } from './Mouse';
-import { updateTileGrid, updateEntity, createEntity, removeEntity } from './SpecUpdate';
+import { updateTileGrid, updateEntity, createEntity, removeEntity, saveLocal } from './SpecTools';
 import { EventEmitter } from '../util';
 
 export const InteractionMode = {
@@ -61,6 +61,9 @@ export class Interaction {
             case 'KeyE':
                 this.setMode(InteractionMode.ENTITY);
                 break;
+            case 'KeyE':
+                this.setMode(InteractionMode.ENTITY);
+                break;
             default:
                 break;
         }
@@ -85,7 +88,7 @@ export class Interaction {
     tryDrawTiles(dragState, pos) {
         const tile = this.editor.picker.pickTile(pos);
 
-        if(!tile && this.mode !== InteractionMode.TILE) {
+        if (!tile && this.mode !== InteractionMode.TILE) {
             return false;
         }
 
@@ -188,14 +191,14 @@ export class Interaction {
 
     onRightClick(pos) {
         const entity = this.editor.picker.pickEntity(pos);
-        if(entity) {
+        if (entity) {
             this.removeEntity(pos);
         }
 
         const tile = this.editor.picker.pickTile(pos);
-        if(tile) {
-            this.removeTile(pos);            
-        }        
+        if (tile) {
+            this.removeTile(pos);
+        }
     }
 
     onWheel(delta) {
@@ -276,5 +279,11 @@ export class Interaction {
 
     setCreateEntityName(entityName) {
         this.createEntityName = entityName;
+    }
+
+    async saveToFile() {
+        const {success} = await saveLocal(this.editor.levelIdx, this.editor.levelSpec);
+
+        return success;
     }
 }

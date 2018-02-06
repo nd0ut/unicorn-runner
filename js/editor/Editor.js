@@ -27,6 +27,8 @@ export class Editor extends Game {
         this.levelIdx = 1;
         this.tileResolver = undefined;
         this.levelManager.showSplash = false;
+
+        this.paused = true;
     }
 
     get level() {
@@ -44,6 +46,7 @@ export class Editor extends Game {
     }
 
     async startEditing(levelIdx) {
+        this.levelIdx = levelIdx;
         const level = await this.levelManager.runLevel(this.levelIdx);
         this.tileResolver = new TileResolver(level.backgroundGrid);
 
@@ -55,15 +58,16 @@ export class Editor extends Game {
         }
 
         this.addDebugLayer(level);
+
+        this.paused && this.pause();        
     }
 
     async restart() {
-        this.startEditing(this.levelIdx);
+        await this.startEditing(this.levelIdx);
     }
 
     async onLoad() {
         await this.startEditing(this.levelIdx);
-        this.pause();
     }
 
     onLevelFinished() {
