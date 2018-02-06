@@ -1,5 +1,5 @@
 import demo from './demo';
-import first from './first';
-import second from './second';
+import one from './one';
+import two from './two';
 
-export default [demo, first, second]
+export default [demo, one, two]

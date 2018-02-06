@@ -5,6 +5,7 @@ const cors = require('@koa/cors');
 const fs = require('fs');
 const acorn = require('acorn');
 const prettier = require('prettier');
+const path = require('path');
 
 const app = new Koa();
 const router = new Router();
@@ -14,13 +15,23 @@ function replaceBetween(source, start, end, what) {
 }
 
 function getLevelPath(levelIdx) {
-    const levelPath = './js/levels/first.js';
-    return levelPath;    
+    const indexPath = './js/levels/index.js';
+    const indexFile = readFile(indexPath);
+    const ast = getAst(indexFile);
+
+    const exportLevelOreder = ast.body.find(node => node.type === 'ExportDefaultDeclaration');
+    const levelVarName = exportLevelOreder.declaration.elements[levelIdx].name;
+
+    const importPath =  ast.body.find(node => node.specifiers[0].local.name === levelVarName);
+    const levelPath = importPath.source.value;
+    const absolutePath = './' + path.join('js/levels', levelPath) + '.js';
+
+    return absolutePath;    
 }
 
-function getLevelFile(levelPath) {
-    const levelFile = fs.readFileSync(levelPath).toString();
-    return levelFile;
+function readFile(path) {
+    const str = fs.readFileSync(path).toString();
+    return str;
 }
 
 function getAst(levelFile) {
@@ -45,7 +56,7 @@ router.post('/spec', (ctx, next) => {
     const { specUpdate, levelIdx } = ctx.request.body;
 
     const levelPath = getLevelPath(levelIdx);
-    let levelFile = getLevelFile(levelPath);
+    let levelFile = readFile(levelPath);
     let ast = getAst(levelFile);
 
     for (const key of Object.keys(specUpdate)) {
