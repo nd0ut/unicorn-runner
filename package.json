@@ -6,8 +6,8 @@
   "author": "Александр Гренишин <nd0ut.me@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html --no-hmr",
-    "editor": "parcel js/editor/index.html --no-hmr & node js/editor/server.js"
+    "start": "parcel game.html --no-hmr",
+    "editor": "parcel editor.html --no-hmr & node js/editor/server.js"
   },
   "dependencies": {
     "@koa/cors": "2",
