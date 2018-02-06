@@ -1,0 +1,50 @@
+.score-block {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    display: block;
+    text-align: center;
+}
+
+.score-sign {
+    margin: 0;
+}
+
+.score-num {
+    margin: 0;
+    font-size: 34px;
+}
+
+.level-block {
+    position: absolute;
+    top: 30px;
+    right: 200px;
+    display: block;
+    text-align: center;
+}
+
+.level-sign {
+    margin: 0;
+}
+
+.level-num {
+    margin: 0;
+    font-size: 34px;
+}
+
+.fireballs-block {
+    position: absolute;
+    top: 30px;
+    right: 300px;
+    display: block;
+    text-align: center;
+}
+
+.fireballs-sign {
+    margin: 0;
+}
+
+.fireballs-num {
+    margin: 0;
+    font-size: 34px;
+}
