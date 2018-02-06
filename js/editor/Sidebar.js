@@ -24,22 +24,69 @@ class Sidebar extends Component {
                 <Mode {...this.props} />
                 {mode === InteractionMode.SELECT && <SelectionMode {...this.props} />}
                 {mode === InteractionMode.ENTITY && <EntityMode {...this.props} />}
+                <Save {...this.props} />
+            </div>
+        );
+    }
+}
+
+class Save extends Component {
+    async save() {
+        const url = 'http://localhost:12345/spec';
+        const spec = JSON.stringify(this.props.editor.levelSpec);
+
+        try {
+            const resp = await fetch(url, {
+                method: 'POST',
+                body: spec
+            });
+            const { success } = await resp.json();
+            this.success = success;
+        } catch (e) {
+            this.success = false;
+        }
+
+        this.forceUpdate();
+
+        setTimeout(() => {
+            this.success = undefined;
+            this.forceUpdate();
+        }, 1000);
+    }
+
+    render() {
+        const btnStyle = {
+            cursor: 'pointer',
+            marginRight: 10,
+            fontSize: 50
+        }
+
+        return (
+            <div style={{marginTop: 50, textAlign: 'center'}}>
+                <div style={btnStyle} onClick={this.save.bind(this)}>SAVE</div>
+                <div>
+                    {this.success !== undefined
+                        ? this.success ? 'ok' : 'fail'
+                        : undefined}
+                </div>
             </div>
         );
     }
 }
 
 function Controls() {
-    return <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    return (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>Controls:</div>
             <div>
                 <div>T - pause/resume</div>
                 <div>R - restart</div>
-                <div style={{'margin-top': '5px'}}>Q - select mode</div>
+                <div style={{ 'margin-top': '5px' }}>Q - select mode</div>
                 <div>W - tile mode</div>
                 <div>E - entity mode</div>
             </div>
-        </div>;
+        </div>
+    );
 }
 
 function Mode({ editor: { interaction } }) {
