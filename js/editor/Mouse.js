@@ -50,6 +50,8 @@ export class Mouse {
     }
 
     handleDown(e) {
+        e.preventDefault();
+        
         const { offsetX, offsetY } = e;
 
         this.downTime = new Date().valueOf();
@@ -57,6 +59,8 @@ export class Mouse {
     }
 
     handleUp(e) {
+        e.preventDefault();
+        
         const { offsetX, offsetY } = e;
         const pos = this.toGamePos(offsetX, offsetY);
 
@@ -73,6 +77,8 @@ export class Mouse {
     }
 
     handleMove(e) {
+        e.preventDefault();
+        
         const { offsetX, offsetY } = e;
         const downPos = this.toGamePos(this.downPos.x, this.downPos.y);
         const pos = this.toGamePos(offsetX, offsetY);
@@ -90,6 +96,8 @@ export class Mouse {
     }
 
     handleClick(e) {
+        e.preventDefault();
+        
         const { offsetX, offsetY } = e;
         const pos = this.toGamePos(offsetX, offsetY);
 
