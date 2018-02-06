@@ -80,6 +80,10 @@ export class LevelManager {
             return;
         }
 
+        if(this.level.frozen) {
+            return;
+        }
+
         if (this.levelState === LevelState.FINISHED) {
             return;
         }

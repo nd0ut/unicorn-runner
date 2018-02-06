@@ -63,8 +63,8 @@ class BehaviorUfo extends Trait {
         this.entity.pos.y = this.napEntity.pos.y + this.napEntity.size.y / 2 - this.entity.size.y;
     }
 
-    update(entity, deltaTime) {
-        if (!this.spawned) {
+    update(entity, deltaTime, level) {
+        if (!this.spawned && !level.frozen) {
             this.spawn();
         }
 
