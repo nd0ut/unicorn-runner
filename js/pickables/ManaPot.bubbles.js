@@ -1,6 +1,6 @@
 export const MANA_BUBBLES_SPRITE = {
     skinName: 'default',
-    imageURL: require('../../img/mana-potions.png'),
+    imageURL: require('../../img/pickables/mana_bubbles.png'),
     frames: [
         {
             name: 'idle-1',

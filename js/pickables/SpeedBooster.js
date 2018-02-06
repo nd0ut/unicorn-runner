@@ -4,7 +4,7 @@ import { Physics, Pickable, Solid } from '../Traits';
 import { defineGameObject } from '../defineGameObject';
 
 const SPEED_BOOSTER = {
-    imageURL: require('../../img/horseshoe.png'),
+    imageURL: require('../../img/pickables/horseshoe.png'),
     frames: [
         {
             name: 'horseshoe-1',

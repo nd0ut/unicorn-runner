@@ -50,7 +50,7 @@ export function createLevelLoader(entityFactory) {
         return Promise.resolve(levelSpec)
             .then(levelSpec => Promise.all([
                 levelSpec,
-                loadImage(require('../img/board_update.png')),
+                loadImage(require('../img/tiles/shield.png')),
                 levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined
             ]))
             .then(([levelSpec, image, sounds]) => {

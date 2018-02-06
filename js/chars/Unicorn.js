@@ -3,7 +3,7 @@ import { Entity } from '../Entity';
 import { Jump, Killable, Physics, Picker, Run, Solid, Striker } from '../Traits';
 
 const UNICORN_SPRITE = {
-    imageURL: require('../../img/unicorn_ham.png'),
+    imageURL: require('../../img/unicorn.png'),
     frames: [
         {
             name: 'idle',

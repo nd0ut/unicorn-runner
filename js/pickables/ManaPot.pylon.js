@@ -1,6 +1,6 @@
 export const MANA_PYLON_SPRITE = {
     skinName: 'pylon',
-    imageURL: require('../../img/mana-pylon.png'),
+    imageURL: require('../../img/pickables/mana_pylon.png'),
     frames: Array.from(new Array(10)).map((val, idx) => ({
         name: `idle-${idx + 1}`,
         rect: [45 * idx, 72, 45, 53]

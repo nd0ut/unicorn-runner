@@ -4,7 +4,7 @@ import { Physics, Solid } from '../Traits';
 
 const FIREBALL_SPRITE = {
     skinName: 'default',
-    imageURL: require('../../img/fireball.png'),
+    imageURL: require('../../img/weapon/fireball.png'),
     frames: [
         {
             name: 'idle-1',

@@ -4,7 +4,7 @@ import { loadSpriteSheet, loadSounds } from '../loaders';
 import { defineGameObject } from '../defineGameObject';
 
 const RAINBOW_SPRITE = {
-    imageURL: require('../../img/rainbow_line.png'),
+    imageURL: require('../../img/pickables/rainbow.png'),
     frames: [
         {
             name: 'spark-1',

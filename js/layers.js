@@ -58,9 +58,9 @@ export function drawStaticBackground(level) {
     let images;
 
     loadImages({
-        CloudsImage: require('../img/clouds.png'),
-        BackImage: require('../img/mountains.png'),
-        FrontImage: require('../img/forest.png')
+        CloudsImage: require('../img/backgrounds/clouds.png'),
+        BackImage: require('../img/backgrounds/mountains.png'),
+        FrontImage: require('../img/backgrounds/forest.png')
     }).then(result => (images = result));
 
     function drawGradient(context, camera) {

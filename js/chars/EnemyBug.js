@@ -4,7 +4,7 @@ import { Killable, Physics, Solid } from '../Traits';
 import { defineGameObject } from '../defineGameObject';
 
 const ENEMY_BUG = {
-    imageURL: require('../../img/cactus.png'),
+    imageURL: require('../../img/enemies/cactus.png'),
     frames: [
         {
             name: 'idle-1',

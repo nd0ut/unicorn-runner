@@ -7,7 +7,7 @@ import { defineGameObject } from '../defineGameObject';
 const PORTAL = {
     skinName: 'default',
     
-    imageURL: require('../../img/portals.png'),
+    imageURL: require('../../img/pickables/portal.png'),
     frames: [
         {
             name: 'portal-1',
