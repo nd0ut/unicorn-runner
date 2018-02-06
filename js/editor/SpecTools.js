@@ -5,7 +5,7 @@ export function updateTileGrid(spec, grid) {
         ranges.push([x, y]);
     }
 
-    spec.layers[0].tiles[0].ranges = ranges;
+    spec.tiles = ranges;
 }
 
 export function updateEntity(levelSpec, idx, specUpdates) {
@@ -35,7 +35,7 @@ export async function saveLocal(levelIdx, levelSpec) {
     
     const specUpdate = {
         entities,
-        layers: levelSpec.layers
+        tiles: levelSpec.tiles
     };
     const body = JSON.stringify({ specUpdate, levelIdx });
 

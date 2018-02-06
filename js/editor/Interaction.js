@@ -241,11 +241,10 @@ export class Interaction {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
         if (tileIndex) {
-            const tile = 1;
-            this.level.backgroundGrid.set(tileIndex.x, tileIndex.y, tile);
-            this.level.collisionGrid.set(tileIndex.x, tileIndex.y, tile);
-
-            updateTileGrid(this.editor.levelSpec, this.level.backgroundGrid);
+            // TODO: dont forget
+            const tile = {};
+            this.level.tileGrid.set(tileIndex.x, tileIndex.y, tile);
+            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
     }
 
@@ -253,11 +252,8 @@ export class Interaction {
         const tileIndex = this.editor.picker.pickTileIndex(pos);
 
         if (tileIndex) {
-            console.log('remove');
-            this.level.backgroundGrid.remove(tileIndex.x, tileIndex.y);
-            this.level.collisionGrid.remove(tileIndex.x, tileIndex.y);
-
-            updateTileGrid(this.editor.levelSpec, this.level.backgroundGrid);
+            this.level.tileGrid.remove(tileIndex.x, tileIndex.y);
+            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
     }
 

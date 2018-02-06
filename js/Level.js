@@ -19,17 +19,12 @@ export class Level {
         this.entityCollider = new EntityCollider(this.entities);
         this.tileCollider = undefined;
 
-        this.collisionGrid = undefined;
-        this.backgroundGrid = undefined;
+        this.tileGrid = undefined;
     }
 
-    setCollisionGrid(matrix) {
-        this.collisionGrid = matrix;
-        this.tileCollider = new TileCollider(matrix);
-    }
-
-    setBackgroundGrid(matrix) {
-        this.backgroundGrid = matrix;
+    setTileGrid(matrix) {
+        this.tileGrid = matrix;
+        this.tileCollider = new TileCollider(matrix);        
     }
 
     setDistance(distance) {

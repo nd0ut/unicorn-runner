@@ -3,12 +3,9 @@ import { SpriteSheet } from './SpriteSheet';
 import { TileResolver } from './TileCreation';
 import { clamp } from './math';
 
-export function createBackgroundLayer(level, tiles, image) {
-    const resolver = new TileResolver(tiles);
+export function createBackgroundLayer(level, tileSprite) {
+    const resolver = new TileResolver(level.tileGrid);
     const buffer = document.createElement('canvas');
-    const sprites = new SpriteSheet('background', image, 60, 60);
-
-    sprites.define('ground', 0, 0, 60, 60);
 
     buffer.width = 1024 + 60;
     buffer.height = 600 + 60;
@@ -25,9 +22,10 @@ export function createBackgroundLayer(level, tiles, image) {
 
         for (let x = startX; x <= endX; ++x) {
             for (let y = startY; y <= endY; y++) {
-                const tile = tiles.get(x, y);
+                const tile = level.tileGrid.get(x, y);
                 if (tile) {
-                    sprites.drawTile('ground', context, x - startX, y - startY);
+                    const skinName = tile.skinName || 'default';
+                    tileSprite.drawTile(skinName, context, x - startX, y - startY);
                 }
             }
         }
@@ -48,20 +46,18 @@ export function createBackgroundLayer(level, tiles, image) {
     };
 }
 
-export function drawStaticBackground(level) {
+export function createStaticBackgroundLayer(level, backgroundSprites) {
     const buffer = document.createElement('canvas');
     buffer.width = 1024 + 60;
     buffer.height = 600 + 60;
 
     const context = buffer.getContext('2d');
 
-    let images;
-
-    loadImages({
-        CloudsImage: require('../img/backgrounds/clouds.png'),
-        BackImage: require('../img/backgrounds/mountains.png'),
-        FrontImage: require('../img/backgrounds/forest.png')
-    }).then(result => (images = result));
+    const images = {
+        SkyImage: backgroundSprites.sky,
+        BackImage: backgroundSprites.back,
+        FrontImage: backgroundSprites.front,
+    };
 
     function drawGradient(context, camera) {
         const gradient = context.createLinearGradient(0, 0, 0, buffer.width);
@@ -79,20 +75,8 @@ export function drawStaticBackground(level) {
         context.fillRect(0, 0, buffer.width, buffer.height);
     }
 
-    function loadImages(urlMap) {
-        const names = Object.keys(urlMap);
-        const urls = Object.values(urlMap);
-
-        return Promise.all(urls.map(url => loadImage(url))).then(images =>
-            images.reduce((result, image, idx) => {
-                result[names[idx]] = image;
-                return result;
-            }, {})
-        );
-    }
-
     function drawImages(context, camera) {
-        const CloudsImage = images.CloudsImage;
+        const SkyImage = images.SkyImage;
         const BackImage = images.BackImage;
         const FrontImage = images.FrontImage;
 
@@ -109,8 +93,8 @@ export function drawStaticBackground(level) {
 
         for (let i = 0; i < count; i++) {
             context.drawImage(
-                CloudsImage,
-                SkyCoordX + CloudsImage.width * i + backMargin,
+                SkyImage,
+                SkyCoordX + SkyImage.width * i + backMargin,
                 SkyCoordY
             );
             context.drawImage(
@@ -128,10 +112,7 @@ export function drawStaticBackground(level) {
 
     return function drawStaticBackgroundLayer(context, camera) {
         drawGradient(context, camera);
-
-        if (images) {
-            drawImages(context, camera);
-        }
+        drawImages(context, camera);        
     };
 }
 

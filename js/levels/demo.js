@@ -42,15 +42,14 @@ const ranges = getRanges();
 const entities = getEntities();
 
 const spec = {
-    layers: [
-        {
-            tiles: [
-                {
-                    ranges
-                }
-            ]
-        }
-    ],
+    background: {
+        sky: require('../../img/backgrounds/clouds.png'),
+        back: require('../../img/backgrounds/mountains.png'),
+        front: require('../../img/backgrounds/forest.png')
+    },
+    tiles: {
+        ranges
+    },
     entities
 };
 

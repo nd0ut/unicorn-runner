@@ -48,7 +48,7 @@ export class Editor extends Game {
     async startEditing(levelIdx) {
         this.levelIdx = levelIdx;
         const level = await this.levelManager.runLevel(this.levelIdx);
-        this.tileResolver = new TileResolver(level.backgroundGrid);
+        this.tileResolver = new TileResolver(level.tileGrid);
 
         const origUpdate = this.timer.update;
 

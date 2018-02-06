@@ -20,6 +20,18 @@ export function loadImage(url) {
     });
 }
 
+export function loadImages(urlMap) {
+    const names = Object.keys(urlMap);
+    const urls = Object.values(urlMap);
+
+    return Promise.all(urls.map(url => loadImage(url))).then(images =>
+        images.reduce((result, image, idx) => {
+            result[names[idx]] = image;
+            return result;
+        }, {})
+    );
+}
+
 export function loadSpriteSheet(sheetSpec) {
     return Promise.resolve(sheetSpec)
         .then(sheetSpec =>
