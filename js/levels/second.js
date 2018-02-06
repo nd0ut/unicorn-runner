@@ -1,3 +1,5 @@
+import { defineLevel } from './defineLevel';
+
 const spec = {
     name: 'Level 2',
     layers: [
@@ -9,86 +11,26 @@ const spec = {
                         //     0, 1,
                         //     3, 4
                         // ],
-                        [
-                            1, 19,
-                            6, 1
-                        ],
-                        [
-                            24, 10,
-                            6, 1
-                        ],
-                        [
-                            38, 10,
-                            4, 1
-                        ],
-                        [
-                            51, 2,
-                            4, 1
-                        ],
-                        [
-                            55, 2,
-                            6, 1
-                        ],
-                        [
-                            60, 1,
-                            6, 1
-                        ],
-                        [
-                            64, 5,
-                            8, 1
-                        ],
-                        [
-                            73, 10,
-                            5, 1
-                        ],
-                        [
-                            87, 2,
-                            8, 1
-                        ],
-                        [
-                            93, 4,
-                            6, 1
-                        ],
-                        [
-                            101, 19,
-                            6, 1
-                        ],
-                        [
-                            124, 10,
-                            6, 1
-                        ],
-                        [
-                            138, 10,
-                            4, 1
-                        ],
-                        [
-                            151, 2,
-                            4, 1
-                        ],
-                        [
-                            155, 2,
-                            6, 1
-                        ],
-                        [
-                            160, 1,
-                            6, 1
-                        ],
-                        [
-                            164, 5,
-                            8, 1
-                        ],
-                        [
-                            173, 10,
-                            5, 1
-                        ],
-                        [
-                            187, 2,
-                            8, 1
-                        ],
-                        [
-                            193, 1,
-                            6, 1
-                        ]
+                        [1, 19, 6, 1],
+                        [24, 10, 6, 1],
+                        [38, 10, 4, 1],
+                        [51, 2, 4, 1],
+                        [55, 2, 6, 1],
+                        [60, 1, 6, 1],
+                        [64, 5, 8, 1],
+                        [73, 10, 5, 1],
+                        [87, 2, 8, 1],
+                        [93, 4, 6, 1],
+                        [101, 19, 6, 1],
+                        [124, 10, 6, 1],
+                        [138, 10, 4, 1],
+                        [151, 2, 4, 1],
+                        [155, 2, 6, 1],
+                        [160, 1, 6, 1],
+                        [164, 5, 8, 1],
+                        [173, 10, 5, 1],
+                        [187, 2, 8, 1],
+                        [193, 1, 6, 1]
                     ]
                 }
             ]
@@ -96,75 +38,54 @@ const spec = {
     ],
     entities: [
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [408, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [780, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [1608, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [1800, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [2580, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [3288, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [3960, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [4448, 0]
         },
         {
-            name: "enemyBug",
+            name: 'enemyBug',
             pos: [4620, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [5588, 0]
         },
         {
-            name: "rainbow",
+            name: 'rainbow',
             pos: [7388, 0]
         }
     ]
 };
 
-async function init(game) {
-    const level = await game.loadLevel(spec);
-    const playerEnv = game.playerEnv;
-    const unicorn = game.entityFactory.unicorn();
-    level.entities.add(playerEnv);
-
-    function startLevel() {        
-        playerEnv.playerController.setPlayer(unicorn);        
-        game.cameraController.focus.follow(unicorn);
-
-        game.timer.update = (deltaTime, time) => {
-            level.update(deltaTime);
-            game.levelManager.update(deltaTime, time, level);
-            game.cameraController.update(deltaTime, time, level);
-            level.comp.draw(game.context, game.camera);
-        };
+export default defineLevel(spec, {
+    onStart: (game, level) => {
+        // level.sounds.get('music').playOnce();
     }
-
-    return {
-        level, startLevel
-    }
-}
-
-export const second = {
-    spec, init
-}
+});
