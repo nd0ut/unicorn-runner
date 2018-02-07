@@ -11,9 +11,11 @@ const spec = {
             front: require('../../img/backgrounds/forest.png')
         },
         gradient: camPos => {
-            const step = ['#ffffff', 0];
-            const step2 = ['#ffffff', 1];
-            return [step, step2];
+            return [
+              ['#256bcc', 0],
+              ['#2278c6', 0.4 - camPos.y * 0.0001],
+              ['#00c7a4', 0.8]
+            ];
         }
     },
     sounds: [
