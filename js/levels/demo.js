@@ -1,4 +1,4 @@
-import { rand } from '../math';
+import { rand, clamp } from '../math';
 import { createPlayerEnv } from '../player/createPlayerEnv';
 import { AutoJump } from '../Traits';
 
@@ -43,13 +43,25 @@ const entities = getEntities();
 
 const spec = {
     background: {
-        sky: require('../../img/backgrounds/clouds.png'),
-        back: require('../../img/backgrounds/mountains.png'),
-        front: require('../../img/backgrounds/forest.png')
+        images: {},
+        gradient: camPos => {
+            const step = ['#ffffff', 0];
+            const step2 = ['#ffffff', 1];
+            return [step, step2];
+        }
     },
-    tiles: {
-        ranges
+    tileSprite: {
+        imageURL: require('../../img/tiles/trak2_wall1a.png'),
+        tileW: 60,
+        tileH: 60,
+        frames: [
+            {
+                name: 'default',
+                rect: [0, 0, 60, 60]
+            }
+        ]
     },
+    tiles: ranges,
     entities
 };
 
@@ -81,19 +93,34 @@ async function init(game) {
             level.comp.draw(game.context, game.camera);
         };
 
-        const onPlayClick = () => {
+        const playBtn = document.querySelector('.play-btn')
+
+        const onPlayClick = async () => {
             document.querySelector('.play-block').remove();
-            game.levelManager.nextLevel();
+            await game.levelManager.nextLevel();
+            game.canvasSelector.classList.toggle('blur', false);                        
         };
 
-        document.querySelector('.play-btn').addEventListener('click', onPlayClick);
+        const onPlayHover = () => {
+            game.canvasSelector.classList.toggle('blur', true);            
+        }
+
+        const onPlayUnhover = () => {
+            game.canvasSelector.classList.toggle('blur', false);            
+        }
+
+        playBtn.addEventListener('click', onPlayClick);
+        playBtn.addEventListener('mouseover', onPlayHover);
+        playBtn.addEventListener('mouseout', onPlayUnhover);
     }
 
     return {
-        level, startLevel
-    }
+        level,
+        startLevel
+    };
 }
 
 export default {
-    spec, init
-}
+    spec,
+    init
+};

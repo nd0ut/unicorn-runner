@@ -48,7 +48,7 @@ export function createBackgroundLayer(level, tileSprite) {
     };
 }
 
-export function createStaticBackgroundLayer(level, backgroundSprites) {
+export function createStaticBackgroundLayer(level, backgroundSprites, getGradientSteps) {
     const buffer = document.createElement('canvas');
     buffer.width = 1024 + 60;
     buffer.height = 600 + 60;
@@ -64,15 +64,12 @@ export function createStaticBackgroundLayer(level, backgroundSprites) {
     function drawGradient(context, camera) {
         const gradient = context.createLinearGradient(0, 0, 0, buffer.width);
 
-        const camY = Math.abs(camera.pos.y);
+        const steps = getGradientSteps(camera.pos);
 
-        const step1 = clamp(0, 0, 1);
-        const step2 = clamp(0.4 - camY * 0.0001, 0, 1);
-        const step3 = clamp(0.8, 0, 1);
+        for(const [color, step] of steps) {    
+            gradient.addColorStop(step, color);
+        }
 
-        gradient.addColorStop(step1, '#256bcc');
-        gradient.addColorStop(step2, '#2278c6');
-        gradient.addColorStop(step3, '#00c7a4');
         context.fillStyle = gradient;
         context.fillRect(0, 0, buffer.width, buffer.height);
     }
@@ -83,7 +80,8 @@ export function createStaticBackgroundLayer(level, backgroundSprites) {
         const FrontImage = images.FrontImage;
 
         const backMargin = 1000;
-        const count = Math.floor(level.distance / FrontImage.width) + 5;
+        const widthMetric = FrontImage || BackImage || SkyImage;
+        const count = Math.floor(level.distance / (widthMetric ? widthMetric.width : 1)) + 5;
 
         const SkyCoordX = -camera.pos.x / 3;
         const BackCoordX = -camera.pos.x / 2;
@@ -94,17 +92,17 @@ export function createStaticBackgroundLayer(level, backgroundSprites) {
         const FrontCoordY = -camera.pos.y * 0.2;
 
         for (let i = 0; i < count; i++) {
-            context.drawImage(
+            SkyImage && context.drawImage(
                 SkyImage,
                 SkyCoordX + SkyImage.width * i + backMargin,
                 SkyCoordY
             );
-            context.drawImage(
+            BackImage && context.drawImage(
                 BackImage,
                 BackCoordX + BackImage.width * i,
                 BackCoordY + camera.size.y - BackImage.height
             );
-            context.drawImage(
+            FrontImage && context.drawImage(
                 FrontImage,
                 FrontCoordX + FrontImage.width * i,
                 FrontCoordY + camera.size.y - FrontImage.height

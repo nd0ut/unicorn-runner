@@ -53,7 +53,7 @@ export class LevelManager {
     }
 
     async runLevel(levelIdx) {
-        this.game.canvasSelector.classList.toggle('blur', true);      
+        this.game.canvasSelector.classList.toggle('black', true);      
 
         this.levelIdx = levelIdx;
         
@@ -66,7 +66,7 @@ export class LevelManager {
         if (this.showSplash && level.name) {
             await splashText(level.name);
         }
-        this.game.canvasSelector.classList.toggle('blur', false);      
+        this.game.canvasSelector.classList.toggle('black', false);      
 
         startLevel();
 

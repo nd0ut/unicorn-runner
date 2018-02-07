@@ -29,7 +29,10 @@ canvas#screen {
 }
 
 canvas#screen.blur {
-    /* filter: blur(500px); */
+    filter: invert(100%);
+}
+
+canvas#screen.black {
     opacity: 0;
 }
 

@@ -14,9 +14,9 @@ function setupTileGrid(levelSpec, level) {
     level.setDistance(tileGrid.width() * 60);
 }
 
-function setupBackgrounds(levelSpec, level, backgroundImages, tileSprite) {
+function setupBackgrounds(levelSpec, level, backgroundImages, getGradientSteps, tileSprite) {
     const backgroundLayer = createBackgroundLayer(level, tileSprite);
-    const staticBackgroundLayer = createStaticBackgroundLayer(level, backgroundImages);
+    const staticBackgroundLayer = createStaticBackgroundLayer(level, backgroundImages, getGradientSteps);
     level.comp.addLayer(staticBackgroundLayer);
     level.comp.addLayer(backgroundLayer);
 }
@@ -51,16 +51,17 @@ export function createLevelLoader(entityFactory) {
             .then(levelSpec =>
                 Promise.all([
                     levelSpec,
-                    loadImages(levelSpec.background),
+                    loadImages(levelSpec.background.images),
+                    levelSpec.background.gradient,
                     loadSpriteSheet(levelSpec.tileSprite),
                     loadSounds(levelSpec)
                 ])
             )
-            .then(([levelSpec, backgroundImages, tileSprite, sounds]) => {
+            .then(([levelSpec, backgroundImages, getGradientSteps, tileSprite, sounds]) => {
                 const level = new Level(levelSpec.name);
 
                 setupTileGrid(levelSpec, level);
-                setupBackgrounds(levelSpec, level, backgroundImages, tileSprite);
+                setupBackgrounds(levelSpec, level, backgroundImages, getGradientSteps, tileSprite);
                 setupEntities(levelSpec, level, entityFactory);
                 setupSounds(level, sounds);
 
