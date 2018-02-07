@@ -37,7 +37,7 @@ export const loadManaPot = defineGameObject('manaPot', {
     // drawBounds: true,
 
     traits: ({sounds}) => [
-        new Physics(),
+        new Physics({ applyGravity: false }),
         new Solid(),
         new Pickable({ onPick: () => sounds.get('picked').playOnce() }),
         new Behavior()

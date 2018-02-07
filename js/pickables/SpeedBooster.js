@@ -71,7 +71,7 @@ const SPEED_BOOSTER = {
                 'horseshoe-9',
                 'horseshoe-10',
                 'horseshoe-11',
-                'horseshoe-12',
+                'horseshoe-12'
             ]
         }
     ]
@@ -85,8 +85,8 @@ class BehaviorSpeedBooster extends Trait {
         this.boostTime = 10000;
     }
 
-    restoreSpeed(them) {        
-        if(them.jump.jumpingUp || them.jump.fallingDown) {
+    restoreSpeed(them) {
+        if (them.jump.jumpingUp || them.jump.fallingDown) {
             them.run.queue(() => this.restoreSpeed(them));
         } else {
             them.run.speed -= this.boost;
@@ -103,7 +103,7 @@ class BehaviorSpeedBooster extends Trait {
 
         them.run.speed += this.boost;
 
-        setTimeout(() => this.restoreSpeed.call(this, them), this.boostTime); 
+        setTimeout(() => this.restoreSpeed.call(this, them), this.boostTime);
     }
 }
 
@@ -115,7 +115,7 @@ export const loadSpeedBooster = defineGameObject('speedBooster', {
     offset: [0, 0],
 
     traits: ({ sounds }) => [
-        new Physics(),
+        new Physics({ applyGravity: false }),
         new Solid(),
         new Pickable(),
         new BehaviorSpeedBooster()
@@ -123,7 +123,7 @@ export const loadSpeedBooster = defineGameObject('speedBooster', {
 
     animations: sprite => {
         const boosterAnim = sprite.animations.get('horseshoe');
-        
+
         return speedbooster => {
             return boosterAnim(speedbooster.lifetime);
         };

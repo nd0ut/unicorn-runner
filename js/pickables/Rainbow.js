@@ -80,7 +80,7 @@ export const loadRainbow = defineGameObject('rainbow', {
     offset: [0, 0],
 
     traits: ({ sounds }) => [
-        new Physics(),
+        new Physics({ applyGravity: false }),
         new Solid(),
         new Pickable({ onPick: () => sounds.get('picked').playOnce() }),
         new BehaviorRainbow()

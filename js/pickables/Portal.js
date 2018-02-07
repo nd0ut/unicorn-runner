@@ -75,7 +75,7 @@ export const loadPortal = defineGameObject('portal', {
     offset: [0, 0],
 
     traits: () => [
-        new Physics(),
+        new Physics({ applyGravity: false }),
         new Solid(),
         new Pickable(),
         new BehaviorPortal()
