@@ -6,7 +6,7 @@ export function createPlayerEnv(game) {
     const playerEnv = new Entity('player');
 
     const playerControl = new PlayerController(game);
-    playerControl.checkpoint.set(64, 64);
+    playerControl.checkpoint.set(96, 64);
     playerEnv.addTrait(playerControl);
 
     const interactionControl = new InteractionController(game);

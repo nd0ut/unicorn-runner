@@ -85,6 +85,7 @@ export class PlayerController extends Trait {
         }
 
         if (!this.player.killable.dead && !level.entities.has(this.player)) {
+            this.player.pos.set(this.checkpoint.x, this.checkpoint.y);
             level.entities.add(this.player);
             return;
         }
