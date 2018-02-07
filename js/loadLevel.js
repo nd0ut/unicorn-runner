@@ -95,7 +95,9 @@ function* expandSpan(skinName, xStart, xLen, yStart, yLen) {
 
 function expandRange(range) {
     const skinDeclared = typeof range[0] === 'string';
-    const skinName = skinDeclared ? range.shift() : undefined;
+    const skinName = skinDeclared ? range[0] : undefined;
+
+    range = skinDeclared ? range.slice(1) : range;
 
     if (range.length === 4) {
         const [xStart, xLen, yStart, yLen] = range;
