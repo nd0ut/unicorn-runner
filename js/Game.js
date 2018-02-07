@@ -36,7 +36,7 @@ export class Game {
     }
 
     async onLoad() {
-        this.levelManager.nextLevel();
+        this.levelManager.runLevel();
     }
 
     onLevelFinished() {

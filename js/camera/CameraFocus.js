@@ -26,7 +26,7 @@ export class CameraFocus extends CameraExt {
     }
 
     get defaultDamping() {
-        return 0.4;
+        return 0.3;
     }
 
     get defaultCamOffset() {

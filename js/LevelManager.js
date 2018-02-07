@@ -12,23 +12,34 @@ const LevelState = {
 
 export const LevelEvents = {
     FAILED: Symbol('FAILED'),
-    FINISHED: Symbol('FINISHED'),
-}
+    FINISHED: Symbol('FINISHED')
+};
 
 @EventEmitter.decorator
 export class LevelManager {
     constructor(game) {
         this.game = game;
 
+        const loadLastLevel = false;
+        const showDemoLevel = false;
+
+        let currentLevel = showDemoLevel ? 0 : 1;
+
+        if (loadLastLevel) {
+            const lastLevel = localStorage.getItem('levelIdx')
+                ? parseInt(localStorage.getItem('levelIdx'))
+                : undefined;
+            
+            currentLevel = lastLevel || currentLevel;
+        }
+
         this.levels = levels;
-        this.levelIdx = -1;
+        this.levelIdx = currentLevel;
         this.levelState = LevelState.IDLE;
 
         this.level = undefined;
 
         this.showSplash = true;
-        this.showDemoLevel = false;
-        
         this.finishDistance = 500;
         this.fallDistance = 600;
 
@@ -52,11 +63,13 @@ export class LevelManager {
         return this.runLevel(this.levelIdx);
     }
 
-    async runLevel(levelIdx) {
-        this.game.canvasSelector.classList.toggle('black', true);      
+    async runLevel(levelIdx = this.levelIdx) {
+        localStorage.setItem('levelIdx', levelIdx);
+
+        this.game.canvasSelector.classList.toggle('black', true);
 
         this.levelIdx = levelIdx;
-        
+
         this.levelSelector.innerHTML = levelIdx;
 
         const { init } = this.levels[levelIdx];
@@ -66,7 +79,7 @@ export class LevelManager {
         if (this.showSplash && level.name) {
             await splashText(level.name);
         }
-        this.game.canvasSelector.classList.toggle('black', false);      
+        this.game.canvasSelector.classList.toggle('black', false);
 
         startLevel();
 
@@ -80,7 +93,7 @@ export class LevelManager {
             return;
         }
 
-        if(this.level.frozen) {
+        if (this.level.frozen) {
             return;
         }
 

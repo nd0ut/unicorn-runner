@@ -34,7 +34,7 @@ export class Matrix {
     }
 
     width() {
-        return this.grid.length;
+        return this.grid.length - this.offset;
     }
 
     *[Symbol.iterator]() {

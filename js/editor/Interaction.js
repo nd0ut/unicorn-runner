@@ -263,15 +263,6 @@ export class Interaction {
         }
     }
 
-    updateTile(pos, tile) {
-        const tileIndex = this.editor.picker.pickTileIndex(pos);
-
-        if (tileIndex) {
-            this.level.tileGrid.set(tileIndex.x, tileIndex.y, tile);
-            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
-        }
-    }
-
     selectInPosition(pos) {
         const entity = this.editor.picker.pickEntity(pos);
         if (entity) {
@@ -295,7 +286,7 @@ export class Interaction {
     setCreateTileSkin(skinName) {
         this.createTileSkin = skinName;
     }
-
+    
     async saveToFile() {
         const { success } = await saveLocal(this.editor.levelIdx, this.editor.levelSpec);
 

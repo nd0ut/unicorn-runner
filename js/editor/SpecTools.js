@@ -1,11 +1,9 @@
 export function updateTileGrid(spec, grid) {
-    const ranges = [];
+    spec.tiles.splice(0, spec.tiles.length);
 
     for (const { x, y, tile } of grid) {
-        ranges.push([tile.skinName || 'default', x, y]);
+        spec.tiles.push([tile.skinName || 'default', x, y]);
     }
-
-    spec.tiles = ranges;
 }
 
 export function updateEntity(levelSpec, idx, specUpdates) {
@@ -32,7 +30,7 @@ export async function saveLocal(levelIdx, levelSpec) {
     const entities = levelSpec.entities
         .filter(e => !!e)
         .sort((a, b) => (a.pos[0] < b.pos[0] ? -1 : 1));
-    
+
     const specUpdate = {
         entities,
         tiles: levelSpec.tiles

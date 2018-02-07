@@ -1,4 +1,4 @@
-import { Trait } from "../Entity";
+import { Trait } from '../Entity';
 
 export class InteractionController extends Trait {
     constructor(game) {
@@ -30,14 +30,37 @@ export class InteractionController extends Trait {
     }
 
     keyHandler(e) {
+        this.boostHandler(e);
+
         switch (e.code) {
             case 'Space':
                 this.jumpHandler(e);
                 break;
             case 'KeyF':
-                this.strikeFireballHandler(e)
+                this.strikeFireballHandler(e);
             default:
                 break;
+        }
+    }
+
+    boostHandler(e) {
+        const shiftPressed = e.shiftKey;
+        
+        if (e.repeat || !shiftPressed || !this.playerController.canBoost()) {
+            return;
+        }
+
+        const unicorn = this.playerController.player;
+
+        if (unicorn.killable.dead || unicorn.jump.inAir) {
+            return;
+        }
+
+
+        if (shiftPressed) {
+            unicorn.run.boost(50000);
+        } else {
+            unicorn.run.cancelBoost();
         }
     }
 
@@ -47,9 +70,9 @@ export class InteractionController extends Trait {
         }
 
         const unicorn = this.playerController.player;
-        const fireball = this.entityFactory.bullet({ 
-            skinName: 'default', 
-            ownerEntity: unicorn 
+        const fireball = this.entityFactory.bullet({
+            skinName: 'default',
+            ownerEntity: unicorn
         });
         unicorn.striker.strike(fireball, this.currentLevel);
     }
@@ -58,7 +81,7 @@ export class InteractionController extends Trait {
         const unicorn = this.playerController.player;
         const keyState = e.type === 'keydown' ? 1 : 0;
 
-        if(unicorn.killable.dead) {
+        if (unicorn.killable.dead) {
             return;
         }
 

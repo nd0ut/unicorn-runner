@@ -74,9 +74,9 @@ export class Entity {
         this[traitName] = undefined;
     }
 
-    collides(candidate) {
+    collides(candidate, side) {
         this.traits.forEach(trait => {
-            trait.collides(this, candidate);
+            trait.collides(this, candidate, side);
         });
     }
 

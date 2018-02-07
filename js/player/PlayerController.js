@@ -15,12 +15,12 @@ export class PlayerController extends Trait {
 
         this.totalScore = 0;
         this.score = 0;
-        this.fireballs = 10;
+        this.mana = 0;    
 
         this.fireballsSelector = document.getElementById('current-fireballs');
         this.scoreSelector = document.getElementById('unicorn-score');
 
-        this.updateUiCounts(this.fireballsSelector, this.fireballs);
+        this.updateUiCounts(this.fireballsSelector, this.mana);
     }
 
     setPlayer(entity) {
@@ -36,37 +36,50 @@ export class PlayerController extends Trait {
             this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
         }
         if (pickable.name === 'manaPot') {
-            this.fireballs += 50;
-            this.updateUiCounts(this.fireballsSelector, this.fireballs);
+            this.mana += 1;
+            this.updateUiCounts(this.fireballsSelector, this.mana);
         }
     }
 
     onStrike(bullet) {
         if (bullet.name === 'bullet') {
-            this.fireballs--;
+            this.mana--;
         }
-        this.updateUiCounts(this.fireballsSelector, this.fireballs);
+        this.updateUiCounts(this.fireballsSelector, this.mana);
     }
 
     updateUiCounts(selector, count) {
         setTimeout(() => {
-            selector.innerHTML = count;
+            selector.innerHTML = Math.ceil(count);
         }, 0);
     }
 
     canStrikeFireballs() {
         const alive = this.player && !this.player.killable.dead;
-        const haveBalls = this.fireballs > 0;
+        const haveMana = this.mana > 0;
 
-        if (alive && this.fireballs === 0) {
-            splashText('not enough balls!', {
+        if (!haveMana) {
+            splashText('no mana', {
                 timeout: 1000,
-                size: 70,
-                color: 'red'
+                size: 30
             });
         }
 
-        return alive && haveBalls;
+        return alive && haveMana;
+    }
+
+    canBoost() {
+        const alive = this.player && !this.player.killable.dead;
+        const haveMana = this.mana > 0;
+
+        if (alive && this.mana === 0) {
+            splashText('no mana', {
+                timeout: 1000,
+                size: 30
+            });
+        }
+
+        return alive && haveMana;
     }
 
     commitScore() {
@@ -76,7 +89,13 @@ export class PlayerController extends Trait {
 
     resetScore() {
         this.score = 0;
-        this.scoreSelector.innerHTML = this.totalScore + this.score;
+        this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
+        
+    }
+
+    resetMana() {
+        this.mana = 0;
+        this.updateUiCounts(this.fireballsSelector, this.mana);        
     }
 
     update(entity, deltaTime, level) {
@@ -89,13 +108,30 @@ export class PlayerController extends Trait {
             level.entities.add(this.player);
             return;
         }
+
+        if(this.player.run.boosted) {
+            this.mana -= deltaTime;
+
+            if(this.mana <= 0) {
+                this.player.run.cancelBoost();
+                this.mana = 0;
+            }
+
+            if(this.player.jump.inAir) {
+                this.player.run.cancelBoost();                
+            }
+            
+            this.updateUiCounts(this.fireballsSelector, this.mana);
+        }
     }
 
     onLevelFinished() {
         this.commitScore();
+        this.resetMana();        
     }
 
     onLevelFailed() {
         this.resetScore();
+        this.resetMana();
     }
 }

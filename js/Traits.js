@@ -65,6 +65,23 @@ export class Solid extends Trait {
     }
 }
 
+export class Stackable extends Trait {
+    constructor() {
+        super('stackable');
+    }
+
+    collides(us, them, side) {
+        if(us.name !== them.name) {
+            return;
+        }
+        
+        if (side === Sides.BOTTOM) {
+            us.bounds.bottom = them.bounds.top;
+            us.vel.y = 0;
+        }
+    }
+}
+
 export class Run extends Trait {
     constructor() {
         super('run');
@@ -91,9 +108,13 @@ export class Run extends Trait {
         this.originSpeed = undefined;
     }
 
-    boost(speed, time) {
+    boost(speed) {
+        if(this.boosted) {
+            return
+        }
+
         this.originSpeed = this.speed;
-        this.speed = speed;
+        this.speed = this.originSpeed + speed;
         this.boosted = true;
     }
 
@@ -144,6 +165,10 @@ export class Jump extends Trait {
 
     get jumpingUp() {
         return this.ready < 0 && this.jumping;
+    }
+
+    get inAir() {
+        return this.fallingDown || this.jumpingUp;
     }
 
     start() {

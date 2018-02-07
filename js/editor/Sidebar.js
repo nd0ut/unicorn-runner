@@ -215,15 +215,15 @@ function TileMode({ editor }) {
         interaction.setCreateTileSkin(value);
     }
 
-    const defaultSelected = tileSkinNames[0];
-
-    interaction.setCreateEntityName(defaultSelected);
+    if(!interaction.createTileSkin) {
+        interaction.setCreateTileSkin(tileSkinNames[0]);
+    }
 
     return (
         <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
             <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
                 {tileSkinNames.map((name, idx) => (
-                    <option selected={name === defaultSelected} value={name}>
+                    <option selected={name === interaction.setCreateTileSkin} value={name}>
                         {name}
                     </option>
                 ))}
@@ -241,15 +241,15 @@ function EntityMode({ editor: { entityFactory, interaction } }) {
         interaction.setCreateEntityName(value);
     }
 
-    const defaultSelected = entityNames[0];
-
-    interaction.setCreateEntityName(defaultSelected);
+    if(!interaction.createEntityName) {
+        interaction.setCreateEntityName(entityNames[0]);
+    }
 
     return (
         <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
             <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
                 {entityNames.map((name, idx) => (
-                    <option selected={name === defaultSelected} value={name}>
+                    <option selected={name === interaction.createEntityName} value={name}>
                         {name}
                     </option>
                 ))}

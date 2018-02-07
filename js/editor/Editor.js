@@ -24,11 +24,15 @@ export class Editor extends Game {
         this.picker = new Picker(this);
         this.selection = new Selection(this);
 
-        this.levelIdx = 1;
+        const storedLevelIdx = parseInt(localStorage.getItem('levelIdx'));
+        this.levelIdx = storedLevelIdx && storedLevelIdx > 0 ? storedLevelIdx : 1;
+
         this.tileResolver = undefined;
         this.levelManager.showSplash = false;
 
         this.paused = true;
+
+        window.editor = this;
     }
 
     get level() {
@@ -62,12 +66,13 @@ export class Editor extends Game {
         this.paused && this.pause();        
     }
 
-    async restart() {
-        await this.startEditing(this.levelIdx);
+    restart() {
+        this.playerEnv.playerController.resetMana();
+        return this.startEditing(this.levelIdx);
     }
 
-    async onLoad() {
-        await this.startEditing(this.levelIdx);
+    onLoad() {
+        return this.startEditing(this.levelIdx);
     }
 
     onLevelFinished() {

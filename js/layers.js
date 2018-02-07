@@ -83,9 +83,9 @@ export function createStaticBackgroundLayer(level, backgroundSprites, getGradien
         const widthMetric = FrontImage || BackImage || SkyImage;
         const count = Math.floor(level.distance / (widthMetric ? widthMetric.width : 1)) + 5;
 
-        const SkyCoordX = -camera.pos.x / 3;
-        const BackCoordX = -camera.pos.x / 2;
-        const FrontCoordX = -camera.pos.x / 1;
+        const SkyCoordX = -camera.pos.x / 2.9;
+        const BackCoordX = -camera.pos.x / 1.9;
+        const FrontCoordX = -camera.pos.x / 0.9;
 
         const SkyCoordY = -camera.pos.y * 0.05;
         const BackCoordY = -camera.pos.y * 0.07;

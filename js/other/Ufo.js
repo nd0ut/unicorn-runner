@@ -31,7 +31,7 @@ class BehaviorUfo extends Trait {
     }
 
     spawn() {
-        this.entity.pos.x = this.napEntity.pos.x - 1000;
+        this.entity.pos.x = this.napEntity.pos.x - 2000;
         this.spawned = true;
     }
 
@@ -51,8 +51,8 @@ class BehaviorUfo extends Trait {
     }
 
     abduct() {
-        this.entity.vel.y -= 250;
-        this.entity.vel.x = 1000;
+        this.entity.vel.y -= 50;
+        this.entity.vel.x = 300;
 
         this.napEntity.pos.y = this.entity.pos.y + this.entity.size.y - this.napEntity.size.y;
         this.napEntity.pos.x = this.entity.pos.x + this.entity.size.x / 6;

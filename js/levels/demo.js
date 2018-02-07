@@ -72,8 +72,10 @@ async function init(game) {
     unicorn.addTrait(new AutoJump());
 
     const playerEnv = createPlayerEnv(game);
-
     level.entities.add(playerEnv);
+
+    const playBtn = document.querySelector('.play-btn')
+    playBtn.style.visibility = 'visible';    
 
     function checkFinish() {
         if (unicorn.pos.x > level.distance) {
@@ -92,8 +94,6 @@ async function init(game) {
             game.cameraController.update(deltaTime, time, level);
             level.comp.draw(game.context, game.camera);
         };
-
-        const playBtn = document.querySelector('.play-btn')
 
         const onPlayClick = async () => {
             document.querySelector('.play-block').remove();

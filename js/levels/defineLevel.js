@@ -5,11 +5,13 @@ export function defineLevel(spec, options) {
         const unicorn = game.entityFactory.unicorn();
         level.entities.add(playerEnv);
 
+        playerEnv.playerController.checkpoint.set(spec.spawn[0], spec.spawn[1]);
+
         function startLevel() {
             options.onStart && options.onStart(game, level);
 
             playerEnv.playerController.setPlayer(unicorn);
-            game.cameraController.focus.follow(unicorn);
+            // game.cameraController.focus.follow(unicorn);
 
             game.timer.update = (deltaTime, time) => {
                 level.update(deltaTime);

@@ -1,6 +1,6 @@
 import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
-import { Killable, Physics, Solid } from '../Traits';
+import { Killable, Physics, Solid, Stackable } from '../Traits';
 import { defineGameObject } from '../defineGameObject';
 
 const ENEMY_BUG = {
@@ -123,6 +123,12 @@ class BehaviorEnemyBug extends Trait {
             entity.vel.x += 1000;
             return;
         }
+        
+        if(!entity.killable.dead && !this.inAttack) {
+            entity.vel.x = -5;
+        } else {
+            entity.vel.x = 0;            
+        }
 
         if (!this.inAttack || this.attackTime > this.attackDuration) {
             return;
@@ -132,7 +138,7 @@ class BehaviorEnemyBug extends Trait {
     }
 
     collides(us, them) {
-        if (!them.killable || us.killable.dead) {
+        if (!them.killable || us.killable.dead || us.name === them.name) {
             return;
         }
 
@@ -141,6 +147,7 @@ class BehaviorEnemyBug extends Trait {
         if (!this.inAttack) {
             this.inAttack = true;
             this.startAttackTime = us.lifetime;
+            
             setTimeout(() => {
                 this.inAttack = false;
                 this.attackTime = 0;
@@ -164,7 +171,8 @@ export const loadEnemyBug = defineGameObject('enemyBug', {
         new Physics(),
         new Solid(),
         new Killable(),
-        new BehaviorEnemyBug()
+        new Stackable(),
+        new BehaviorEnemyBug(),
     ],
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');
