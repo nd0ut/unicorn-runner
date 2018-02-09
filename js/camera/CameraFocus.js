@@ -30,7 +30,7 @@ export class CameraFocus extends CameraExt {
     }
 
     get defaultCamOffset() {
-        return new Vec2(100, 100);
+        return new Vec2(0, 100);
     }
 
     update(deltaTime, time, level) {

@@ -1,8 +1,8 @@
 import { rand, clamp } from '../math';
 import { createPlayerEnv } from '../player/createPlayerEnv';
-import { AutoJump } from '../Traits';
+import { AutoJump, Physics } from '../Traits';
 
-const N = 50;
+const N = 100;
 
 function getEntities() {
     const choose = ['speedBooster'];
@@ -11,7 +11,7 @@ function getEntities() {
 
     const entities = Array.from(Array(N)).map((val, idx) => ({
         name: choose[rand.int(0, choose.length - 1)],
-        pos: [idx * rand.int(100, 2000) + 500, 100]
+        pos: [idx * rand.int(100, 2000) + 500, -1000]
     }));
 
     return entities;
@@ -23,10 +23,10 @@ function getRanges() {
     let x = 0;
 
     const ranges = Array.from(Array(N)).map(() => {
-        mul = h === 0 ? 1 : mul;
+        mul = h === -7 ? 1 : mul;
         mul = h === 7 ? -1 : mul;
 
-        const platformWidth = rand.int(6, 12);
+        const platformWidth = rand.int(15, 30);
 
         const range = [x, platformWidth, h, 1];
         h = h + mul;
@@ -79,6 +79,7 @@ async function init(game) {
 
     const playerEnv = createPlayerEnv(game);
     level.entities.add(playerEnv);
+    level.entities.forEach(entity => entity.addTrait(new Physics()));
 
     const playBtn = document.querySelector('.play-btn');
     playBtn.style.visibility = 'visible';

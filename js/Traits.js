@@ -342,12 +342,10 @@ export class Striker extends Trait {
         bullet.vel.x = 1000;
         level.entities.add(bullet);
 
-        this.onStrike && this.onStrike(bullet);
+        this.canStrike = false;
+        this.strikeTime = 0;
 
-        this.queue(() => {
-            this.canStrike = false;
-            this.strikeTime = 0;
-        });
+        this.onStrike && this.onStrike(bullet);        
     }
 
     update(entity, deltaTime, level) {
@@ -358,10 +356,8 @@ export class Striker extends Trait {
         this.strikeTime += deltaTime;
 
         if (this.strikeTime > this.reloadDuration) {
-            this.queue(() => {
-                this.canStrike = true;
-                this.strikeTime = 0;
-            });
+            this.canStrike = true;
+            this.strikeTime = 0;
         }
     }
 }
