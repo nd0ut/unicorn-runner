@@ -4,7 +4,7 @@ import { defineLevel } from "./defineLevel";
 import { clamp } from "../math";
 
 const spec = {
-  name: "range",
+  name: "magic",
   spawn: [96, 64],
   background: {
     images: {
