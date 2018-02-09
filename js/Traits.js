@@ -83,12 +83,11 @@ export class Stackable extends Trait {
 }
 
 export class Run extends Trait {
-    constructor() {
+    constructor({speed = 15000}) {
         super('run');
 
-        this.speed = 15000;
-        // this.speed = 2000;
-
+        
+        this.speed = speed;
         this.realSpeed = this.speed;
         this.lastSpeed = this.speed;
         this.originSpeed = undefined;
