@@ -161,10 +161,10 @@ const UNICORN_SPRITE = {
             name: 'cast',
             frameLen: 0.1,
             frames: [
-                // 'cast-1', 
+                // 'cast-1',
                 // 'cast-2',
                 // 'cast-3',
-                'cast-4',
+                'cast-4'
                 // 'cast-5',
                 // 'cast-6',
             ]
@@ -207,7 +207,7 @@ const UNICORN_SOUNDS = {
             name: 'land'
         }
     ]
-}
+};
 
 function animations(sprite) {
     const runAnim = sprite.animations.get('run');
@@ -243,14 +243,14 @@ function animations(sprite) {
         }
 
         return 'idle';
-    }
+    };
 }
 
 function sounds(sounds) {
     const runSound = sounds.get('clip-clop');
     const dieSound = sounds.get('die');
 
-    return (unicorn) => {
+    return unicorn => {
         if (unicorn.killable.dead) {
             dieSound.playing();
             return;
@@ -265,25 +265,24 @@ function sounds(sounds) {
         }
 
         if (unicorn.run.distance > 0) {
-            runSound.playing(unicorn.run.speed / 10000);
+            runSound.playing({ rate: unicorn.run.realSpeed / 10000, volume: 0.05 });
             return;
         }
-    }
+    };
 }
-
 
 export const loadUnicorn = defineGameObject('unicorn', {
     spriteSpecs: [UNICORN_SPRITE],
-    soundsSpec: [UNICORN_SOUNDS],
+    soundSpecs: [UNICORN_SOUNDS],
 
     size: [90, 100],
     offset: [45, 40],
     // drawBounds: true,
 
     afterCreate: entity => {
-        entity.killable.removeAfter = 1;        
+        entity.killable.removeAfter = 1;
     },
-    
+
     traits: () => [
         new Physics(),
         new Solid(),
@@ -293,5 +292,6 @@ export const loadUnicorn = defineGameObject('unicorn', {
         new Killable(),
         new Striker()
     ],
-    animations
+    animations,
+    sounds
 });

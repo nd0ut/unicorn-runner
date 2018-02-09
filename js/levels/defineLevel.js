@@ -11,7 +11,7 @@ export function defineLevel(spec, options) {
             options.onStart && options.onStart(game, level);
 
             playerEnv.playerController.setPlayer(unicorn);
-            // game.cameraController.focus.follow(unicorn);
+            game.cameraController.focus.follow(unicorn);
 
             game.timer.update = (deltaTime, time) => {
                 level.update(deltaTime);
@@ -21,9 +21,16 @@ export function defineLevel(spec, options) {
             };
         }
 
+        function stopLevel() {
+            for (const [name, sound] of level.sounds.entries()) {
+                sound.stop();
+            }
+        }
+
         return {
             level,
-            startLevel
+            startLevel,
+            stopLevel
         };
     }
 

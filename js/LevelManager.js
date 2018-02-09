@@ -21,7 +21,7 @@ export class LevelManager {
         this.game = game;
 
         const loadLastLevel = false;
-        const showDemoLevel = false;
+        const showDemoLevel = true;
 
         let currentLevel = showDemoLevel ? 0 : 1;
 
@@ -38,6 +38,7 @@ export class LevelManager {
         this.levelState = LevelState.IDLE;
 
         this.level = undefined;
+        this.stopLevel = undefined;
 
         this.showSplash = true;
         this.finishDistance = 500;
@@ -64,6 +65,7 @@ export class LevelManager {
     }
 
     async runLevel(levelIdx = this.levelIdx) {
+        this.stopLevel && this.stopLevel();
         localStorage.setItem('levelIdx', levelIdx);
 
         this.game.canvasSelector.classList.toggle('black', true);
@@ -73,8 +75,10 @@ export class LevelManager {
         this.levelSelector.innerHTML = levelIdx;
 
         const { init } = this.levels[levelIdx];
-        const { level, startLevel } = await init(this.game);
+        const { level, startLevel, stopLevel } = await init(this.game);
+
         this.level = level;
+        this.stopLevel = stopLevel;
 
         if (this.showSplash && level.name) {
             await splashText(level.name);

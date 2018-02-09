@@ -1,4 +1,4 @@
-import { Sound } from "./Sound";
+import { Sound } from './Sound';
 
 class SingleSoundManager {
     constructor() {
@@ -12,27 +12,34 @@ class SingleSoundManager {
     }
 
     async loadSounds(sounds) {
-        const buffers = await Promise.all(sounds.map(sound => this.loadBuffer(sound.url)));
+        const buffers = await Promise.all(
+            sounds.map(sound => this.loadBuffer(sound.url))
+        );
         const soundsMap = new Map();
 
         sounds.forEach((sound, idx) => {
-            sound.buffer = buffers[idx]
+            sound.buffer = buffers[idx];
             soundsMap.set(sound.name, new Sound(this, sound));
         });
 
         return soundsMap;
     }
 
-    play(sound, options = {}) {
+    play(sound, { volume = 1, loop = false, rate = 1 } = {}) {
         const source = this.context.createBufferSource();
+        const gainNode = this.context.createGain();
+
         source.buffer = sound.buffer;
-        source.connect(this.context.destination);
-        source.loop = options.loop !== undefined ? options.loop : false;
-        source.playbackRate.value = options.rate !== undefined ? options.rate : 1;
+        source.loop = loop !== undefined ? loop : false;
+        source.playbackRate.value = rate !== undefined ? rate : 1;
+        gainNode.gain.value = volume;
+
+        source.connect(gainNode);
+        gainNode.connect(this.context.destination);
 
         source.start(0);
 
-        return source;
+        return { source, gainNode };
     }
 }
 

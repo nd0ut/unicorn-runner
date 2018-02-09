@@ -24,7 +24,10 @@ export class Editor extends Game {
         this.picker = new Picker(this);
         this.selection = new Selection(this);
 
-        const storedLevelIdx = parseInt(localStorage.getItem('levelIdx'));
+        let lastLevel = parseInt(localStorage.getItem('levelIdx'));
+        lastLevel = lastLevel > this.levelManager.levels.length - 1 ? lastLevel - 1 : lastLevel;
+
+        const storedLevelIdx = lastLevel;
         this.levelIdx = storedLevelIdx && storedLevelIdx > 0 ? storedLevelIdx : 1;
 
         this.tileResolver = undefined;

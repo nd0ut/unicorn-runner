@@ -89,6 +89,7 @@ export class Run extends Trait {
         this.speed = 15000;
         // this.speed = 2000;
 
+        this.realSpeed = this.speed;
         this.lastSpeed = this.speed;
         this.originSpeed = undefined;
 
@@ -129,15 +130,15 @@ export class Run extends Trait {
     }
 
     update(entity, deltaTime) {
-        let speed = this.speed;
+        this.realSpeed = this.speed;
 
         if (Math.abs(this.lastSpeed - this.speed) > 0) {
-            speed = lerp(this.lastSpeed, this.speed, 1/this.damping * deltaTime)
+            this.realSpeed = lerp(this.lastSpeed, this.speed, 1 / this.damping * deltaTime);
         } 
 
-        entity.vel.x = speed * deltaTime;
+        entity.vel.x = this.realSpeed * deltaTime;
         this.distance += Math.abs(entity.vel.x) * deltaTime;
-        this.lastSpeed = speed;
+        this.lastSpeed = this.realSpeed;
     }
 }
 

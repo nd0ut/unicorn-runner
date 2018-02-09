@@ -50,6 +50,12 @@ const spec = {
             return [step, step2];
         }
     },
+    sounds: [
+        {
+            url: require('../../sounds/music/demo.wav'),
+            name: 'music'
+        }
+    ],
     tileSprite: {
         imageURL: require('../../img/tiles/trak2_wall1a.png'),
         tileW: 60,
@@ -74,8 +80,8 @@ async function init(game) {
     const playerEnv = createPlayerEnv(game);
     level.entities.add(playerEnv);
 
-    const playBtn = document.querySelector('.play-btn')
-    playBtn.style.visibility = 'visible';    
+    const playBtn = document.querySelector('.play-btn');
+    playBtn.style.visibility = 'visible';
 
     function checkFinish() {
         if (unicorn.pos.x > level.distance) {
@@ -85,6 +91,8 @@ async function init(game) {
     }
 
     function startLevel() {
+        level.sounds.get('music').playLoop();
+
         playerEnv.playerController.setPlayer(unicorn);
         game.cameraController.focus.follow(unicorn);
 
@@ -98,25 +106,32 @@ async function init(game) {
         const onPlayClick = async () => {
             document.querySelector('.play-block').remove();
             await game.levelManager.nextLevel();
-            game.canvasSelector.classList.toggle('blur', false);                        
+            game.canvasSelector.classList.toggle('blur', false);
         };
 
         const onPlayHover = () => {
-            game.canvasSelector.classList.toggle('blur', true);            
-        }
+            game.canvasSelector.classList.toggle('blur', true);
+        };
 
         const onPlayUnhover = () => {
-            game.canvasSelector.classList.toggle('blur', false);            
-        }
+            game.canvasSelector.classList.toggle('blur', false);
+        };
 
         playBtn.addEventListener('click', onPlayClick);
         playBtn.addEventListener('mouseover', onPlayHover);
         playBtn.addEventListener('mouseout', onPlayUnhover);
     }
 
+    function stopLevel() {
+        for (const [name, sound] of level.sounds.entries()) {
+            sound.stop();
+        }
+    }
+
     return {
         level,
-        startLevel
+        startLevel,
+        stopLevel
     };
 }
 
