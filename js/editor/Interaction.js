@@ -1,13 +1,7 @@
 import { clamp } from '../math';
 import { EventEmitter } from '../util';
 import { DragState, MouseEvents } from './Mouse';
-import {
-    createEntity,
-    removeEntity,
-    saveLocal,
-    updateEntity,
-    updateTileGrid
-} from './SpecTools';
+import * as SpecTools from './SpecTools';
 
 export const InteractionMode = {
     SELECT: Symbol('SELECT'),
@@ -31,6 +25,7 @@ export class Interaction {
 
         this.dragging = {};
         this.createEntityName = undefined;
+        this.createEntitySkinName = undefined;
         this.createTileSkin = undefined;
     }
 
@@ -45,6 +40,18 @@ export class Interaction {
     setMode(mode) {
         this.mode = mode;
         this.emit('change');
+    }
+
+    setCreateEntityName(entityName) {
+        this.createEntityName = entityName;
+    }
+
+    setCreateTileSkin(skinName) {
+        this.createTileSkin = skinName;
+    }
+
+    setCreateEntitySkinName(skinName) {
+        this.createEntitySkinName = skinName;
     }
 
     onKeyPress(e) {
@@ -171,7 +178,7 @@ export class Interaction {
             this.dragging.entity.pos.x = x;
             this.dragging.entity.pos.y = y;
 
-            updateEntity(this.editor.levelSpec, this.dragging.entity.idx, {
+            SpecTools.updateEntity(this.editor.levelSpec, this.dragging.entity.idx, {
                 pos: [x, y]
             });
         }
@@ -222,14 +229,15 @@ export class Interaction {
 
     createEntity(pos) {
         const entityCreator = this.editor.entityFactory[this.createEntityName];
-        const entity = entityCreator();
+        const entity = entityCreator({ skinName: this.createEntitySkinName });
 
         const x = pos.x - entity.size.x / 2 - entity.offset.x;
         const y = pos.y - entity.size.y / 2 - entity.offset.y;
 
-        const idx = createEntity(this.editor.levelSpec, {
+        const idx = SpecTools.createEntity(this.editor.levelSpec, {
             name: entity.name,
-            pos: [x, y]
+            pos: [x, y],
+            skinName: this.createEntitySkinName
         });
 
         entity.pos.set(x, y);
@@ -240,7 +248,7 @@ export class Interaction {
 
     removeEntity(pos) {
         const entity = this.editor.picker.pickEntity(pos);
-        removeEntity(this.editor.levelSpec, entity.idx);
+        SpecTools.removeEntity(this.editor.levelSpec, entity.idx);
         this.editor.level.entities.delete(entity);
     }
 
@@ -250,7 +258,7 @@ export class Interaction {
         if (tileIndex) {
             const tile = { skinName: this.createTileSkin };
             this.level.tileGrid.set(tileIndex.x, tileIndex.y, tile);
-            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
+            SpecTools.updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
     }
 
@@ -259,7 +267,7 @@ export class Interaction {
 
         if (tileIndex) {
             this.level.tileGrid.remove(tileIndex.x, tileIndex.y);
-            updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
+            SpecTools.updateTileGrid(this.editor.levelSpec, this.level.tileGrid);
         }
     }
 
@@ -279,16 +287,11 @@ export class Interaction {
         this.editor.selection.clear();
     }
 
-    setCreateEntityName(entityName) {
-        this.createEntityName = entityName;
-    }
-
-    setCreateTileSkin(skinName) {
-        this.createTileSkin = skinName;
-    }
-    
     async saveToFile() {
-        const { success } = await saveLocal(this.editor.levelIdx, this.editor.levelSpec);
+        const { success } = await SpecTools.saveLocal(
+            this.editor.levelIdx,
+            this.editor.levelSpec
+        );
 
         return success;
     }

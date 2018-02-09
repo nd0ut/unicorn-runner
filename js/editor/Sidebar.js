@@ -215,7 +215,7 @@ function TileMode({ editor }) {
         interaction.setCreateTileSkin(value);
     }
 
-    if(!interaction.createTileSkin) {
+    if (!interaction.createTileSkin) {
         interaction.setCreateTileSkin(tileSkinNames[0]);
     }
 
@@ -223,7 +223,10 @@ function TileMode({ editor }) {
         <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
             <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
                 {tileSkinNames.map((name, idx) => (
-                    <option selected={name === interaction.setCreateTileSkin} value={name}>
+                    <option
+                        selected={name === interaction.setCreateTileSkin}
+                        value={name}
+                    >
                         {name}
                     </option>
                 ))}
@@ -232,25 +235,41 @@ function TileMode({ editor }) {
     );
 }
 
-
 function EntityMode({ editor: { entityFactory, interaction } }) {
-    const entityNames = Object.keys(entityFactory);
+    const nameSkinCombs = Object.keys(entityFactory).reduce((acc, name) => {
+        const skins = entityFactory[name].availableSkins;
+        skins.forEach(skin => acc.push({ name, skin }));
+        return acc;
+    }, []);
 
     function onSelect(e) {
-        const value = e.target.value;
-        interaction.setCreateEntityName(value);
+        const idx = e.target.value;
+        const { skin, name } = nameSkinCombs[idx];
+
+        interaction.setCreateEntityName(name);
+        interaction.setCreateEntitySkinName(skin);
     }
 
-    if(!interaction.createEntityName) {
-        interaction.setCreateEntityName(entityNames[0]);
+    function isSelected(name, skin) {
+        return (
+            interaction.createEntityName === name &&
+            interaction.createEntitySkinName === skin
+        );
+    }
+
+    if (!interaction.createEntityName) {
+        const { skin, name } = nameSkinCombs[0];
+
+        interaction.setCreateEntityName(name);
+        interaction.setCreateEntitySkinName(skin);
     }
 
     return (
         <div style={{ display: 'flex', marginTop: '15px', 'flex-direction': 'column' }}>
             <select onChange={onSelect} style={{ 'min-height': '150px' }} size="3">
-                {entityNames.map((name, idx) => (
-                    <option selected={name === interaction.createEntityName} value={name}>
-                        {name}
+                {nameSkinCombs.map(({ name, skin }, idx) => (
+                    <option selected={isSelected(name, skin)} value={idx}>
+                        {name} {skin !== 'default' && `[${skin}]`}
                     </option>
                 ))}
             </select>

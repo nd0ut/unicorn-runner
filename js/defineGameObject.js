@@ -45,11 +45,16 @@ export function defineGameObject(name, options) {
             Promise.all(soundSpecs.map(spec => loadSounds(spec)))
         ]);
 
-        return (options = {}) => {
+        function create(options = {}) {
             const skinName = options.skinName || 'default';
 
-            const skinSprite = sprites.find(sprite => sprite.skinName === skinName);
+            let skinSprite = sprites.find(sprite => sprite.skinName === skinName);
             const skinSounds = soundSets.find(sound => sound.skinName === skinName);
+
+            if(!skinSprite) {
+                console.warn(`Skin "${name} [${skinName}]" not found. Fallback to the first one.`);
+                skinSprite = sprites[0];
+            }
 
             const entity = new Entity(name);
             entity.size.set(size[0], size[1]);
@@ -67,5 +72,9 @@ export function defineGameObject(name, options) {
 
             return entity;
         };
+
+        create.availableSkins = sprites.map(s => s.skinName || 'default');
+        
+        return create;
     };
 }
