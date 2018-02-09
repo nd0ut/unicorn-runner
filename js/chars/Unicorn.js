@@ -286,7 +286,7 @@ export const loadUnicorn = defineGameObject('unicorn', {
     traits: () => [
         new Physics(),
         new Solid(),
-        new Run({speed: 2000}),
+        new Run({speed: 15000}),
         new Jump(),
         new Picker(),
         new Killable(),

@@ -80,13 +80,11 @@ class BehaviorBullet extends Trait {
     }
 
     collides(us, them) {
-        if (!them.killable || them === this.ownerEntity) {
+        if (!them.killable || them.killable.dead || them === this.ownerEntity) {
             return;
         }
 
         them.killable.kill();
-
-        this.destroy();
     }
 }
 

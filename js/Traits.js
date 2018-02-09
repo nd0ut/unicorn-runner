@@ -75,6 +75,10 @@ export class Stackable extends Trait {
             return;
         }
 
+        if(this.killable && this.killable.dead) {
+            return;
+        }
+
         if (side === Sides.BOTTOM) {
             us.bounds.bottom = them.bounds.top;
             us.vel.y = 0;
@@ -317,7 +321,7 @@ export class Striker extends Trait {
     constructor() {
         super('striker');
 
-        this.reloadDuration = 0.2;
+        this.reloadDuration = 0.1;
         this.canStrike = true;
         this.strikeTime = 0;
 
