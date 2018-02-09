@@ -1,4 +1,4 @@
-import { loadEnemyBug } from './chars/EnemyBug';
+import { loadEnemy } from './chars/Enemy';
 import { loadUnicorn } from './chars/Unicorn';
 import { loadUfo } from './other/Ufo';
 import { loadManaPot } from './pickables/ManaPot';
@@ -16,7 +16,7 @@ export function loadEntities() {
 
     return Promise.all([
         loadUnicorn().then(addFactory('unicorn')),
-        loadEnemyBug().then(addFactory('enemyBug')),
+        loadEnemy().then(addFactory('enemy')),
         loadRainbow().then(addFactory('rainbow')),
         loadSpeedBooster().then(addFactory('speedBooster')),
         loadPortal().then(addFactory('portal')),

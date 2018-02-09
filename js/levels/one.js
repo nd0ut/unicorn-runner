@@ -265,18 +265,18 @@ const spec = {
   entities: [
     { name: "speedBooster", pos: [769.6654805148739, 299.5] },
     { name: "rainbow", pos: [1314.8304345700217, 43.5] },
-    { name: "enemyBug", pos: [1796, 285.75] },
-    { name: "enemyBug", pos: [2580, 0] },
+    { name: "enemy", pos: [1796, 285.75] },
+    { name: "enemy", pos: [2580, 0] },
     { name: "rainbow", pos: [3183.8893762925363, -147.088566603083] },
-    { name: "enemyBug", pos: [3968, 405.75] },
+    { name: "enemy", pos: [3968, 405.75] },
     { name: "rainbow", pos: [4610, -7] },
-    { name: "enemyBug", pos: [4620, 0] },
+    { name: "enemy", pos: [4620, 0] },
     { name: "rainbow", pos: [5604, 37] },
-    { name: "enemyBug", pos: [6519.332364340603, 285] },
+    { name: "enemy", pos: [6519.332364340603, 285] },
     { name: "speedBooster", pos: [6663.277780038607, 302.5] },
     { name: "rainbow", pos: [7388, 0] },
-    { name: "enemyBug", pos: [7721.990176118361, 286] },
-    { name: "enemyBug", pos: [9995.156915549245, 408] }
+    { name: "enemy", pos: [7721.990176118361, 286] },
+    { name: "enemy", pos: [9995.156915549245, 408] }
   ]
 };
 

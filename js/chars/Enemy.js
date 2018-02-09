@@ -3,7 +3,7 @@ import { loadSpriteSheet } from '../loaders';
 import { Killable, Physics, Solid, Stackable } from '../Traits';
 import { defineGameObject } from '../defineGameObject';
 
-const ENEMY_BUG = {
+const ENEMY = {
     imageURL: require('../../img/enemies/cactus.png'),
     frames: [
         {
@@ -107,7 +107,7 @@ const ENEMY_BUG = {
     ]
 };
 
-class BehaviorEnemyBug extends Trait {
+class BehaviorEnemy extends Trait {
     constructor() {
         super('behavior');
 
@@ -151,8 +151,8 @@ class BehaviorEnemyBug extends Trait {
     }
 }
 
-export const loadEnemyBug = defineGameObject('enemyBug', {
-    spriteSpecs: [ENEMY_BUG],
+export const loadEnemy = defineGameObject('enemy', {
+    spriteSpecs: [ENEMY],
     size: [50, 51],
     offset: [5, 21],
     // drawBounds: true,
@@ -166,23 +166,23 @@ export const loadEnemyBug = defineGameObject('enemyBug', {
         new Solid(),
         new Killable(),
         new Stackable(),
-        new BehaviorEnemyBug(),
+        new BehaviorEnemy(),
     ],
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');
         const attackAnim = sprite.animations.get('attack');
         const deathAnim = sprite.animations.get('death');
 
-        return (enemyBug) => {
-            if (enemyBug.behavior.inAttack) {
-                return attackAnim(enemyBug.behavior.attackTime);
+        return (enemy) => {
+            if (enemy.behavior.inAttack) {
+                return attackAnim(enemy.behavior.attackTime);
             }
 
-            if (enemyBug.killable.dead) {
-                return deathAnim(enemyBug.killable.deadTime);
+            if (enemy.killable.dead) {
+                return deathAnim(enemy.killable.deadTime);
             }
 
-            return idleAnim(enemyBug.lifetime);
+            return idleAnim(enemy.lifetime);
         };
     }
 });
