@@ -13,20 +13,25 @@ export class EntityCollider {
 
             if (subject.bounds.overlaps(candidate.bounds)) {
                 const side =
-                    this.getSideY(subject, candidate)
-                    // this.getSideX(subject, candidate);
-                console.log(side);
+                    this.getSideY(subject, candidate) ||
+                    this.getSideX(subject, candidate);
                 subject.collides(candidate, side);
             }
         });
     }
 
     getSideX(subject, candidate) {
-        if (subject.vel.x > 0) {
+        const movingRight = subject.vel.x > 0;
+        const movingRightFaster = subject.vel.x > candidate.vel.x;
+        if (movingRight && movingRightFaster) {
             if (subject.bounds.right > candidate.bounds.left) {
                 return Sides.RIGHT;
             }
-        } else if (subject.vel.x < 0) {
+        }
+
+        const movingLeft = subject.vel.x < 0;
+        const movingLeftFaster = subject.vel.x < candidate.vel.x;
+        if (movingLeft && movingLeftFaster) {
             if (subject.bounds.left < candidate.bounds.right) {
                 return Sides.LEFT;
             }
@@ -34,11 +39,17 @@ export class EntityCollider {
     }
 
     getSideY(subject, candidate) {
-        if (subject.vel.y > 0) {
+        const movingDown = subject.vel.y > 0;
+        const movingDownFaster = subject.vel.y > candidate.vel.y;
+        if (movingDown && movingDownFaster) {
             if (subject.bounds.bottom > candidate.bounds.top) {
                 return Sides.BOTTOM;
             }
-        } else if (subject.vel.y < 0) {
+        } 
+
+        const movingUp = subject.vel.y < 0;
+        const movingUpFaster = subject.vel.y < candidate.vel.y;
+        if (movingUp && movingUpFaster) {
             if (subject.bounds.top < candidate.bounds.bottom) {
                 return Sides.TOP;
             }

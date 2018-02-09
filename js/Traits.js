@@ -71,13 +71,22 @@ export class Stackable extends Trait {
     }
 
     collides(us, them, side) {
-        if(us.name !== them.name) {
+        if (us.name !== them.name) {
             return;
         }
-        
+
         if (side === Sides.BOTTOM) {
             us.bounds.bottom = them.bounds.top;
             us.vel.y = 0;
+        } else if (side === Sides.TOP) {
+            us.bounds.top = them.bounds.bottom;
+            us.vel.y = 0;
+        } else if (side === Sides.LEFT) {
+            us.bounds.left = them.bounds.right;
+            us.vel.x = 0;
+        } else if (side === Sides.RIGHT) {
+            us.bounds.right = them.bounds.left;
+            us.vel.x = 0;
         }
     }
 }
@@ -109,8 +118,8 @@ export class Run extends Trait {
     }
 
     boost(speed) {
-        if(this.boosted) {
-            return
+        if (this.boosted) {
+            return;
         }
 
         this.originSpeed = this.speed;
@@ -119,21 +128,25 @@ export class Run extends Trait {
     }
 
     cancelBoost() {
-        if(!this.boosted) {
-            return
+        if (!this.boosted) {
+            return;
         }
 
         this.speed = this.originSpeed;
         this.originSpeed = undefined;
-        this.boosted = false;            
+        this.boosted = false;
     }
 
     update(entity, deltaTime) {
         this.realSpeed = this.speed;
 
         if (Math.abs(this.lastSpeed - this.speed) > 0) {
-            this.realSpeed = lerp(this.lastSpeed, this.speed, 1 / this.damping * deltaTime);
-        } 
+            this.realSpeed = lerp(
+                this.lastSpeed,
+                this.speed,
+                1 / this.damping * deltaTime
+            );
+        }
 
         entity.vel.x = this.realSpeed * deltaTime;
         this.distance += Math.abs(entity.vel.x) * deltaTime;
@@ -172,15 +185,15 @@ export class Jump extends Trait {
     }
 
     start() {
-        if(!this.enabled) {
-            return
+        if (!this.enabled) {
+            return;
         }
 
         this.requestTime = this.gracePeriod;
     }
 
     cancel() {
-        if(!this.enabled) {
+        if (!this.enabled) {
             return;
         }
         this.engageTime = 0;
@@ -215,10 +228,7 @@ export class Jump extends Trait {
         }
 
         if (this.engageTime > 0) {
-            entity.vel.y = -(
-                this.velocity +
-                Math.abs(entity.vel.x) * this.speedBoost
-            );
+            entity.vel.y = -(this.velocity + Math.abs(entity.vel.x) * this.speedBoost);
             this.engageTime -= deltaTime;
             if (this.engageTime < 0) {
                 this.engageTime = 0;
@@ -332,22 +342,22 @@ export class Striker extends Trait {
 
         this.queue(() => {
             this.canStrike = false;
-            this.strikeTime = 0;    
-        })
+            this.strikeTime = 0;
+        });
     }
 
     update(entity, deltaTime, level) {
-        if(this.canStrike) {
+        if (this.canStrike) {
             return;
         }
 
         this.strikeTime += deltaTime;
-        
-        if(this.strikeTime > this.reloadDuration) {
+
+        if (this.strikeTime > this.reloadDuration) {
             this.queue(() => {
                 this.canStrike = true;
                 this.strikeTime = 0;
-            })
+            });
         }
     }
 }

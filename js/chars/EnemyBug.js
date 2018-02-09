@@ -124,12 +124,6 @@ class BehaviorEnemyBug extends Trait {
             return;
         }
         
-        if(!entity.killable.dead && !this.inAttack) {
-            entity.vel.x = -5;
-        } else {
-            entity.vel.x = 0;            
-        }
-
         if (!this.inAttack || this.attackTime > this.attackDuration) {
             return;
         }
