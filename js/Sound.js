@@ -33,7 +33,10 @@ export class Sound {
     }
 
     stop() {
-        this.source.stop();
+        if(this.source) {
+            this.source.stop();
+        }
+        
         this.isPlaying = false;
     }
 
