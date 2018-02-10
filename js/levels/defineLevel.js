@@ -18,6 +18,8 @@ export function defineLevel(spec, options) {
                 game.levelManager.update(deltaTime, time, level);
                 game.cameraController.update(deltaTime, time, level);
                 level.comp.draw(game.context, game.camera);
+
+                options.afterUpdate && options.afterUpdate(game, level);
             };
         }
 

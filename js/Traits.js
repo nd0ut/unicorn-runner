@@ -75,7 +75,7 @@ export class Stackable extends Trait {
             return;
         }
 
-        if(this.killable && this.killable.dead) {
+        if (this.killable && this.killable.dead) {
             return;
         }
 
@@ -85,21 +85,20 @@ export class Stackable extends Trait {
         } else if (side === Sides.TOP) {
             us.bounds.top = them.bounds.bottom;
             us.vel.y = 0;
-        } else if (side === Sides.LEFT) {
-            us.bounds.left = them.bounds.right;
-            us.vel.x = 0;
         } else if (side === Sides.RIGHT) {
             us.bounds.right = them.bounds.left;
+            us.vel.x = 0;
+        } else if (side === Sides.LEFT) {
+            us.bounds.left = them.bounds.right;
             us.vel.x = 0;
         }
     }
 }
 
 export class Run extends Trait {
-    constructor({speed = 15000}) {
+    constructor({ speed = 15000 }) {
         super('run');
 
-        
         this.speed = speed;
         this.realSpeed = this.speed;
         this.lastSpeed = this.speed;
@@ -345,7 +344,7 @@ export class Striker extends Trait {
         this.canStrike = false;
         this.strikeTime = 0;
 
-        this.onStrike && this.onStrike(bullet);        
+        this.onStrike && this.onStrike(bullet);
     }
 
     update(entity, deltaTime, level) {

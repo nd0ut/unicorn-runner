@@ -6,6 +6,7 @@ import { loadPortal } from './pickables/Portal';
 import { loadRainbow } from './pickables/Rainbow';
 import { loadSpeedBooster } from './pickables/SpeedBooster';
 import { loadBullet } from './weapon/Bullet';
+import { loadDoor } from './other/Door';
 
 export function loadEntities() {
     const entityFactories = {};
@@ -22,6 +23,7 @@ export function loadEntities() {
         loadPortal().then(addFactory('portal')),
         loadBullet().then(addFactory('bullet')),
         loadManaPot().then(addFactory('manaPot')),
-        loadUfo().then(addFactory('ufo'))
+        loadUfo().then(addFactory('ufo')),
+        loadDoor().then(addFactory('door'))
     ]).then(() => entityFactories);
 }

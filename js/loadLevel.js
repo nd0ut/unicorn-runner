@@ -14,23 +14,32 @@ function setupTileGrid(levelSpec, level) {
     level.setDistance(tileGrid.width() * 60);
 }
 
-function setupBackgrounds(levelSpec, level, backgroundImages, getGradientSteps, tileSprite) {
+function setupBackgrounds(
+    levelSpec,
+    level,
+    backgroundImages,
+    getGradientSteps,
+    tileSprite
+) {
     const backgroundLayer = createBackgroundLayer(level, tileSprite);
-    const staticBackgroundLayer = createStaticBackgroundLayer(level, backgroundImages, getGradientSteps);
+    const staticBackgroundLayer = createStaticBackgroundLayer(
+        level,
+        backgroundImages,
+        getGradientSteps
+    );
     level.comp.addLayer(staticBackgroundLayer);
     level.comp.addLayer(backgroundLayer);
 }
 
 function setupEntities(levelSpec, level, entityFactory) {
-    levelSpec.entities.forEach(({ name, id, skinName, pos: [x, y] }, idx) => {
-        skinName = skinName || 'default';
-        const createEntity = entityFactory[name];
-        const entity = createEntity({ skinName });
-        entity.pos.set(x, y);
+    levelSpec.entities.forEach((tileSpec, idx) => {
+        const createEntity = entityFactory[tileSpec.name];
+        const entity = createEntity(tileSpec);
+        entity.pos.set(tileSpec.pos[0], tileSpec.pos[1]);
         entity.idx = idx;
 
         level.entities.add(entity);
-        id && level.namedEntities.set(id, entity);
+        tileSpec.id && level.namedEntities.set(tileSpec.id, entity);
     });
 
     const spriteLayer = createSpriteLayer(level.entities);
@@ -57,16 +66,24 @@ export function createLevelLoader(entityFactory) {
                     loadSounds(levelSpec)
                 ])
             )
-            .then(([levelSpec, backgroundImages, getGradientSteps, tileSprite, sounds]) => {
-                const level = new Level(levelSpec.name);
+            .then(
+                ([levelSpec, backgroundImages, getGradientSteps, tileSprite, sounds]) => {
+                    const level = new Level(levelSpec.name);
 
-                setupTileGrid(levelSpec, level);
-                setupBackgrounds(levelSpec, level, backgroundImages, getGradientSteps, tileSprite);
-                setupEntities(levelSpec, level, entityFactory);
-                setupSounds(level, sounds);
+                    setupTileGrid(levelSpec, level);
+                    setupBackgrounds(
+                        levelSpec,
+                        level,
+                        backgroundImages,
+                        getGradientSteps,
+                        tileSprite
+                    );
+                    setupEntities(levelSpec, level, entityFactory);
+                    setupSounds(level, sounds);
 
-                return level;
-            });
+                    return level;
+                }
+            );
     };
 }
 

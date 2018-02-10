@@ -1,12 +1,12 @@
 import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
 import { Physics, Pickable, Solid } from '../Traits';
-import { rand } from '../math';
+import { rand, Vec2 } from '../math';
 import { defineGameObject } from '../defineGameObject';
 
 const PORTAL = {
     skinName: 'default',
-    
+
     imageURL: require('../../img/pickables/portal.png'),
     frames: [
         {
@@ -51,8 +51,9 @@ const PORTAL = {
 };
 
 class BehaviorPortal extends Trait {
-    constructor() {
+    constructor({ destintaion }) {
         super('behavior');
+        this.destintaion = destintaion;
     }
 
     collides(us, them) {
@@ -64,8 +65,8 @@ class BehaviorPortal extends Trait {
         us.vel.set(30, -400);
         us.solid.obstructs = false;
 
-        them.pos.x += rand.int(100, 1000);
-        them.pos.y = -100;
+        const dest = this.destintaion || new Vec2(this.pos.x + rand.int(100, 1000), -100);
+        them.pos.set(dest.x, dest.y);
     }
 }
 
@@ -74,11 +75,11 @@ export const loadPortal = defineGameObject('portal', {
     size: [36, 72],
     offset: [0, 0],
 
-    traits: () => [
+    traits: ({ destintaion }) => [
         new Physics({ applyGravity: false }),
         new Solid(),
         new Pickable(),
-        new BehaviorPortal()
+        new BehaviorPortal({ destintaion })
     ],
     animations: sprite => {
         const portalAnim = sprite.animations.get('portal');
