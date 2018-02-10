@@ -1,4 +1,7 @@
 export const MANA_PYLON_SPRITE = {
+    size: [70, 70],
+    offset: [15, 0],
+
     skinName: 'pylon',
     imageURL: require('../../img/pickables/mana_pylon.png'),
     frames: Array.from(new Array(10)).map((val, idx) => ({
@@ -10,7 +13,7 @@ export const MANA_PYLON_SPRITE = {
             name: 'idle',
             frameLen: 0.1,
             frames: [
-                'idle-1',
+                'idle-1'
                 // 'idle-2',
                 // 'idle-3',
                 // 'idle-4',

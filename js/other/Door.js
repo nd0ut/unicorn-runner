@@ -5,6 +5,9 @@ import { rand, Vec2 } from '../math';
 import { defineGameObject } from '../defineGameObject';
 
 const DOOR = {
+    size: [120, 165],
+    offset: [0, 0],
+
     skinName: 'default',
 
     imageURL: require('../../img/other/doors.png'),
@@ -57,8 +60,6 @@ class BehaviorDoor extends Trait {
 
 export const loadDoor = defineGameObject('door', {
     spriteSpecs: [DOOR],
-    size: [120, 165],
-    offset: [0, 0],
 
     traits: () => [new BehaviorDoor()],
     animations: sprite => {

@@ -32,8 +32,6 @@ export const loadManaPot = defineGameObject('manaPot', {
     spriteSpecs: [MANA_BUBBLES_SPRITE, MANA_PYLON_SPRITE],
     soundSpecs: [SOUNDS],
 
-    size: [70, 70],
-    offset: [15, 0],
     // drawBounds: true,
 
     traits: ({sounds}) => [

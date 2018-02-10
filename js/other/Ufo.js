@@ -3,6 +3,10 @@ import { Trait } from '../Entity';
 import { Physics, Solid } from '../Traits';
 
 const UFO_SPRITE = {
+    size: [240, 350],
+    offset: [0, 0],
+    skinName: 'default',
+
     imageURL: require('../../img/ufo.png'),
     frames: [
         {
@@ -14,9 +18,7 @@ const UFO_SPRITE = {
         {
             name: 'idle',
             frameLen: 0.1,
-            frames: [
-                'idle',
-            ]
+            frames: ['idle']
         }
     ]
 };
@@ -82,8 +84,6 @@ class BehaviorUfo extends Trait {
 
 export const loadUfo = defineGameObject('ufo', {
     spriteSpecs: [UFO_SPRITE],
-    size: [240, 350],
-    offset: [0, 0],
     // drawBounds: true,
 
     traits: ({ napEntity }) => [

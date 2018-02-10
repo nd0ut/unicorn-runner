@@ -4,6 +4,9 @@ import { Jump, Killable, Physics, Picker, Run, Solid, Striker } from '../Traits'
 
 const UNICORN_SPRITE = {
     imageURL: require('../../img/unicorn.png'),
+    skinName: 'default',
+    size: [90, 100],
+    offset: [45, 40],
     frames: [
         {
             name: 'idle',
@@ -275,8 +278,6 @@ export const loadUnicorn = defineGameObject('unicorn', {
     spriteSpecs: [UNICORN_SPRITE],
     soundSpecs: [UNICORN_SOUNDS],
 
-    size: [90, 100],
-    offset: [45, 40],
     // drawBounds: true,
 
     afterCreate: entity => {
@@ -286,7 +287,7 @@ export const loadUnicorn = defineGameObject('unicorn', {
     traits: () => [
         new Physics(),
         new Solid(),
-        new Run({speed: 15000}),
+        new Run({speed: 1000}),
         new Jump(),
         new Picker(),
         new Killable(),

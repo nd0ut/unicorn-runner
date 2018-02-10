@@ -5,6 +5,9 @@ import { Physics, Solid } from '../Traits';
 const FIREBALL_SPRITE = {
     skinName: 'default',
     imageURL: require('../../img/weapon/fireball.png'),
+    size: [55, 25],
+    offset: [0, 35],
+
     frames: [
         {
             name: 'idle-1',
@@ -46,7 +49,7 @@ const FIREBALL_SPRITE = {
                 'idle-4',
                 'idle-5',
                 'idle-6',
-                'idle-7',
+                'idle-7'
             ]
         }
     ]
@@ -90,8 +93,6 @@ class BehaviorBullet extends Trait {
 
 export const loadBullet = defineGameObject('bullet', {
     spriteSpecs: [FIREBALL_SPRITE],
-    size: [55, 25],
-    offset: [0, 35],
     // drawBounds: true,
 
     traits: ({ ownerEntity }) => [

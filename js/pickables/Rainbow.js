@@ -5,6 +5,10 @@ import { defineGameObject } from '../defineGameObject';
 
 const RAINBOW_SPRITE = {
     imageURL: require('../../img/pickables/rainbow.png'),
+    size: [83, 93],
+    offset: [0, 0],
+    skinName: 'default',
+
     frames: [
         {
             name: 'spark-1',
@@ -35,14 +39,7 @@ const RAINBOW_SPRITE = {
         {
             name: 'spark',
             frameLen: 0.2,
-            frames: [
-                'spark-1',
-                'spark-2',
-                'spark-3',
-                'spark-4',
-                'spark-5',
-                'spark-6'
-            ]
+            frames: ['spark-1', 'spark-2', 'spark-3', 'spark-4', 'spark-5', 'spark-6']
         }
     ]
 };
@@ -75,9 +72,6 @@ class BehaviorRainbow extends Trait {
 export const loadRainbow = defineGameObject('rainbow', {
     spriteSpecs: [RAINBOW_SPRITE],
     soundSpecs: [RAINBOW_SOUNDS],
-
-    size: [83, 93],
-    offset: [0, 0],
 
     traits: ({ sounds }) => [
         new Physics({ applyGravity: false }),

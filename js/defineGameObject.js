@@ -16,8 +16,6 @@ const defaultOptions = {
     traits: undefined,
     animations: undefined,
     sounds: undefined,
-    size: undefined,
-    offset: undefined,
 
     drawBounds: false,
     afterCreate: undefined
@@ -30,8 +28,6 @@ export function defineGameObject(name, options) {
         traits,
         animations,
         sounds,
-        size,
-        offset,
         drawBounds,
         afterCreate
     } = {
@@ -49,17 +45,20 @@ export function defineGameObject(name, options) {
             const skinName = options.skinName || 'default';
 
             let skinSprite = sprites.find(sprite => sprite.skinName === skinName);
+            let spriteSpec = spriteSpecs.find(spec => spec.skinName === skinName);
+
             const skinSounds = soundSets.find(sound => sound.skinName === skinName);
 
             if(!skinSprite) {
                 console.warn(`Skin "${name} [${skinName}]" not found. Fallback to the first one.`);
                 skinSprite = sprites[0];
+                spriteSpec = spriteSpecs[0];
             }
 
             const entity = new Entity(name);
-            entity.size.set(size[0], size[1]);
-            entity.offset.x = offset[0];
-            entity.offset.y = offset[1];
+            entity.size.set(spriteSpec.size[0], spriteSpec.size[1]);
+            entity.offset.x = spriteSpec.offset[0];
+            entity.offset.y = spriteSpec.offset[1];
 
             traits({ ...options, sounds: skinSounds }).forEach(trait => entity.addTrait(trait));
 

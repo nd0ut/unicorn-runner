@@ -6,6 +6,8 @@ import { defineGameObject } from '../defineGameObject';
 
 const PORTAL = {
     skinName: 'default',
+    size: [36, 72],
+    offset: [0, 0],
 
     imageURL: require('../../img/pickables/portal.png'),
     frames: [
@@ -72,8 +74,6 @@ class BehaviorPortal extends Trait {
 
 export const loadPortal = defineGameObject('portal', {
     spriteSpecs: [PORTAL],
-    size: [36, 72],
-    offset: [0, 0],
 
     traits: ({ destintaion }) => [
         new Physics({ applyGravity: false }),

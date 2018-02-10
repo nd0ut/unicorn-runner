@@ -3,6 +3,7 @@ import { loadSpriteSheet } from '../loaders';
 import { Killable, Physics, Solid, Stackable } from '../Traits';
 import { defineGameObject } from '../defineGameObject';
 import ENEMY_CACTUS from './enemy_skins/enemy_cactus';
+import ENEMY_TARGET from './enemy_skins/enemy_target';
 
 class BehaviorEnemy extends Trait {
     constructor() {
@@ -20,7 +21,7 @@ class BehaviorEnemy extends Trait {
             entity.vel.x += 1000;
             return;
         }
-        
+
         if (!this.inAttack || this.attackTime > this.attackDuration) {
             return;
         }
@@ -38,7 +39,7 @@ class BehaviorEnemy extends Trait {
         if (!this.inAttack) {
             this.inAttack = true;
             this.startAttackTime = us.lifetime;
-            
+
             setTimeout(() => {
                 this.inAttack = false;
                 this.attackTime = 0;
@@ -49,9 +50,7 @@ class BehaviorEnemy extends Trait {
 }
 
 export const loadEnemy = defineGameObject('enemy', {
-    spriteSpecs: [ENEMY_CACTUS],
-    size: [50, 51],
-    offset: [5, 21],
+    spriteSpecs: [ENEMY_CACTUS, ENEMY_TARGET],
     // drawBounds: true,
 
     afterCreate: entity => {
@@ -63,14 +62,14 @@ export const loadEnemy = defineGameObject('enemy', {
         new Solid(),
         new Killable(),
         new Stackable(),
-        new BehaviorEnemy(),
+        new BehaviorEnemy()
     ],
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');
         const attackAnim = sprite.animations.get('attack');
         const deathAnim = sprite.animations.get('death');
 
-        return (enemy) => {
+        return enemy => {
             if (enemy.behavior.inAttack) {
                 return attackAnim(enemy.behavior.attackTime);
             }

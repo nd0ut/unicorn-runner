@@ -1,5 +1,8 @@
 export const MANA_BUBBLES_SPRITE = {
     skinName: 'default',
+    size: [70, 70],
+    offset: [15, 0],
+
     imageURL: require('../../img/pickables/mana_bubbles.png'),
     frames: [
         {

@@ -1,6 +1,8 @@
 export default {
-    imageURL: require('../../../img/enemies/cactus.png'),
     skinName: 'cactus',
+    imageURL: require('../../../img/enemies/cactus.png'),
+    size: [50, 51],
+    offset: [5, 21],
     frames: [
         {
             name: 'idle-1',
@@ -63,42 +65,24 @@ export default {
         {
             name: 'death-6',
             rect: [197 + 63 * 5, 216, 63, 73]
-        },
+        }
     ],
     animations: [
         {
             name: 'idle',
             frameLen: 0.2,
-            frames: [
-                'idle-1',
-                'idle-2',
-                'idle-3',
-                'idle-4',
-                'idle-5',
-                'idle-6',
-            ]
+            frames: ['idle-1', 'idle-2', 'idle-3', 'idle-4', 'idle-5', 'idle-6']
         },
         {
             name: 'attack',
             frameLen: 0.1,
-            frames: [
-                'attack-1',
-                'attack-2',
-                'attack-3',
-            ]
+            frames: ['attack-1', 'attack-2', 'attack-3']
         },
 
         {
             name: 'death',
             frameLen: 0.1,
-            frames: [
-                'death-1',
-                'death-2',
-                'death-3',
-                'death-4',
-                'death-5',
-                'death-6',                
-            ]
+            frames: ['death-1', 'death-2', 'death-3', 'death-4', 'death-5', 'death-6']
         }
     ]
-}
+};

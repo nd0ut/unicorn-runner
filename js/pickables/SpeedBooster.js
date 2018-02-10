@@ -5,6 +5,10 @@ import { defineGameObject } from '../defineGameObject';
 
 const SPEED_BOOSTER = {
     imageURL: require('../../img/pickables/horseshoe.png'),
+    size: [45, 49],
+    offset: [0, 0],
+    skinName: 'default',
+
     frames: [
         {
             name: 'horseshoe-1',
@@ -110,9 +114,6 @@ class BehaviorSpeedBooster extends Trait {
 export const loadSpeedBooster = defineGameObject('speedBooster', {
     spriteSpecs: [SPEED_BOOSTER],
     soundSpecs: [],
-
-    size: [45, 49],
-    offset: [0, 0],
 
     traits: ({ sounds }) => [
         new Physics({ applyGravity: false }),
