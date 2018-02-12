@@ -86,7 +86,7 @@ class BehaviorSpeedBooster extends Trait {
         super('behavior');
 
         this.boost = 5000;
-        this.boostTime = 10000;
+        this.boostTime = 5000;
     }
 
     restoreSpeed(them) {
