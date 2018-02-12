@@ -41,7 +41,7 @@ export class LevelManager {
         this.stopLevel = undefined;
 
         this.showSplash = true;
-        this.finishDistance = 500;
+        this.finishDistance = 1500;
         this.fallDistance = 600;
 
         this.levelSelector = document.getElementById('current-level');
@@ -134,7 +134,7 @@ export class LevelManager {
 
             this.ufo = this.game.entityFactory.ufo({ napEntity: this.player });
             this.level.entities.add(this.ufo);
-            this.game.cameraController.focus.notice(this.ufo, 3000);
+            this.game.cameraController.focus.notice(this.ufo, 10000);
         }
     }
 

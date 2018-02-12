@@ -148,11 +148,19 @@ export class Run extends Trait {
     }
 
     stop() {
+        if(this.originSpeed) {
+            this.resume();
+        }
+
         this.originSpeed = this.speed;
         this.speed = 1;
     }
 
     resume() {
+        if(!this.originSpeed) {
+            return;
+        }
+        
         this.speed = this.originSpeed;
         this.originSpeed = undefined;
     }
