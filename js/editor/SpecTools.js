@@ -16,7 +16,7 @@ export function updateEntity(levelSpec, idx, specUpdates) {
 }
 
 export function createEntity(levelSpec, entitySpec) {
-    const idx = levelSpec.entities.length + 1;
+    const idx = levelSpec.entities.length;
     levelSpec.entities[idx] = entitySpec;
     return idx;
 }
