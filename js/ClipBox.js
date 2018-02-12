@@ -6,25 +6,25 @@ export class ClipBox {
     }
 
     overlaps(box) {
-        return this.bottom > box.top
-            && this.top < box.bottom
-            && this.left < box.right
-            && this.right > box.left;
+        return (
+            this.bottom > box.top &&
+            this.top < box.bottom &&
+            this.left < box.right &&
+            this.right > box.left
+        );
     }
 
     contains(pos) {
-        return this.bottom >= pos.y
-            && this.top <= pos.y
-            && this.left <= pos.x
-            && this.right >= pos.x
+        return (
+            this.bottom >= pos.y &&
+            this.top <= pos.y &&
+            this.left <= pos.x &&
+            this.right >= pos.x
+        );
     }
 
     clone() {
-        return new ClipBox(
-            Object.assign({}, this.pos),
-            Object.assign({}, this.size),
-            Object.assign({}, this.offset)
-        );
+        return new ClipBox(this.pos.clone(), this.size.clone(), this.offset.clone());
     }
 
     get width() {
