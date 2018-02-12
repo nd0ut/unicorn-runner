@@ -95,6 +95,43 @@ export class Stackable extends Trait {
     }
 }
 
+export class Impassable extends Trait {
+    constructor() {
+        super('impassable');
+        this.activated = true;
+    }
+    
+    activate() {
+        this.queue(() => this.activated = true);
+    }
+
+    deactivate() {
+        this.queue(() => this.activated = false);
+    }
+
+    collides(us, them, side) {
+        if(!this.activated) {
+            return;
+        }
+
+        if (side === Sides.BOTTOM) {
+            them.bounds.top = us.bounds.bottom;
+            them.vel.y = 0;
+        } else if (side === Sides.TOP) {
+            them.bounds.bottom = us.bounds.top;
+            them.vel.y = 0;
+        } else if (side === Sides.RIGHT) {
+            them.bounds.left = us.bounds.right;
+            them.vel.x = 0;
+        } else if (side === Sides.LEFT) {
+            them.bounds.right = us.bounds.left;
+            them.vel.x = 0;
+        }
+
+        them.obstruct(them, side);
+    }
+}
+
 export class Run extends Trait {
     constructor({ speed = 15000 }) {
         super('run');

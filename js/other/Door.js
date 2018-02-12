@@ -1,6 +1,6 @@
 import { Entity, Trait } from '../Entity';
 import { loadSpriteSheet } from '../loaders';
-import { Physics, Pickable, Solid } from '../Traits';
+import { Physics, Pickable, Solid, Impassable } from '../Traits';
 import { rand, Vec2 } from '../math';
 import { defineGameObject } from '../defineGameObject';
 
@@ -48,7 +48,17 @@ class BehaviorDoor extends Trait {
     }
 
     open() {
-        this.queue(() => this.opened = true);
+        this.queue(() => {
+            this.opened = true;
+            this.entity.impassable.deactivate();
+        });
+    }
+
+    close() {
+        this.queue(() => {
+            this.opened = false;
+            this.entity.impassable.activate();
+        });
     }
 
     update(entity, deltaTime, level) {
@@ -56,12 +66,21 @@ class BehaviorDoor extends Trait {
             this.openedTime += deltaTime;
         }
     }
+
+    collides(us, them, side) {
+        if(!this.opened) {
+            them.obstruct(them, side);
+        }
+    }
 }
 
 export const loadDoor = defineGameObject('door', {
     spriteSpecs: [DOOR],
 
-    traits: () => [new BehaviorDoor()],
+    traits: () => [
+        new Impassable(),
+        new BehaviorDoor()
+    ],
     animations: sprite => {
         const openAnim = sprite.animations.get('open');
 
