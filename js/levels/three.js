@@ -79,11 +79,13 @@ const spec = {
     ["default", 14, 7],
     ["default", 15, 7],
     ["default", 16, 7],
- 
+    ["grass", 40, 4],
+    ["grass", 41, 4],
+    ["grass", 42, 4],
+    ["grass", 43, 4],
+    ["grass", 44, 4]
   ],
-  entities: [
-  
-  ]
+  entities: []
 };
 
 export default defineLevel(spec, {
