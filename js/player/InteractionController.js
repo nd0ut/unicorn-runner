@@ -65,7 +65,9 @@ export class InteractionController extends Trait {
     }
 
     strikeFireballHandler(e) {
-        if (e.repeat || !this.playerController.canStrikeFireballs()) {
+        const down = e.type === 'keydown';
+
+        if (!down || !this.playerController.canStrikeFireballs()) {
             return;
         }
 
