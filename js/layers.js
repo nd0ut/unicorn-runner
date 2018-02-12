@@ -176,7 +176,7 @@ export function createDebugLayer(editor) {
             context.beginPath();
             context.strokeStyle = 'white';
             context.lineWidth = 2;
-            context.rect(tile.x1, tile.y1, tile.x2 - tile.x1, tile.y2 - tile.y1);
+            context.rect(tile.x1 - camera.pos.x, tile.y1 - camera.pos.y, tile.x2 - tile.x1, tile.y2 - tile.y1);
             context.stroke();
             context.closePath();
         }
