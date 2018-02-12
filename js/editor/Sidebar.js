@@ -169,7 +169,7 @@ function SelectionMode({ editor: { selection, interaction } }) {
 
     const type = tile ? 'tile' : 'entity';
     const pos = tile
-        ? `[${tile.indexX}, ${tile.indexY}]`
+        ? `[${tile.indexX}, ${tile.indexY}], [${tile.x1}, ${tile.y1}]`
         : `[${entity.pos.x}, ${entity.pos.y}]`;
 
     return (
