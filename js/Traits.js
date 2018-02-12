@@ -79,16 +79,16 @@ export class Stackable extends Trait {
             return;
         }
 
-        if (side === Sides.BOTTOM) {
+        if (us.vel.y > 0 && side === Sides.BOTTOM) {
             us.bounds.bottom = them.bounds.top;
             us.vel.y = 0;
-        } else if (side === Sides.TOP) {
+        } else if (us.vel.y < 0 && side === Sides.TOP) {
             us.bounds.top = them.bounds.bottom;
             us.vel.y = 0;
-        } else if (side === Sides.RIGHT) {
+        } else if (us.vel.x > 0 && side === Sides.RIGHT) {
             us.bounds.right = them.bounds.left;
             us.vel.x = 0;
-        } else if (side === Sides.LEFT) {
+        } else if (us.vel.x < 0 && side === Sides.LEFT) {
             us.bounds.left = them.bounds.right;
             us.vel.x = 0;
         }

@@ -10,8 +10,8 @@ export class EntityCollider {
             if (subject === candidate) {
                 return;
             }
-
-            if (subject.bounds.overlaps(candidate.bounds)) {
+            
+            if (subject.bounds.overlaps(candidate.bounds)) {                
                 const side =
                     this.getSideY(subject, candidate) ||
                     this.getSideX(subject, candidate);
@@ -21,38 +21,34 @@ export class EntityCollider {
     }
 
     getSideX(subject, candidate) {
-        const movingRight = subject.vel.x > 0;
-        const movingRightFaster = subject.vel.x > candidate.vel.x;
-        if (movingRight && movingRightFaster) {
-            if (subject.bounds.right > candidate.bounds.left) {
-                return Sides.RIGHT;
-            }
+        if (
+            subject.bounds.left > candidate.bounds.left &&
+            subject.bounds.left < candidate.bounds.right
+        ) {
+            return Sides.LEFT;
         }
 
-        const movingLeft = subject.vel.x < 0;
-        const movingLeftFaster = subject.vel.x < candidate.vel.x;
-        if (movingLeft && movingLeftFaster) {
-            if (subject.bounds.left < candidate.bounds.right) {
-                return Sides.LEFT;
-            }
+        if (
+            subject.bounds.right < candidate.bounds.right &&
+            subject.bounds.right > candidate.bounds.left
+        ) {
+            return Sides.RIGHT;
         }
     }
 
-    getSideY(subject, candidate) {
-        const movingDown = subject.vel.y > 0;
-        const movingDownFaster = subject.vel.y > candidate.vel.y;
-        if (movingDown && movingDownFaster) {
-            if (subject.bounds.bottom > candidate.bounds.top) {
-                return Sides.BOTTOM;
-            }
-        } 
+    getSideY(subject, candidate) {        
+        if (
+            subject.bounds.top > candidate.bounds.top &&
+            subject.bounds.top < candidate.bounds.bottom
+        ) {
+            return Sides.TOP;
+        }
 
-        const movingUp = subject.vel.y < 0;
-        const movingUpFaster = subject.vel.y < candidate.vel.y;
-        if (movingUp && movingUpFaster) {
-            if (subject.bounds.top < candidate.bounds.bottom) {
-                return Sides.TOP;
-            }
+        if (
+            subject.bounds.bottom < candidate.bounds.bottom &&
+            subject.bounds.bottom > candidate.bounds.top
+        ) {
+            return Sides.BOTTOM;
         }
     }
 }
