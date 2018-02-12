@@ -490,14 +490,36 @@ const spec = {
   ]
 };
 
-export default defineLevel(spec, {
-  onStart: (game, level) => {
-    // level.sounds.get('music').playOnce();
-  },
-  afterUpdate: (game, level) => {
-    checkDoor1(game, level);
+export default defineLevel(spec, createLevelOptions());
+
+function createLevelOptions() {
+  const checkFirstMana = firstManaChecker();
+
+  return {
+    onStart: (game, level) => {
+      // level.sounds.get('music').playOnce();
+    },
+    afterUpdate: (game, level) => {
+      checkFirstMana(game, level);
+      checkDoor1(game, level);
+    }
   }
-});
+}
+
+function firstManaChecker() {
+  let firstJumpReached = false;
+
+  return (game, level) => {
+      const player = game.playerEnv.playerController.player;
+      const firstJumpX = 1200;
+
+      const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
+      if (!firstJumpReached && nearFirstJump) {
+          firstJumpReached = true;
+          splashText('press f to fire', { size: 50, timeout: 2000 });
+      }
+  };
+}
 
 function checkDoor1(game, level) {
   const targetIds = ["target-1", "target-2", "target-3"];

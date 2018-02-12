@@ -283,5 +283,21 @@ const spec = {
 export default defineLevel(spec, {
     onStart: (game, level) => {
         // level.sounds.get('music').playOnce();
-    }
+    },
+    afterUpdate: onAfterUpdate()
 });
+
+function onAfterUpdate() {
+    let firstJumpReached = false;
+
+    return (game, level) => {
+        const player = game.playerEnv.playerController.player;
+        const firstJumpX = 500;
+
+        const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
+        if (!firstJumpReached && nearFirstJump) {
+            firstJumpReached = true;
+            splashText('press space to jump', { size: 50, timeout: 2000 });
+        }
+    };
+}
