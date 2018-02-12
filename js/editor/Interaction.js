@@ -21,7 +21,7 @@ export class Interaction {
         this.editor.mouse.on(MouseEvents.MOVE, this.onMove.bind(this));
         this.editor.mouse.on(MouseEvents.WHEEL, this.onWheel.bind(this));
 
-        window.addEventListener('keypress', this.onKeyPress.bind(this));
+        window.addEventListener('keydown', this.onKeyPress.bind(this));
 
         this.dragging = {};
         this.createEntityName = undefined;
@@ -55,10 +55,6 @@ export class Interaction {
     }
 
     onKeyPress(e) {
-        if (e.repeat) {
-            return;
-        }
-
         switch (e.code) {
             case 'KeyT':
                 this.editor.paused ? this.editor.resume() : this.editor.pause();
@@ -75,8 +71,11 @@ export class Interaction {
             case 'KeyE':
                 this.setMode(InteractionMode.ENTITY);
                 break;
-            case 'KeyE':
-                this.setMode(InteractionMode.ENTITY);
+            case 'ArrowRight':
+                this.setCamPos(this.cam.pos.x + 500, this.cam.pos.y);
+                break;
+            case 'ArrowLeft':
+                this.setCamPos(this.cam.pos.x - 500, this.cam.pos.y);
                 break;
             default:
                 break;
@@ -239,7 +238,6 @@ export class Interaction {
             pos: [x, y],
             skinName: this.createEntitySkinName
         });
-
         entity.pos.set(x, y);
         entity.idx = idx;
 
