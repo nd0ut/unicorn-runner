@@ -83,14 +83,13 @@ export class PlayerController extends Trait {
     }
 
     commitScore() {
-        this.totalScore = this.score;
+        this.totalScore += this.score;
         this.resetScore();
     }
 
     resetScore() {
         this.score = 0;
         this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
-        
     }
 
     resetMana() {
