@@ -1,12 +1,7 @@
-import {
-    createBackgroundLayer,
-    createSpriteLayer,
-    createStaticBackgroundLayer
-} from './layers';
+import { createBackgroundLayer, createSpriteLayer, createStaticBackgroundLayer } from './layers';
 import { Level } from './Level';
-import { loadImages, loadSpriteSheet } from './loaders';
+import { loadImages, loadSounds, loadSpriteSheet } from './loaders';
 import { Matrix } from './math';
-import { SoundManager } from './SoundManager';
 
 function setupTileGrid(levelSpec, level) {
     const tileGrid = createTileGrid(levelSpec.tiles);
@@ -50,10 +45,6 @@ function setupSounds(level, sounds) {
     level.sounds = sounds;
 }
 
-function loadSounds(levelSpec) {
-    return levelSpec.sounds ? SoundManager.loadSounds(levelSpec.sounds) : undefined;
-}
-
 export function createLevelLoader(entityFactory) {
     return function loadLevel(levelSpec) {
         return Promise.resolve(levelSpec)
@@ -63,7 +54,7 @@ export function createLevelLoader(entityFactory) {
                     loadImages(levelSpec.background.images),
                     levelSpec.background.gradient,
                     loadSpriteSheet(levelSpec.tileSprite),
-                    loadSounds(levelSpec)
+                    levelSpec.sounds && loadSounds(levelSpec)
                 ])
             )
             .then(

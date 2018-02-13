@@ -1,4 +1,4 @@
-import { SoundManager, BufferLoader } from './SoundManager';
+import { SoundContext } from './SoundContext';
 import { SpriteSheet } from './SpriteSheet';
 import { Sound } from './Sound';
 
@@ -68,7 +68,7 @@ export function loadSpriteSheet(sheetSpec) {
 export function loadSounds(soundSpec) {
     return Promise.resolve(soundSpec)
         .then(soundSpec =>
-            Promise.all([soundSpec, SoundManager.loadSounds(soundSpec.sounds)])
+            Promise.all([soundSpec, SoundContext.loadSounds(soundSpec.sounds)])
         )
         .then(([soundSpec, sounds]) => {
             return Object.assign(sounds, {

@@ -1,6 +1,6 @@
 import { Entity, Trait } from '../Entity';
 import { Physics, Pickable, Solid, Soundable } from '../Traits';
-import { loadSpriteSheet, loadSounds } from '../loaders';
+import { loadSpriteSheet } from '../loaders';
 import { defineGameObject } from '../defineGameObject';
 
 const RAINBOW_SPRITE = {

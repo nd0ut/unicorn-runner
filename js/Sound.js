@@ -1,9 +1,8 @@
 export class Sound {
-    constructor(soundManager, sound) {
-        this.soundManager = soundManager;
-
-        this.name = sound.name;
-        this.buffer = sound.buffer;
+    constructor(name, buf, createSource) {
+        this.name = name;
+        this.buffer = buf;
+        this.createSource = createSource;
 
         this.isPlaying = false;
         this.timeoutId = undefined;
@@ -12,31 +11,37 @@ export class Sound {
     }
 
     playOnce() {
-        const { gainNode, source } = this.soundManager.play(this);
+        const { gainNode, source } = this.createSource(this.buffer);
         this.gainNode = gainNode;
         this.source = source;
+
+        this.source.start(0);        
         this.isPlaying = true;
     }
 
     playLoop() {
-        const { gainNode, source } = this.soundManager.play(this, { loop: true });
+        const { gainNode, source } = this.createSource(this.buffer, { loop: true });
         this.gainNode = gainNode;
         this.source = source;
+
+        this.source.start(0);
         this.isPlaying = true;
     }
 
     startPlaying(options) {
-        const { gainNode, source } = this.soundManager.play(this, options);
+        const { gainNode, source } = this.createSource(this.buffer, options);
         this.gainNode = gainNode;
         this.source = source;
+
+        this.source.start(0);        
         this.isPlaying = true;
     }
 
     stop() {
-        if(this.source) {
+        if (this.source) {
             this.source.stop();
         }
-        
+
         this.isPlaying = false;
     }
 
