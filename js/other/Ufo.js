@@ -29,6 +29,8 @@ class BehaviorUfo extends Trait {
         this.napEntity = napEntity;
 
         this.catched = false;
+        this.catchTime = 0;
+
         this.spawned = false;
     }
 
@@ -37,32 +39,35 @@ class BehaviorUfo extends Trait {
         this.spawned = true;
     }
 
-    catch() {
+    catch(deltaTime) {
         this.catched = true;
+        this.catchTime = deltaTime;
 
         this.napEntity.removeTrait('solid');
         this.napEntity.removeTrait('physics');
     }
 
     canCatch() {
-        const ufoCenter = this.entity.pos.x + this.entity.size.x / 2;
-        const napCenter = this.napEntity.pos.x + this.napEntity.size.x / 2;
-        const canCatch = Math.abs(ufoCenter - napCenter) < 100;
-
+        const ufoCenter = this.entity.bounds.left + this.entity.bounds.width / 2;
+        const napCenter = this.napEntity.bounds.left + this.napEntity.bounds.width / 2;
+        const canCatch = ufoCenter - napCenter > 0;
         return canCatch;
     }
 
     abduct() {
+        const ufoCenterX = this.entity.bounds.left + this.entity.bounds.width / 2;
+
         this.entity.vel.y -= 50;
         this.entity.vel.x = 300;
 
-        this.napEntity.pos.y = this.entity.pos.y + this.entity.size.y - this.napEntity.size.y;
-        this.napEntity.pos.x = this.entity.pos.x + this.entity.size.x / 6;
+        this.napEntity.pos.x = ufoCenterX - this.napEntity.bounds.width / 2;
+        this.napEntity.pos.y = this.entity.bounds.bottom - this.napEntity.bounds.height;
     }
 
     alignTarget() {
-        this.entity.vel.x += 50;
-        this.entity.pos.y = this.napEntity.pos.y + this.napEntity.size.y / 2 - this.entity.size.y;
+        this.entity.vel.x += 1;
+        this.entity.bounds.bottom =
+            this.napEntity.bounds.top + this.napEntity.bounds.height / 2;
     }
 
     update(entity, deltaTime, level) {
@@ -70,10 +75,10 @@ class BehaviorUfo extends Trait {
             this.spawn();
         }
 
-        if(!this.catched) {
+        if (!this.catched) {
             this.alignTarget();
 
-            this.canCatch() && this.catch();
+            this.canCatch() && this.catch(deltaTime);
         }
 
         if (this.catched) {
@@ -93,7 +98,7 @@ export const loadUfo = defineGameObject('ufo', {
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');
 
-        return (entity) => {
+        return entity => {
             return idleAnim(entity.lifetime);
         };
     }
