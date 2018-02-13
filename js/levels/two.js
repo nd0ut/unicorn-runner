@@ -4,7 +4,7 @@ import { defineLevel } from "./defineLevel";
 import { clamp } from "../math";
 
 const spec = {
-  name: "shoot'em all",
+  name: "shooting",
   spawn: [96, 64],
   background: {
     images: {
@@ -493,20 +493,20 @@ const spec = {
 export default defineLevel(spec, createLevelOptions());
 
 function createLevelOptions() {
-  const checkFirstMana = firstManaChecker();
+  const howToSplash = howToSplasher();
 
   return {
     onStart: (game, level) => {
       // level.sounds.get('music').playOnce();
     },
     afterUpdate: (game, level) => {
-      checkFirstMana(game, level);
+      howToSplash(game, level);
       checkDoor1(game, level);
     }
   }
 }
 
-function firstManaChecker() {
+function howToSplasher() {
   let firstJumpReached = false;
 
   return (game, level) => {
