@@ -79,7 +79,7 @@ export function createStaticBackgroundLayer(level, backgroundSprites, getGradien
         const BackImage = images.BackImage;
         const FrontImage = images.FrontImage;
 
-        const backMargin = 1000;
+        const skyMargin = 500;
         const widthMetric = FrontImage || BackImage || SkyImage;
         const count = Math.floor(level.distance / (widthMetric ? widthMetric.width : 1)) + 5;
 
@@ -94,7 +94,7 @@ export function createStaticBackgroundLayer(level, backgroundSprites, getGradien
         for (let i = 0; i < count; i++) {
             SkyImage && context.drawImage(
                 SkyImage,
-                SkyCoordX + SkyImage.width * i + backMargin,
+                SkyCoordX + SkyImage.width * i + i * skyMargin,
                 SkyCoordY
             );
             BackImage && context.drawImage(
