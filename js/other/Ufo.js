@@ -35,14 +35,14 @@ class BehaviorUfo extends Trait {
     }
 
     spawn() {
-        this.entity.pos.x = this.napEntity.pos.x - 2000;
+        this.entity.pos.x = this.napEntity.pos.x - 1500;
         this.spawned = true;
     }
 
     catch(deltaTime) {
         this.catched = true;
         this.catchTime = deltaTime;
-
+        
         this.napEntity.removeTrait('solid');
         this.napEntity.removeTrait('physics');
     }
@@ -58,14 +58,17 @@ class BehaviorUfo extends Trait {
         const ufoCenterX = this.entity.bounds.left + this.entity.bounds.width / 2;
 
         this.entity.vel.y -= 50;
-        this.entity.vel.x = 300;
+        
+        if(this.entity.vel.x > 100) {
+            this.entity.vel.x -= 100;
+        }
 
         this.napEntity.pos.x = ufoCenterX - this.napEntity.bounds.width / 2;
         this.napEntity.pos.y = this.entity.bounds.bottom - this.napEntity.bounds.height;
     }
 
     alignTarget() {
-        this.entity.vel.x += 1;
+        this.entity.vel.x += 100;
         this.entity.bounds.bottom =
             this.napEntity.bounds.top + this.napEntity.bounds.height / 2;
     }

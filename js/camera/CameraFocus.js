@@ -74,14 +74,17 @@ export class CameraFocus extends CameraExt {
         this.cam.pos.y = Math.min(entityY, 0);
     }
 
-    notice(noticeEntity, time) {
+    notice(noticeEntity, time, xOffset) {
         this.noticeState = NoticeState.NOTICE_STARTED;
 
         this.noticeEntity = noticeEntity;
         this.noticeTime = time;
         this.entity = noticeEntity;
         this.followEntity.run.stop();
-        this.camOffset.x = this.cam.size.x / 3;
+
+        if(xOffset) {
+            this.camOffset.x = xOffset;
+        }
 
         return new Promise(res => {
             this.noticeResolver = res;
