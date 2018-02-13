@@ -30,6 +30,10 @@ export class InteractionController extends Trait {
     }
 
     keyHandler(e) {
+        if(!this.playerController.player) {
+            return;
+        }
+        
         this.boostHandler(e);
 
         switch (e.code) {

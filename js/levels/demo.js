@@ -71,6 +71,42 @@ const spec = {
     entities
 };
 
+function initPlayButton(game) {
+    const playBtn = document.querySelector('.play-btn');
+    playBtn.style.visibility = 'visible';
+
+    playBtn.addEventListener('click', onPlayClick);
+    playBtn.addEventListener('mouseover', onPlayHover);
+    playBtn.addEventListener('mouseout', onPlayUnhover);
+    window.addEventListener('keydown', onKeyDown)
+
+    async function start() {
+        document.querySelector('.play-block').remove();
+        window.removeEventListener('keydown', onKeyDown);
+        
+        await game.levelManager.nextLevel();
+        game.canvasSelector.classList.toggle('blur', false);
+    }
+
+    function onPlayClick() {
+        start();
+    };
+
+    function onPlayHover() {
+        game.canvasSelector.classList.toggle('blur', true);
+    };
+
+    function onPlayUnhover() {
+        game.canvasSelector.classList.toggle('blur', false);
+    };
+
+    function onKeyDown(e) {
+        if(e.code === 'Space') {
+            start();
+        }
+    }
+}
+
 async function init(game) {
     const level = await game.loadLevel(spec);
 
@@ -81,8 +117,7 @@ async function init(game) {
     level.entities.add(playerEnv);
     level.entities.forEach(entity => entity.addTrait(new Physics()));
 
-    const playBtn = document.querySelector('.play-btn');
-    playBtn.style.visibility = 'visible';
+    initPlayButton(game);
 
     function checkFinish() {
         if (unicorn.pos.x > level.distance) {
@@ -103,24 +138,6 @@ async function init(game) {
             game.cameraController.update(deltaTime, time, level);
             level.comp.draw(game.context, game.camera);
         };
-
-        const onPlayClick = async () => {
-            document.querySelector('.play-block').remove();
-            await game.levelManager.nextLevel();
-            game.canvasSelector.classList.toggle('blur', false);
-        };
-
-        const onPlayHover = () => {
-            game.canvasSelector.classList.toggle('blur', true);
-        };
-
-        const onPlayUnhover = () => {
-            game.canvasSelector.classList.toggle('blur', false);
-        };
-
-        playBtn.addEventListener('click', onPlayClick);
-        playBtn.addEventListener('mouseover', onPlayHover);
-        playBtn.addEventListener('mouseout', onPlayUnhover);
     }
 
     function stopLevel() {
