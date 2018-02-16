@@ -1,6 +1,6 @@
 import { defineGameObject } from '../defineGameObject';
 import { Entity } from '../Entity';
-import { Jump, Killable, Physics, Picker, Run, Solid, Striker } from '../Traits';
+import { Jump, Killable, Physics, Picker, Run, Solid, Striker, Killer } from '../Traits';
 
 const UNICORN_SPRITE = {
     imageURL: require('../../img/unicorn.png'),
@@ -278,20 +278,15 @@ export const loadUnicorn = defineGameObject('unicorn', {
     spriteSpecs: [UNICORN_SPRITE],
     soundSpecs: [UNICORN_SOUNDS],
 
-    // drawBounds: true,
-
-    afterCreate: entity => {
-        entity.killable.removeAfter = 1;
-    },
-
-    traits: () => [
+    traits: ({ speed }) => [
         new Physics(),
         new Solid(),
-        new Run({speed: 15000}),
+        new Run({ speed: speed || 15000 }),
         new Jump(),
         new Picker(),
-        new Killable(),
-        new Striker()
+        new Killable({ removeAfter: 1 }),
+        new Striker(),
+        new Killer()
     ],
     animations,
     sounds

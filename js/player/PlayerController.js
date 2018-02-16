@@ -1,7 +1,7 @@
 import { Trait } from '../Entity';
 import { LevelEvents } from '../LevelManager';
 import { Vec2 } from '../math';
-import { splashText } from '../Splash';
+import { splash } from '../Splash';
 
 export class PlayerController extends Trait {
     constructor(game) {
@@ -15,7 +15,9 @@ export class PlayerController extends Trait {
 
         this.totalScore = 0;
         this.score = 0;
-        this.mana = 0;    
+        this.mana = 0;
+        this.kills = 0;
+        this.deaths = 0;
 
         this.fireballsSelector = document.getElementById('current-fireballs');
         this.scoreSelector = document.getElementById('unicorn-score');
@@ -26,8 +28,10 @@ export class PlayerController extends Trait {
     setPlayer(entity) {
         this.player = entity;
 
-        this.player.picker.onPick = this.onPick.bind(this);
-        this.player.striker.onStrike = this.onStrike.bind(this);
+        this.player.picker.on('pick', this.onPick.bind(this));
+        this.player.striker.on('strike', this.onStrike.bind(this));
+        this.player.killer.on('kill', this.onKill.bind(this));
+        this.player.killable.on('dead', this.onDead.bind(this));
     }
 
     onPick(picker, pickable) {
@@ -48,6 +52,14 @@ export class PlayerController extends Trait {
         this.updateUiCounts(this.fireballsSelector, this.mana);
     }
 
+    onKill() {
+        this.kills++;
+    }
+
+    onDead() {
+        this.deaths++;
+    }
+
     updateUiCounts(selector, count) {
         setTimeout(() => {
             selector.innerHTML = Math.ceil(count);
@@ -59,7 +71,7 @@ export class PlayerController extends Trait {
         const haveMana = this.mana > 0;
 
         if (!haveMana) {
-            splashText('no mana', {
+            splash('no mana', {
                 timeout: 1000,
                 size: 30
             });
@@ -73,7 +85,7 @@ export class PlayerController extends Trait {
         const haveMana = this.mana > 0;
 
         if (alive && this.mana === 0) {
-            splashText('no mana', {
+            splash('no mana', {
                 timeout: 1000,
                 size: 30
             });
@@ -94,7 +106,7 @@ export class PlayerController extends Trait {
 
     resetMana() {
         this.mana = 0;
-        this.updateUiCounts(this.fireballsSelector, this.mana);        
+        this.updateUiCounts(this.fireballsSelector, this.mana);
     }
 
     update(entity, deltaTime, level) {
@@ -108,25 +120,25 @@ export class PlayerController extends Trait {
             return;
         }
 
-        if(this.player.run.boosted) {
+        if (this.player.run.boosted) {
             this.mana -= deltaTime;
 
-            if(this.mana <= 0) {
+            if (this.mana <= 0) {
                 this.player.run.cancelBoost();
                 this.mana = 0;
             }
 
-            if(this.player.jump.inAir) {
-                this.player.run.cancelBoost();                
+            if (this.player.jump.inAir) {
+                this.player.run.cancelBoost();
             }
-            
+
             this.updateUiCounts(this.fireballsSelector, this.mana);
         }
     }
 
-    onLevelFinished() {
+    onLevelFinished({ isLastLevel }) {
         this.commitScore();
-        this.resetMana();        
+        this.resetMana();
     }
 
     onLevelFailed() {

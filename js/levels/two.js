@@ -1,4 +1,4 @@
-import { splashText } from "../Splash";
+import { splash } from "../Splash";
 import { Striker } from "../Traits";
 import { defineLevel } from "./defineLevel";
 import { clamp } from "../math";
@@ -516,7 +516,7 @@ function howToSplasher() {
       const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
       if (!firstJumpReached && nearFirstJump) {
           firstJumpReached = true;
-          splashText('press f to fire', { size: 50, timeout: 2000 });
+          splash('press f to fire', { size: 50, timeout: 2000 });
       }
   };
 }

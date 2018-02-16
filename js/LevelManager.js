@@ -1,5 +1,5 @@
 import levels from './levels';
-import { splashText } from './Splash';
+import { splash } from './Splash';
 import { EventEmitter } from './util';
 
 const LevelState = {
@@ -21,7 +21,7 @@ export class LevelManager {
         this.game = game;
 
         const loadLastLevel = false;
-        const showDemoLevel = true;
+        const showDemoLevel = false;
 
         let currentLevel = showDemoLevel ? 0 : 1;
 
@@ -29,7 +29,7 @@ export class LevelManager {
             const lastLevel = localStorage.getItem('levelIdx')
                 ? parseInt(localStorage.getItem('levelIdx'))
                 : undefined;
-            
+
             currentLevel = lastLevel || currentLevel;
         }
 
@@ -81,7 +81,7 @@ export class LevelManager {
         this.stopLevel = stopLevel;
 
         if (this.showSplash && level.name) {
-            await splashText(level.name);
+            await splash(level.name);
         }
         this.game.canvasSelector.classList.toggle('black', false);
 
@@ -121,7 +121,7 @@ export class LevelManager {
             return;
         }
 
-        const animationEnd = this.player.pos.y + this.player.size.y < -100;
+        const animationEnd = this.player.pos.y + this.player.size.y < -500;
 
         if (animationEnd) {
             this.levelState = LevelState.FINISHED;
@@ -143,6 +143,10 @@ export class LevelManager {
         const fall = this.player.pos.y > this.fallDistance;
         const levelFailed = death || fall;
 
+        if (fall) {
+            this.player.killable.kill();
+        }
+
         if (levelFailed) {
             this.onFail();
             this.levelState = LevelState.FAILED;
@@ -150,7 +154,9 @@ export class LevelManager {
     }
 
     onFinish() {
-        this.emit(LevelEvents.FINISHED);
+        const isLastLevel = this.levelIdx === this.levels.length - 1;
+
+        this.emit(LevelEvents.FINISHED, { isLastLevel });
     }
 
     onFail() {

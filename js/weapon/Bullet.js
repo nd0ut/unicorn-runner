@@ -61,7 +61,6 @@ class BehaviorBullet extends Trait {
 
         this.ownerEntity = ownerEntity;
         this.destroyed = false;
-        this.removeAfter = 0.3;
     }
 
     destroy() {
@@ -87,6 +86,7 @@ class BehaviorBullet extends Trait {
             return;
         }
 
+        this.ownerEntity.killer && this.ownerEntity.killer.kill(them);
         them.killable.kill();
     }
 }

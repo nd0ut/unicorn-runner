@@ -1,6 +1,7 @@
 import { Trait } from './Entity';
 import { Sides } from './Entity';
 import { lerp } from './math';
+import { EventEmitter } from './util';
 
 export class Physics extends Trait {
     constructor({ applyGravity } = { applyGravity: true }) {
@@ -100,17 +101,17 @@ export class Impassable extends Trait {
         super('impassable');
         this.activated = true;
     }
-    
+
     activate() {
-        this.queue(() => this.activated = true);
+        this.queue(() => (this.activated = true));
     }
 
     deactivate() {
-        this.queue(() => this.activated = false);
+        this.queue(() => (this.activated = false));
     }
 
     collides(us, them, side) {
-        if(!this.activated) {
+        if (!this.activated) {
             return;
         }
 
@@ -148,7 +149,7 @@ export class Run extends Trait {
     }
 
     stop() {
-        if(this.originSpeed) {
+        if (this.originSpeed) {
             this.resume();
         }
 
@@ -157,10 +158,10 @@ export class Run extends Trait {
     }
 
     resume() {
-        if(!this.originSpeed) {
+        if (!this.originSpeed) {
             return;
         }
-        
+
         this.speed = this.originSpeed;
         this.originSpeed = undefined;
     }
@@ -287,15 +288,21 @@ export class Jump extends Trait {
     }
 }
 
+@EventEmitter.decorator
 export class Killable extends Trait {
-    constructor() {
+    constructor({ removeAfter } = {}) {
         super('killable');
         this.dead = false;
         this.deadTime = 0;
-        this.removeAfter = 0.3;
+        this.removeAfter = removeAfter !== undefined ? removeAfter : 0.3;
     }
 
     kill() {
+        if(this.dead) {
+            return;
+        }
+        
+        this.emit('dead');
         this.queue(() => (this.dead = true));
     }
 
@@ -320,17 +327,30 @@ export class Killable extends Trait {
     }
 }
 
+@EventEmitter.decorator
+export class Killer extends Trait {
+    constructor() {
+        super('killer');
+    }
+
+    kill(victim) {
+        this.emit('kill', victim);
+    }
+}
+
+@EventEmitter.decorator
 export class Pickable extends Trait {
     constructor({ onPick } = {}) {
         super('pickable');
-        this.onPick = onPick;
         this.picked = false;
         this.pickTime = 0;
         this.removeAfter = 0.3;
+
+        onPick && this.on('pick', onPick);
     }
 
     pick() {
-        this.onPick && this.onPick();
+        this.emit('pick');
         this.queue(() => (this.picked = true));
     }
 
@@ -346,10 +366,10 @@ export class Pickable extends Trait {
     }
 }
 
+@EventEmitter.decorator
 export class Picker extends Trait {
     constructor() {
         super('picker');
-        this.onPick = function() {};
     }
 
     collides(us, them) {
@@ -357,10 +377,11 @@ export class Picker extends Trait {
             return;
         }
 
-        this.onPick(us, them);
+        this.emit('pick', us, them)
     }
 }
 
+@EventEmitter.decorator
 export class Striker extends Trait {
     constructor() {
         super('striker');
@@ -368,8 +389,6 @@ export class Striker extends Trait {
         this.reloadDuration = 0.1;
         this.canStrike = true;
         this.strikeTime = 0;
-
-        this.onStrike = undefined;
     }
 
     isStriking() {
@@ -389,7 +408,7 @@ export class Striker extends Trait {
         this.canStrike = false;
         this.strikeTime = 0;
 
-        this.onStrike && this.onStrike(bullet);
+        this.emit('stike', bullet);
     }
 
     update(entity, deltaTime, level) {

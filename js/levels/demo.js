@@ -11,7 +11,7 @@ function getEntities() {
 
     const entities = Array.from(Array(N)).map((val, idx) => ({
         name: choose[rand.int(0, choose.length - 1)],
-        pos: [idx * rand.int(100, 2000) + 500, -1000]
+        pos: [idx * rand.int(1000, 2000) + 500, -1000]
     }));
 
     return entities;
@@ -23,8 +23,8 @@ function getRanges() {
     let x = 0;
 
     const ranges = Array.from(Array(N)).map(() => {
-        mul = h === -7 ? 1 : mul;
-        mul = h === 7 ? -1 : mul;
+        mul = h === -3 ? 1 : mul;
+        mul = h === 9 ? -1 : mul;
 
         const platformWidth = rand.int(15, 30);
 
@@ -78,30 +78,30 @@ function initPlayButton(game) {
     playBtn.addEventListener('click', onPlayClick);
     playBtn.addEventListener('mouseover', onPlayHover);
     playBtn.addEventListener('mouseout', onPlayUnhover);
-    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keydown', onKeyDown);
 
     async function start() {
         document.querySelector('.play-block').remove();
         window.removeEventListener('keydown', onKeyDown);
-        
+
         await game.levelManager.nextLevel();
         game.canvasSelector.classList.toggle('blur', false);
     }
 
     function onPlayClick() {
         start();
-    };
+    }
 
     function onPlayHover() {
         game.canvasSelector.classList.toggle('blur', true);
-    };
+    }
 
     function onPlayUnhover() {
         game.canvasSelector.classList.toggle('blur', false);
-    };
+    }
 
     function onKeyDown(e) {
-        if(e.code === 'Space') {
+        if (e.code === 'Space') {
             start();
         }
     }
@@ -110,7 +110,7 @@ function initPlayButton(game) {
 async function init(game) {
     const level = await game.loadLevel(spec);
 
-    const unicorn = game.entityFactory.unicorn();
+    const unicorn = game.entityFactory.unicorn({ speed: 30000 });
     unicorn.addTrait(new AutoJump());
 
     const playerEnv = createPlayerEnv(game);

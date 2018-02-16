@@ -1,4 +1,4 @@
-import { splashText } from "../Splash";
+import { splash } from "../Splash";
 import { Striker } from "../Traits";
 import { defineLevel } from "./defineLevel";
 import { clamp } from "../math";
@@ -349,7 +349,7 @@ function onAfterUpdate() {
     const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
     if (!firstJumpReached && nearFirstJump) {
       firstJumpReached = true;
-      splashText("press space to jump", { size: 50, timeout: 2000 });
+      splash("press space to jump", { size: 50, timeout: 2000 });
     }
   };
 }

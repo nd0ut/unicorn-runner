@@ -1,4 +1,4 @@
-import { splashText } from "../Splash";
+import { splash } from "../Splash";
 import { Striker } from "../Traits";
 import { defineLevel } from "./defineLevel";
 import { clamp } from "../math";
@@ -134,7 +134,7 @@ function howToSplasher() {
     const nearDistance = Math.abs(player.pos.x - distance) < 10;
     if (!distanceReached && nearDistance) {
       distanceReached = true;
-      splashText("press shift to boost", { size: 50, timeout: 2000 });
+      splash("press shift to boost", { size: 50, timeout: 2000 });
     }
   };
 }
