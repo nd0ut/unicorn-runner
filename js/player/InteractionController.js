@@ -31,10 +31,10 @@ export class InteractionController extends Trait {
     }
 
     keyHandler(e) {
-        if(!this.playerController.player) {
+        if (!this.playerController.player) {
             return;
         }
-        
+
         this.handleKeyEvent(e);
 
         switch (e.code) {
@@ -49,28 +49,36 @@ export class InteractionController extends Trait {
     }
 
     handleKeyEvent(e) {
-        const shiftPressed = e.shiftKey;        
-        this.shiftPressed = shiftPressed;        
+        const shiftPressed = e.shiftKey;
+        this.shiftPressed = shiftPressed;
     }
 
     boostChecker() {
         const unicorn = this.playerController.player;
 
         if (unicorn.killable.dead || unicorn.jump.inAir) {
-            unicorn.run.cancelBoost();            
+            unicorn.run.cancelBoost();
             return;
         }
 
-        if (this.shiftPressed && this.playerController.canBoost() && !unicorn.run.boosted) {
+        if (
+            this.shiftPressed &&
+            this.playerController.canBoost() &&
+            !unicorn.run.boosted
+        ) {
             unicorn.run.boost(30000);
         }
 
-        if(!this.shiftPressed && unicorn.run.boosted) {
-            unicorn.run.cancelBoost();                        
+        if (!this.shiftPressed && unicorn.run.boosted) {
+            unicorn.run.cancelBoost();
         }
     }
 
     strikeFireballHandler(e) {
+        if (e.repeat) {
+            return;
+        }
+
         const down = e.type === 'keydown';
 
         if (!down || !this.playerController.canStrikeFireballs()) {
@@ -101,10 +109,10 @@ export class InteractionController extends Trait {
     }
 
     update() {
-        if(!this.playerController.player) {
+        if (!this.playerController.player) {
             return;
         }
-        
+
         this.boostChecker();
     }
 }
