@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel game.html --no-hmr",
-    "editor": "parcel editor.html --no-hmr & node js/editor/server.js"
+    "editor": "parcel editor.html --no-hmr & node js/editor/server.js",
+    "build": "parcel build game.html --public-url ./"
   },
   "dependencies": {
     "@koa/cors": "2",
@@ -22,5 +23,8 @@
     "koa-router": "^7.4.0",
     "preact": "^8.2.7",
     "prettier": "^1.10.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0"
   }
 }
