@@ -130,6 +130,27 @@ export class PlayerController extends Trait {
 
             this.updateUiCounts(this.fireballsSelector, this.mana);
         }
+
+        if(!level.paused) {
+            this.stuckDetector(entity, deltaTime, level);
+        }
+    }
+
+    stuckDetector(entity, deltaTime, level) {
+        if(this.lastPlayerX === this.player.pos.x) {
+            this.samePosTime += deltaTime;
+        } else {
+            this.samePosTime = 0;
+            this.stuck = false;
+        }
+
+        if (!this.stuck && this.samePosTime > 2) {
+            this.stuck = true;
+            this.game.levelManager.restartLevel();
+            return;
+        }
+
+        this.lastPlayerX = this.player.pos.x;
     }
 
     onLevelFinished({ isLastLevel }) {
