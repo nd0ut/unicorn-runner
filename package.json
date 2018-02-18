@@ -8,7 +8,8 @@
   "scripts": {
     "start": "parcel game.html --no-hmr",
     "editor": "parcel editor.html --no-hmr & node js/editor/server.js",
-    "build": "parcel build game.html --public-url ./"
+    "build": "parcel build game.html --public-url ./",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@koa/cors": "2",
