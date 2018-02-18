@@ -24,9 +24,10 @@ const UFO_SPRITE = {
 };
 
 class BehaviorUfo extends Trait {
-    constructor(napEntity) {
+    constructor(napEntity, sounds) {
         super('ufoBehavior');
         this.napEntity = napEntity;
+        this.sounds = sounds;
 
         this.catched = false;
         this.catchTime = 0;
@@ -37,6 +38,8 @@ class BehaviorUfo extends Trait {
     spawn() {
         this.entity.pos.x = this.napEntity.pos.x - 1500;
         this.spawned = true;
+
+        this.sounds.get('ufo').playOnce();
     }
 
     catch(deltaTime) {
@@ -90,13 +93,23 @@ class BehaviorUfo extends Trait {
     }
 }
 
+const UFO_SOUNDS = {
+    sounds: [
+        {
+            url: require('../../sounds/ufo.wav'),
+            name: 'ufo'
+        }
+    ]
+};
+
 export const loadUfo = defineGameObject('ufo', {
     spriteSpecs: [UFO_SPRITE],
+    soundSpecs: [UFO_SOUNDS],
     // drawBounds: true,
 
-    traits: ({ napEntity }) => [
+    traits: ({ napEntity, sounds }) => [
         new Physics({ applyGravity: false }),
-        new BehaviorUfo(napEntity)
+        new BehaviorUfo(napEntity, sounds)
     ],
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');
