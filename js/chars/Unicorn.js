@@ -268,7 +268,7 @@ function sounds(sounds) {
         }
 
         if (unicorn.run.distance > 0) {
-            runSound.playing({ rate: unicorn.run.realSpeed / 10000, volume: 0.05 });
+            runSound.playing({ rate: unicorn.run.realSpeed / 10000, volume: 0.02 });
             return;
         }
     };
