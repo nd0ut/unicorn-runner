@@ -8,6 +8,7 @@ import { createLevelLoader } from './loadLevel';
 import { createPlayerEnv } from './player/createPlayerEnv';
 import { Timer } from './Timer';
 import { splash } from './Splash';
+import { doCongratulations } from './Congratulations';
 
 export class Game {
     constructor(canvasSelector) {
@@ -54,17 +55,8 @@ export class Game {
 
     async onGameOver() {
         this.pause();
-        
-        const pc = this.playerEnv.playerController;
-        
-        await splash('you win! <br> congratulations!', { size: 50, background: 'rgba(0,0,0,0.5)' });
 
-        const html = `
-            score: ${pc.totalScore} <br> 
-            Deaths: ${pc.deaths}
-        `;
-        splash(html, { size: 50, background: 'rgba(0,0,0,0.5)', timeout: 100000 });
-
+        doCongratulations(this);
     }
 
     pause() {
