@@ -113,7 +113,7 @@ async function init(game) {
     const unicorn = game.entityFactory.unicorn({ speed: 20000 });
     unicorn.addTrait(new AutoJump());
 
-    const playerEnv = createPlayerEnv(game);
+    const playerEnv = game.playerEnv;
     level.entities.add(playerEnv);
     level.entities.forEach(entity => entity.addTrait(new Physics()));
 
