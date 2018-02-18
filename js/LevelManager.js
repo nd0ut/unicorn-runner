@@ -21,7 +21,7 @@ export class LevelManager {
         this.game = game;
 
         const loadLastLevel = false;
-        const showDemoLevel = false;
+        const showDemoLevel = true;
 
         let currentLevel = showDemoLevel ? 0 : 1;
 

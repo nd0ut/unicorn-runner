@@ -110,7 +110,7 @@ function initPlayButton(game) {
 async function init(game) {
     const level = await game.loadLevel(spec);
 
-    const unicorn = game.entityFactory.unicorn({ speed: 30000 });
+    const unicorn = game.entityFactory.unicorn({ speed: 20000 });
     unicorn.addTrait(new AutoJump());
 
     const playerEnv = createPlayerEnv(game);
@@ -127,7 +127,7 @@ async function init(game) {
     }
 
     function startLevel() {
-        level.sounds.get('music').playLoop();
+        level.sounds.get('music').playLoop({ volume: 0.8 });
 
         playerEnv.playerController.setPlayer(unicorn);
         game.cameraController.focus.follow(unicorn);

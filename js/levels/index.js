@@ -5,7 +5,7 @@ import three from './three';
 
 export default [
     demo, 
-    // one, 
-    // two, 
+    one, 
+    two, 
     three,
 ]
