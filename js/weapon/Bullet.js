@@ -60,6 +60,10 @@ const FIREBALL_SOUNDS = {
         {
             url: require('../../sounds/fireball-cast.wav'),
             name: 'cast'
+        },
+        {
+            url: require('../../sounds/fireball-release.wav'),
+            name: 'release'
         }
     ]
 };
@@ -89,6 +93,7 @@ class BehaviorBullet extends Trait {
 
     obstruct() {
         this.destroy();
+        this.sounds.get('release').playOnce({ volume: 0.3 });
     }
 
     collides(us, them) {
@@ -98,6 +103,9 @@ class BehaviorBullet extends Trait {
 
         this.ownerEntity.killer && this.ownerEntity.killer.kill(them);
         them.killable.kill();
+        this.destroy();
+        
+        this.sounds.get('release').playOnce({ volume: 0.3 });         
     }
 
     striked() {
