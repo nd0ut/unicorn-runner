@@ -408,7 +408,8 @@ export class Striker extends Trait {
         this.canStrike = false;
         this.strikeTime = 0;
 
-        this.emit('stike', bullet);
+        bullet.bulletBehavior.striked();
+        this.emit('strike', bullet);
     }
 
     update(entity, deltaTime, level) {

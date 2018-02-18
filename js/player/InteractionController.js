@@ -5,6 +5,7 @@ export class InteractionController extends Trait {
         super('interactionController');
 
         this.game = game;
+        this.shiftPressed = false;
 
         this.setupHandlers();
     }
@@ -34,7 +35,7 @@ export class InteractionController extends Trait {
             return;
         }
         
-        this.boostHandler(e);
+        this.handleKeyEvent(e);
 
         switch (e.code) {
             case 'Space':
@@ -47,24 +48,25 @@ export class InteractionController extends Trait {
         }
     }
 
-    boostHandler(e) {
-        const shiftPressed = e.shiftKey;
-        
-        if (e.repeat || !shiftPressed || !this.playerController.canBoost()) {
-            return;
-        }
+    handleKeyEvent(e) {
+        const shiftPressed = e.shiftKey;        
+        this.shiftPressed = shiftPressed;        
+    }
 
+    boostChecker() {
         const unicorn = this.playerController.player;
 
         if (unicorn.killable.dead || unicorn.jump.inAir) {
+            unicorn.run.cancelBoost();            
             return;
         }
 
+        if (this.shiftPressed && this.playerController.canBoost() && !unicorn.run.boosted) {
+            unicorn.run.boost(30000);
+        }
 
-        if (shiftPressed) {
-            unicorn.run.boost(50000);
-        } else {
-            unicorn.run.cancelBoost();
+        if(!this.shiftPressed && unicorn.run.boosted) {
+            unicorn.run.cancelBoost();                        
         }
     }
 
@@ -96,5 +98,9 @@ export class InteractionController extends Trait {
         } else {
             unicorn.jump.cancel();
         }
+    }
+
+    update() {
+        this.boostChecker();
     }
 }

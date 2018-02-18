@@ -40,7 +40,7 @@ export class PlayerController extends Trait {
             this.updateUiCounts(this.scoreSelector, this.totalScore + this.score);
         }
         if (pickable.name === 'manaPot') {
-            this.mana += 1;
+            this.mana += 2;
             this.updateUiCounts(this.fireballsSelector, this.mana);
         }
     }
@@ -126,10 +126,6 @@ export class PlayerController extends Trait {
             if (this.mana <= 0) {
                 this.player.run.cancelBoost();
                 this.mana = 0;
-            }
-
-            if (this.player.jump.inAir) {
-                this.player.run.cancelBoost();
             }
 
             this.updateUiCounts(this.fireballsSelector, this.mana);

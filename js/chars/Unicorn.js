@@ -255,7 +255,7 @@ function sounds(sounds) {
 
     return unicorn => {
         if (unicorn.killable.dead) {
-            dieSound.playing();
+            dieSound.playing({ volume: 0.1 });
             return;
         }
 

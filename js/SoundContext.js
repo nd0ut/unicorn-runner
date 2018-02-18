@@ -34,7 +34,7 @@ class SingleSoundContext {
         return soundsMap;
     }
 
-    createSource(buf, { volume = 1, loop = false, rate = 1 } = {}) {
+    createSource(buf, { volume = 0.5, loop = false, rate = 1 } = {}) {
         const source = this.context.createBufferSource();
         const gainNode = this.context.createGain();
 

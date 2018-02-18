@@ -10,24 +10,28 @@ export class Sound {
                this.gainNode = undefined;
            }
 
-           playOnce() {
+           playOnce({ rate = 1, volume = 0.3 } = {}) {
                const { gainNode, source } = this.createSource(this.buffer);
                this.gainNode = gainNode;
                this.source = source;
+
+               this.source.playbackRate.value = rate;
+               this.gainNode.gain.value = volume;            
 
                this.source.start(0);
                this.isPlaying = true;
            }
 
-           playLoop({ rate = 1, volume = 1 } = {}) {
+           playLoop({ rate = 1, volume = 0.3 } = {}) {
                const { gainNode, source } = this.createSource(this.buffer, {
                    loop: true
                });
                this.gainNode = gainNode;
                this.source = source;
 
+               this.source.playbackRate.value = rate;
                this.gainNode.gain.value = volume;
-               
+
                this.source.start(0);
                this.isPlaying = true;
            }
@@ -49,7 +53,7 @@ export class Sound {
                this.isPlaying = false;
            }
 
-           playing({ rate = 1, volume = 1 } = {}) {
+           playing({ rate = 1, volume = 0.3 } = {}) {
                if (!this.isPlaying) {
                    this.startPlaying({ loop: true, rate, volume });
                }

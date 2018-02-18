@@ -407,42 +407,82 @@ const spec = {
     ["default", 192, 8],
     ["dirt", 192, 9],
     ["default", 193, 8],
-    ["dirt", 193, 9]
+    ["dirt", 193, 9],
+    ["wood", 198, 8],
+    ["wood", 199, 7],
+    ["wood", 203, 7],
+    ["wood", 204, 6],
+    ["wood", 207, 6],
+    ["wood", 208, 5],
+    ["wood", 211, 5],
+    ["wood", 212, 4],
+    ["wood", 214, 5],
+    ["wood", 215, 4],
+    ["wood", 218, 5],
+    ["wood", 219, 4],
+    ["wood", 220, 4],
+    ["wood", 221, 4],
+    ["wood", 222, 4],
+    ["wood", 223, 4],
+    ["wood", 224, 4],
+    ["wood", 225, 4],
+    ["wood", 226, 4],
+    ["wood", 227, 4],
+    ["wood", 228, 4],
+    ["wood", 229, 4],
+    ["wood", 230, 4],
+    ["wood", 231, 4],
+    ["wood", 232, 4],
+    ["wood", 233, 4],
+    ["wood", 234, 4],
+    ["wood", 235, 4],
+    ["wood", 236, 4],
+    ["wood", 237, 4],
+    ["wood", 238, 4],
+    ["wood", 239, 4],
+    ["wood", 240, 4],
+    ["wood", 241, 4],
+    ["wood", 242, 4],
+    ["wood", 243, 4],
+    ["wood", 244, 4],
+    ["wood", 245, 3],
+    ["wood", 245, 4],
+    ["wood", 246, 3],
+    ["wood", 247, 2],
+    ["wood", 247, 3],
+    ["wood", 247, 4],
+    ["wood", 247, 5],
+    ["wood", 247, 6],
+    ["wood", 247, 7],
+    ["wood", 247, 8],
+    ["wood", 247, 9],
+    ["wood", 247, 10]
   ],
   entities: [
     { name: "manaPot", pos: [1266.0000186093064, 15] },
     { name: "enemy", pos: [2319.1666666666615, 381.5], skinName: "target" },
-    { name: "manaPot", pos: [2792.1666666666615, 342], skinName: "default" },
     { name: "manaPot", pos: [2867, 344] },
-    { name: "manaPot", pos: [2942, 345] },
     { name: "manaPot", pos: [3017.408459114388, 346] },
-    { name: "manaPot", pos: [3090.408459114388, 348] },
-    { name: "manaPot", pos: [3210.1666666666615, 284], skinName: "default" },
     { name: "manaPot", pos: [3283.9999999999914, 285] },
-    { name: "manaPot", pos: [3357.9999999999914, 285] },
     { name: "manaPot", pos: [3430.9999999999914, 287] },
-    { name: "manaPot", pos: [3502.9999999999914, 287] },
-    { name: "manaPot", pos: [3592.1666666666615, 227], skinName: "default" },
     { name: "manaPot", pos: [3664.050762163021, 227] },
-    { name: "manaPot", pos: [3733.050762163021, 228] },
     { name: "manaPot", pos: [3805.050762163021, 228] },
-    { name: "manaPot", pos: [3876.050762163021, 228] },
     { name: "speedBooster", pos: [4028.498282284062, 177.5] },
     { name: "speedBooster", pos: [4781.498282284062, 62.5] },
     { name: "enemy", skinName: "cactus", pos: [4858.074896158258, 165.5] },
     { name: "enemy", skinName: "cactus", pos: [4859, -14.5] },
+    { name: "enemy", skinName: "cactus", pos: [4859, 108.5] },
     { name: "enemy", skinName: "cactus", pos: [4859, -398.5] },
     { name: "enemy", skinName: "cactus", pos: [4859, 45.91666666666667] },
-    { name: "enemy", skinName: "cactus", pos: [4859, 108.5] },
     { name: "enemy", skinName: "cactus", pos: [4859.074896158258, -210] },
-    { name: "enemy", skinName: "cactus", pos: [4860, -74.5] },
     { name: "enemy", skinName: "cactus", pos: [4860, -463.08333333333337] },
+    { name: "enemy", skinName: "cactus", pos: [4860, -74.5] },
     { name: "enemy", skinName: "cactus", pos: [4860.074896158258, -143.5] },
     { name: "enemy", skinName: "cactus", pos: [4860.074896158258, -275] },
     { name: "enemy", skinName: "cactus", pos: [4860.074896158258, -335] },
     { name: "enemy", pos: [4860.597505721113, -579.5], skinName: "cactus" },
-    { name: "enemy", skinName: "cactus", pos: [4861, -641.75] },
     { name: "enemy", skinName: "cactus", pos: [4861, -519.5] },
+    { name: "enemy", skinName: "cactus", pos: [4861, -641.75] },
     { name: "rainbow", pos: [4952.685545762244, 35.5] },
     { name: "enemy", skinName: "cactus", pos: [5618.503676392036, 289] },
     { name: "enemy", skinName: "cactus", pos: [5640.333333333396, 341] },
@@ -454,9 +494,7 @@ const spec = {
     { name: "enemy", pos: [6104, 167], skinName: "cactus" },
     { name: "rainbow", pos: [6826.5, 229.5], skinName: "default" },
     { name: "manaPot", pos: [7065.899479945025, 228], skinName: "default" },
-    { name: "manaPot", pos: [7119.1666666666615, 229], skinName: "default" },
     { name: "manaPot", pos: [7180.193362357293, 228], skinName: "default" },
-    { name: "manaPot", pos: [7236, 227], skinName: "default" },
     {
       name: "enemy",
       pos: [8018.1666666666615, 25],
@@ -486,7 +524,24 @@ const spec = {
       pos: [8801.896812757153, 399.5],
       skinName: "default"
     },
-    { name: "enemy", pos: [9664, 406.5], skinName: "cactus" }
+    { name: "enemy", pos: [9664, 406.5], skinName: "cactus" },
+    { name: "manaPot", pos: [10194.166666849957, 166], skinName: "default" },
+    {
+      name: "rainbow",
+      pos: [10629.001220181868, 11.253143575674308],
+      skinName: "default"
+    },
+    { name: "manaPot", pos: [10978.166666849957, 415], skinName: "default" },
+    { name: "manaPot", pos: [11374.166666849957, 398], skinName: "default" },
+    { name: "enemy", pos: [12219.166666849957, 265.5], skinName: "target" },
+    { name: "rainbow", pos: [12329.157294348368, 44.5], skinName: "default" },
+    { name: "enemy", pos: [12459.166666849957, 207.5], skinName: "target" },
+    { name: "enemy", pos: [12880.166666849957, 145.5], skinName: "target" },
+    {
+      name: "rainbow",
+      pos: [13292.660758604594, -23.47985891352434],
+      skinName: "default"
+    }
   ]
 };
 
@@ -503,21 +558,21 @@ function createLevelOptions() {
       howToSplash(game, level);
       checkDoor1(game, level);
     }
-  }
+  };
 }
 
 function howToSplasher() {
   let firstJumpReached = false;
 
   return (game, level) => {
-      const player = game.playerEnv.playerController.player;
-      const firstJumpX = 1200;
+    const player = game.playerEnv.playerController.player;
+    const firstJumpX = 1200;
 
-      const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
-      if (!firstJumpReached && nearFirstJump) {
-          firstJumpReached = true;
-          splash('press f to fire', { size: 50, timeout: 2000 });
-      }
+    const nearFirstJump = Math.abs(player.pos.x - firstJumpX) < 10;
+    if (!firstJumpReached && nearFirstJump) {
+      firstJumpReached = true;
+      splash("press f to fire", { size: 50, timeout: 2000 });
+    }
   };
 }
 

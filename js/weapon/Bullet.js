@@ -55,11 +55,21 @@ const FIREBALL_SPRITE = {
     ]
 };
 
+const FIREBALL_SOUNDS = {
+    sounds: [
+        {
+            url: require('../../sounds/fireball-cast.wav'),
+            name: 'cast'
+        }
+    ]
+};
+
 class BehaviorBullet extends Trait {
-    constructor(ownerEntity) {
+    constructor(ownerEntity, sounds) {
         super('bulletBehavior');
 
         this.ownerEntity = ownerEntity;
+        this.sounds = sounds;
         this.destroyed = false;
     }
 
@@ -89,16 +99,22 @@ class BehaviorBullet extends Trait {
         this.ownerEntity.killer && this.ownerEntity.killer.kill(them);
         them.killable.kill();
     }
+
+    striked() {
+        this.sounds.get('cast').playOnce({ volume: 0.1, rate: 3 });
+    }
 }
 
 export const loadBullet = defineGameObject('bullet', {
     spriteSpecs: [FIREBALL_SPRITE],
+    soundSpecs: [FIREBALL_SOUNDS],
+
     // drawBounds: true,
 
-    traits: ({ ownerEntity }) => [
+    traits: ({ ownerEntity, sounds }) => [
         new Physics({ applyGravity: false }),
         new Solid(),
-        new BehaviorBullet(ownerEntity)
+        new BehaviorBullet(ownerEntity, sounds)
     ],
     animations: sprite => {
         const idleAnim = sprite.animations.get('idle');

@@ -111,14 +111,23 @@ class BehaviorSpeedBooster extends Trait {
     }
 }
 
+const SPEED_SOUNDS = {
+    sounds: [
+        {
+            url: require('../../sounds/picked.wav'),
+            name: 'picked'
+        }
+    ]
+};
+
 export const loadSpeedBooster = defineGameObject('speedBooster', {
     spriteSpecs: [SPEED_BOOSTER],
-    soundSpecs: [],
+    soundSpecs: [SPEED_SOUNDS],
 
     traits: ({ sounds }) => [
         new Physics({ applyGravity: false }),
         new Solid(),
-        new Pickable(),
+        new Pickable({ onPick: () => sounds.get('picked').playOnce() }),
         new BehaviorSpeedBooster()
     ],
 
