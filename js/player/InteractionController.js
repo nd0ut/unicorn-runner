@@ -101,6 +101,10 @@ export class InteractionController extends Trait {
     }
 
     update() {
+        if(!this.playerController.player) {
+            return;
+        }
+        
         this.boostChecker();
     }
 }
