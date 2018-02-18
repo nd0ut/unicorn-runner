@@ -3,6 +3,14 @@ import { Sound } from './Sound';
 class SingleSoundContext {
     constructor() {
         this.context = new AudioContext();
+
+        document.addEventListener('mousemove', this.onMouseMove.bind(this));
+    }
+
+    onMouseMove(e) {
+        if(this.context.state === 'suspended') {
+            this.context.resume();
+        }
     }
 
     loadBuffer(url) {
